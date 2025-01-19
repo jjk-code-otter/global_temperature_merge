@@ -1,0 +1,39 @@
+from pathlib import Path
+import xarray as xa
+import numpy as np
+import pandas as pd
+import os
+
+import matplotlib.pyplot as plt
+
+data_dir_env = os.getenv('DATADIR')
+DATA_DIR = Path(data_dir_env)
+
+dcent_dir = DATA_DIR / 'ManagedData' / 'Data' / 'DCENT'
+
+n_years = 2023-1850+1
+n_months = 12 * n_years
+
+output = np.zeros((n_years, 201))
+
+for i in range(1,201):
+    filename =  dcent_dir / f'DCENT_ensemble_1850_2023_member_{i:03d}.nc'
+    print(filename)
+
+    # Open file get area weights
+    df = xa.open_dataset(filename)
+
+    weights = np.cos(np.deg2rad(df.temperature.lat))
+
+    # Calculate the area-weighted average, then the annual average
+    regional_ts = df.temperature.weighted(weights).mean(dim=("lat", "lon"))
+    regional_ts = regional_ts.data
+    regional_ts = np.mean(regional_ts.reshape(int(n_months/12), 12), axis=1)
+    output[:,i] = regional_ts[:]
+
+# Transpose array and add time axis for writing
+time = np.arange(1850,1850+n_years, 1)
+output[:,0] = time[:]
+
+np.savetxt(dcent_dir / "ensemble_time_series.csv", output, delimiter=",")
+

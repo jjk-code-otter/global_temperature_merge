@@ -8,3 +8,5 @@ Input datasets are converted into a common format using code in the "translators
 Merging is performed using `combinator.py` based on dataset family trees defined in json files such as `hierarchy_ur.json`.
 
 Some other plots are produced by `compare_all_ensembles.py` and `plot_hierarchy.py`.
+
+The code has been refactored with `make_meta_ensemble.py` now doing most of what the old code used to do.

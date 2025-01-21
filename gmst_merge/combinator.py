@@ -11,6 +11,7 @@ import numpy as np
 from random import randrange
 import statsmodels.api as sm
 import matplotlib.patches as patches
+from typing import List, Tuple
 
 
 def get_next(j, k, maxj, maxk):
@@ -21,7 +22,16 @@ def get_next(j, k, maxj, maxk):
     return j, k
 
 
-def split_list(in_lst, n_splits):
+def split_list(in_lst: list, n_splits: int) -> list:
+    """
+    Given a list, split it into n_splits random groups
+
+    :param in_lst: list
+        List to be split
+    :param n_splits: int
+        Number of output lists to divide the list into
+    :return: list
+    """
     new_lst = copy.deepcopy(in_lst)
 
     # mix the list up
@@ -39,7 +49,15 @@ def split_list(in_lst, n_splits):
     return result
 
 
-def make_random_tree(lst):
+def make_random_tree(lst: List[str]) -> list:
+    """
+    Given a list of datasets, generate a list of lists specifying a hierarchical family tree by repeatedly
+    grouping elements.
+
+    :param lst: List[str]
+        List of datasets to be
+    :return:
+    """
     new_list = copy.deepcopy(lst)
 
     for i in range(4):
@@ -55,13 +73,30 @@ def make_random_tree(lst):
     return new_list
 
 
-def choose_start_and_end_year(y1, y2):
+def choose_start_and_end_year(y1: int, y2: int) -> Tuple[int, int]:
+    """
+    Given the start and end years of a particular dataset, choose a start year for the overlap
+
+    :param y1: int
+        first possible year for overlap
+    :param y2: int
+        last possible year for overlap
+    :return:
+        Tuple[int, int]
+    """
     trans_start_year = random.randint(y1, y2)
     trans_end_year = trans_start_year + 29
     return trans_start_year, trans_end_year
 
 
-def pick_one(inarr):
+def pick_one(inarr: list) -> str:
+    """
+    Given a list of lists, recursively pick from the entries until you find a non-list item and return that
+
+    :param inarr: list
+        List containing lists and/or strings
+    :return:
+    """
     selection = random.choice(inarr)
     if isinstance(selection, list):
         selection = pick_one(selection)
@@ -70,16 +105,40 @@ def pick_one(inarr):
     return selection
 
 
-def anomalize(d, in_start_year, in_end_year):
+def anomalize(in_arr: np.ndarray, in_start_year: int, in_end_year: int) -> np.ndarray:
+    """
+    Calculate anomalies from the input array using the period from in_start_year to in_end_year to calculate the
+    climatology.
+
+    :param in_arr: np.ndarray
+        Array containing the ensemble
+    :param in_start_year: int
+        First year of climatology period
+    :param in_end_year: int
+        Last year of climatology period
+    :return: np.ndarray
+    """
     # Calculate anomalies
-    hold = d[0]  # We don't want anomalies of years so hold
-    mask = (d[0] >= in_start_year) & (d[0] <= in_end_year)
-    d = d - np.mean(d.loc[mask], axis=0)
-    d[0] = hold
-    return d
+    hold = in_arr[0]  # We don't want anomalies of years so hold
+    mask = (in_arr[0] >= in_start_year) & (in_arr[0] <= in_end_year)
+    out_arr = in_arr - np.mean(in_arr.loc[mask], axis=0)
+    out_arr[0] = hold
+    return out_arr
 
 
 def ensemblify(n_meta_ensemble, df, datasets, tails, heads, randomise=True):
+    """
+    Given all the inputs calculate the meta ensemble with n_meta_ensemble elements
+
+    :param n_meta_ensemble: int
+        Size of desired meta ensemble
+    :param df:
+    :param datasets:
+    :param tails:
+    :param heads:
+    :param randomise:
+    :return:
+    """
     all_tail_datasets = []
     all_head_datasets = []
     all_start_years = []
@@ -177,6 +236,27 @@ def lowess_smooth(time, ensemble):
     return smoothed_ensemble
 
 
+def get_exceedance_year(ensemble_array, threshold):
+    logic_board = np.argmax(ensemble_array >= threshold, axis=0)
+    passing_year = logic_board + 1850
+    return passing_year
+
+
+def get_normalised_count_by_year(ensemble_array, passing_year):
+    val, count = np.unique(passing_year, return_counts=True)
+    count = count[val != 1850]
+    count = np.cumsum(count)
+    val = val[val != 1850]
+    count = count / ensemble_array.shape[1]
+    return val, count
+
+
+def summarise(ensemble):
+    return np.mean(ensemble, axis=1), np.std(ensemble, axis=1), np.quantile(ensemble, 0.025, axis=1), np.quantile(
+        ensemble, 0.975, axis=1)
+
+
+# Plotting code
 def plot_input_ensemble(df, in_start_year, in_end_year, img_filename):
     fig, axs = plt.subplots(4, 4)
     fig.set_size_inches(16, 16)
@@ -274,21 +354,6 @@ def make_heat_map(ensemble_array, filename):
     plt.close()
 
 
-def get_exceedance_year(ensemble_array, threshold):
-    logic_board = np.argmax(ensemble_array >= threshold, axis=0)
-    passing_year = logic_board + 1850
-    return passing_year
-
-
-def get_normalised_count_by_year(ensemble_array, passing_year):
-    val, count = np.unique(passing_year, return_counts=True)
-    count = count[val != 1850]
-    count = np.cumsum(count)
-    val = val[val != 1850]
-    count = count / ensemble_array.shape[1]
-    return val, count
-
-
 def passing_thresholds(ensemble_array, filename):
     plt.figure(figsize=[9, 9])
     for threshold in np.arange(0.5, 1.6, 0.1):
@@ -382,11 +447,7 @@ def plot_simple_summary(filename, time, full_ensemble_mean, full_ensemble_stdev,
     return
 
 
-def summarise(ensemble):
-    return np.mean(ensemble, axis=1), np.std(ensemble, axis=1), np.quantile(ensemble, 0.025, axis=1), np.quantile(
-        ensemble, 0.975, axis=1)
-
-
+# Output functions, csv writers etc
 def ensemble_to_csv(filename, time, full_ensemble, column_names):
     df_full_ensemble = pd.DataFrame(data=full_ensemble.astype(np.float16), index=time.astype(int),
                                     columns=column_names)
@@ -423,7 +484,7 @@ if __name__ == '__main__':
     start_year = 1981
     end_year = 2010
     n_meta_ensemble = 10000
-    cover_factor = 1.96 # 1.645
+    cover_factor = 1.96  # 1.645
     plot_full_input_ensemble = False
 
     # Each dataset directory contains a file with this name which has n + 1 columns and m rows where n is the
@@ -454,7 +515,7 @@ if __name__ == '__main__':
         'indianred', 'lightseagreen', 'fuchsia'
     ]
 
-    for hierarchy_variable in ['ur_ensembles_only', 'ur','random', 'sst', 'lsat', 'interp', 'sst_ensembles_only',
+    for hierarchy_variable in ['ur_ensembles_only', 'ur', 'random', 'sst', 'lsat', 'interp', 'sst_ensembles_only',
                                'lsat_ensembles_only', 'equal']:
 
         print(f"Processing hierarchy based on {hierarchy_variable}")
@@ -539,7 +600,8 @@ if __name__ == '__main__':
         early_average = np.mean(full_ensemble_pre[selected_year, :], axis=0)
 
         print("Warming from 1850-1900 to 2001-2020 (IPCC metric)")
-        print(f"Mean {np.mean(early_average):.2f} and 1.645 * stdev {1.645 * np.std(early_average):.2f} and 90% range {np.quantile(early_average, 0.05):.2f}-{np.quantile(early_average, 0.95):.2f}")
+        print(
+            f"Mean {np.mean(early_average):.2f} and 1.645 * stdev {1.645 * np.std(early_average):.2f} and 90% range {np.quantile(early_average, 0.05):.2f}-{np.quantile(early_average, 0.95):.2f}")
 
         selected_year_a = (time >= 1880) & (time <= 1899)
         selected_year_b = (time >= 1995) & (time <= 2014)
@@ -548,7 +610,8 @@ if __name__ == '__main__':
         difference = late_average - early_average
 
         print("Warming from 1880-1899 to 1995-2014 (C and G metric)")
-        print(f"Mean {np.mean(difference):.3f} and 1.96 * stdev {1.96 * np.std(difference):.3f} and 95% range {np.quantile(difference, 0.025):.3f}-{np.quantile(difference, 0.975):.3f}")
+        print(
+            f"Mean {np.mean(difference):.3f} and 1.96 * stdev {1.96 * np.std(difference):.3f} and 95% range {np.quantile(difference, 0.025):.3f}-{np.quantile(difference, 0.975):.3f}")
 
         print("Prob that lowess exceeded 1.5, 1.4 and 1.3C in 2024")
         print(100 * np.count_nonzero(full_ensemble_lowess[2024 - 1850, :] > 1.5) / n_meta_ensemble)

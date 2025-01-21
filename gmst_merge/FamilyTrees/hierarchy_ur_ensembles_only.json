@@ -1,0 +1,17 @@
+{
+  "master": [
+    ["DCENT", "GloSAT", ["ERA5", "JRA-3Q"], [["NOAA_ensemble", "GISTEMP_ensemble"]], [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"]]],
+    ["DCENT", ["NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"], [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"], "GloSAT"]],
+    ["DCENT", ["Kadow_ensemble"], ["NOAA_ensemble"], ["ERA5", "JRA-3Q"], [["GloSAT", "HadCRUT5", "GETQUOCS"], ["Calvert 2024", "Vaccaro", "GISTEMP_ensemble"]]]
+  ],
+  "tails": [
+    ["DCENT", [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"]], [["NOAA_ensemble"]], "GloSAT"],
+    ["DCENT", [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"], "GloSAT"], ["NOAA_ensemble"]],
+    [[["GloSAT", "HadCRUT5", "GETQUOCS"], ["Calvert 2024", "Vaccaro"]], ["Kadow_ensemble"], ["NOAA_ensemble"], "DCENT"]
+  ],
+  "heads": [
+    ["HadCRUT5", "GISTEMP_ensemble", ["ERA5", "JRA-3Q"]],
+    ["HadCRUT5",  "GISTEMP_ensemble", ["ERA5", "JRA-3Q"]],
+    [["HadCRUT5", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"]]
+  ]
+}

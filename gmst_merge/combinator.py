@@ -49,6 +49,22 @@ def split_list(in_lst: list, n_splits: int) -> list:
     return result
 
 
+def pick_one(inarr: list) -> str:
+    """
+    Given a list of lists, recursively pick from the entries until you find a non-list item and return that
+
+    :param inarr: list
+        List containing lists and/or strings
+    :return:
+    """
+    selection = random.choice(inarr)
+    if isinstance(selection, list):
+        selection = pick_one(selection)
+    else:
+        return selection
+    return selection
+
+
 def make_random_tree(lst: List[str]) -> list:
     """
     Given a list of datasets, generate a list of lists specifying a hierarchical family tree by repeatedly
@@ -87,22 +103,6 @@ def choose_start_and_end_year(y1: int, y2: int) -> Tuple[int, int]:
     trans_start_year = random.randint(y1, y2)
     trans_end_year = trans_start_year + 29
     return trans_start_year, trans_end_year
-
-
-def pick_one(inarr: list) -> str:
-    """
-    Given a list of lists, recursively pick from the entries until you find a non-list item and return that
-
-    :param inarr: list
-        List containing lists and/or strings
-    :return:
-    """
-    selection = random.choice(inarr)
-    if isinstance(selection, list):
-        selection = pick_one(selection)
-    else:
-        return selection
-    return selection
 
 
 def anomalize(in_arr: np.ndarray, in_start_year: int, in_end_year: int) -> np.ndarray:
@@ -525,7 +525,7 @@ if __name__ == '__main__':
             heads = make_random_tree(hhh)
             random_switch = True
         else:
-            with open(f'hierarchy_{hierarchy_variable}.json') as f:
+            with open(f'FamilyTrees/hierarchy_{hierarchy_variable}.json') as f:
                 hierarch = json.load(f)
 
             master = hierarch['master']

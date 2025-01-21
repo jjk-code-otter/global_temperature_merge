@@ -1,0 +1,41 @@
+{
+  "master": [
+    "GloSAT",
+    "HadCRUT5",
+    "Berkeley Earth",
+    "GETQUOCS",
+    "Calvert 2024",
+    "Vaccaro",
+    "GISTEMP_ensemble",
+    "Kadow_ensemble",
+    "NOAA v6",
+    "NOAA_ensemble",
+    "CMST",
+    "COBE-STEMP3",
+    "DCENT",
+    "ERA5",
+    "JRA-3Q"
+  ],
+  "tails": [
+    "GloSAT",
+    "HadCRUT5",
+    "Berkeley Earth",
+    "GETQUOCS",
+    "Calvert 2024",
+    "Vaccaro",
+    "Kadow_ensemble",
+    "NOAA v6",
+    "NOAA_ensemble",
+    "CMST",
+    "COBE-STEMP3",
+    "DCENT"
+  ],
+  "heads": [
+      "HadCRUT5",
+      "Berkeley Earth",
+      "GISTEMP_ensemble",
+      "NOAA v6",
+      "ERA5",
+      "JRA-3Q"
+    ]
+    }

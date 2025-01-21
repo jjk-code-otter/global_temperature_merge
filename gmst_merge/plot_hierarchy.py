@@ -77,7 +77,7 @@ fig.set_size_inches(30, 16)
 
 for a, hierarchy_variable in enumerate(['sst', 'lsat', 'interp']):
 
-    with open(f'hierarchy_{hierarchy_variable}.json') as f:
+    with open(f'FamilyTrees/hierarchy_{hierarchy_variable}.json') as f:
         hierarch = json.load(f)
 
     # Only want to plot the master tree

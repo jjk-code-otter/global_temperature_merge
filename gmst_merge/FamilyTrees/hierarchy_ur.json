@@ -1,0 +1,17 @@
+{
+  "master": [
+    ["DCENT", "COBE-STEMP3", "GloSAT", ["ERA5", "JRA-3Q"], ["CMST", ["NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"]], ["Berkeley Earth", ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"]]],
+    ["DCENT", "CMST", "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"], [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"], "GloSAT"]],
+    ["DCENT", ["Kadow_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST","COBE-STEMP3"], ["ERA5", "JRA-3Q"], [["GloSAT", "HadCRUT5","Berkeley Earth", "GETQUOCS"], ["Calvert 2024", "Vaccaro", "GISTEMP_ensemble"]]]
+  ],
+  "tails": [
+    ["DCENT", [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"], "Berkeley Earth"], ["CMST", ["NOAA v6", "NOAA_ensemble"]], "COBE-STEMP3", "GloSAT"],
+    ["DCENT", "CMST", [["Kadow_ensemble", "Calvert 2024", "HadCRUT5"], ["GETQUOCS", "Vaccaro"], "GloSAT"], "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble"]],
+    [[["GloSAT", "HadCRUT5","Berkeley Earth", "GETQUOCS"], ["Calvert 2024", "Vaccaro"]], ["Kadow_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST","COBE-STEMP3"], "DCENT"]
+  ],
+  "heads": [
+    [["HadCRUT5", "Berkeley Earth"], ["NOAA v6", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"]],
+    ["HadCRUT5", "Berkeley Earth",  ["NOAA v6", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"]],
+    [[["HadCRUT5","Berkeley Earth"], ["GISTEMP_ensemble"]], "NOAA v6", ["ERA5", "JRA-3Q"]]
+  ]
+}

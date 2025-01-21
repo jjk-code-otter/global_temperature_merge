@@ -1,16 +1,10 @@
 import copy
-import itertools
 from pathlib import Path
 import os
-import random
-import json
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from random import randrange
-import statsmodels.api as sm
-import matplotlib.patches as patches
 
 
 def make_perturbations(ensemble):
@@ -87,6 +81,6 @@ if __name__ == '__main__':
         all_perturbed.append(perturb_dataset(df, all_perturbations[0]))
 
     for p in all_perturbed:
-        plt.plot(p[:,0],p[:,1:])
+        plt.plot(p[:, 0], p[:, 1:])
     plt.show()
     plt.close()

@@ -6,6 +6,7 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+
 class Dataset:
 
     def __init__(self, inarr, name='none'):
@@ -61,6 +62,14 @@ class Dataset:
     def get_end_year(self):
         return int(np.max(self.time))
 
+    def get_quantile_range(self, percent_range):
+        fraction = percent_range / 100.
+        remainder = (1 - fraction) / 2
+        return np.quantile(self.data, remainder, axis=1), np.quantile(self.data, 1 - remainder, axis=1)
+
+    def get_ensemble_mean(self):
+        return np.mean(self.data, axis=1)
+
     def anomalize(self, in_start_year, in_end_year):
         """
         Calculate anomalies from the input array using the period from in_start_year to in_end_year to calculate the
@@ -111,7 +120,7 @@ class Dataset:
         bins = np.arange(-0.5, 1.77, 0.01)
         hmap = np.zeros((y2 - y1 + 1, len(bins) - 1))
 
-        for y in range(y1, y2+1):
+        for y in range(y1, y2 + 1):
             n_plot_years = y2 - y1 + 1
             bins = np.arange(-0.5, 1.77, 0.01)
             h, b = np.histogram(self.data[y - y1, :], bins=bins)
@@ -123,7 +132,7 @@ class Dataset:
                 hmap[y - y1, :] = h_prime
 
         max_value = np.max(hmap)
-        #hmap[hmap==0] = np.nan
+        # hmap[hmap==0] = np.nan
         plt.figure(figsize=[16, 16])
         times = self.time
         plt.pcolormesh(b, times, hmap, cmap='magma', vmin=0, vmax=max_value, shading='nearest')
@@ -241,4 +250,79 @@ class Dataset:
             plt.text(-0.7, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
 
         plt.savefig(filename, dpi=300)
+        plt.close()
+
+    def plot_time_series_with_exceedances(self, filename):
+
+        q1, q2 = self.get_quantile_range(95)
+        mn = self.get_ensemble_mean()
+
+        fig, axs = plt.subplots()
+        fig.set_size_inches(16, 9)
+
+        axs.fill_between(self.time, q1, q2, color='#d0b2f7', alpha=0.5)
+        axs.plot(self.time, mn, color='#6800b8')
+
+        axs.set_xlim(1850, 2024)
+
+        ylims = axs.get_ylim()
+        xlims = axs.get_xlim()
+
+        for year in np.arange(1850, 2030, 50):
+            plt.text(year, ylims[0] - 0.1, f'{year}', clip_on=False, ha='center', va='center', fontsize=20)
+
+        for threshold in np.arange(0.5, 1.6, 0.5):
+            plt.text(1849, threshold, f'{threshold}', clip_on=False, ha='right', va='center', fontsize=20)
+
+            passing_year = self.get_exceedance_year(threshold)
+            val, count = self.get_normalised_count_by_year(threshold)
+
+            sides = []
+
+            for p in [0.025, 0.975]:
+                if max(passing_year) == 1850:
+                    continue
+                if np.max(count) < p:
+                    continue
+
+                threshold_year = val[np.argmax(count >= p)]
+                plt.plot([xlims[0], threshold_year], [threshold, threshold], color='darkgrey')
+                sides.append(threshold_year)
+                axs.plot([threshold_year, threshold_year], ylims, color='darkgrey')
+
+            if len(sides) == 2:
+                axs.plot(sides, [threshold, threshold], linewidth=3, color='#fa5f05')
+                plt.gca().add_patch(
+                    patches.Rectangle(
+                        (sides[0], ylims[0]), sides[1] - sides[0], ylims[1] - ylims[0],
+                        linewidth=None, edgecolor=None, facecolor='#f7ceb2',  ##e6a2fc',
+                        zorder=0, alpha=0.5
+                    )
+                )
+
+                median_year = val[np.argmax(count >= 0.5)]
+
+                plt.text(
+                    (sides[1] + sides[0]) / 2,
+                    ylims[1] + 0.2,
+                    f'{threshold}$\!^\circ\!$C',
+                    clip_on=False, ha='center', fontsize=20
+                )
+                plt.text(
+                    (sides[1] + sides[0]) / 2,
+                    ylims[1] + 0.1,
+                    f'{int(median_year)}',
+                    clip_on=False, ha='center', fontsize=20
+                )
+                plt.text(
+                    (sides[1] + sides[0]) / 2,
+                    ylims[1] + 0.035,
+                    f'[{int(sides[0])}-{int(sides[1])}]',
+                    clip_on=False, ha='center', fontsize=12
+                )
+
+        axs.set_ylim(ylims)
+        axs.set_xlim(xlims)
+        plt.axis('off')
+        plt.savefig(filename, bbox_inches='tight', dpi=300)
         plt.close()

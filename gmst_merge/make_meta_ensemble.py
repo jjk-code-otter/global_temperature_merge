@@ -1,10 +1,6 @@
 import os
-import glob
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-
-import gmst_merge.dataset as ds
 import gmst_merge.family_tree as ft
 import gmst_merge.metaensemblefactory as mef
 
@@ -36,6 +32,8 @@ def build_ensemble_and_plot(tree_filename, tag, n_meta_ensemble):
     smoothed.plot_passing_thresholds(f'Figures/{tag}_passing.png')
     meta_ensemble.plot_joy_division_histogram(f'Figures/{tag}_smoothed_joy_division.png')
 
+    smoothed.plot_time_series_with_exceedances(f'Figures/{tag}_time_series_with_exceedances.png')
+
     print(tails)
     print(heads)
     print(meta_ensemble)
@@ -45,8 +43,9 @@ if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    n_meta_ensemble = 1000
+    n_meta_ensemble = 10000
     cover_factor = 1.96  # 1.645
 
-    for tree in ['ur_ensembles_only', 'ur', 'sst', 'lsat', 'interp', 'sst_ensembles_only', 'lsat_ensembles_only', 'equal']:
+    for tree in ['ur_ensembles_only', 'ur', 'sst', 'lsat', 'interp',
+                 'sst_ensembles_only', 'lsat_ensembles_only', 'equal']:
         build_ensemble_and_plot(f'FamilyTrees/hierarchy_{tree}.json', tree, n_meta_ensemble)

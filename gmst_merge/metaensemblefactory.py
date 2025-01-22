@@ -1,3 +1,19 @@
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from typing import List, Tuple
 import numpy as np
 import gmst_merge.dataset as ds
@@ -27,12 +43,18 @@ class MetaEnsembleFactory:
         self.heads = heads
         self.latest_join_year = 1981
 
-    def make_meta_ensemble(self, n_meta_ensemble, randomize=True):
+    def make_meta_ensemble(self, n_meta_ensemble, randomize=False):
         meta_ensemble = np.zeros((2024 - 1850 + 1, n_meta_ensemble+1))
 
         for i in range(n_meta_ensemble):
-            tail = self.tails.sample_from_tree()
-            head = self.heads.sample_from_tree()
+            if randomize:
+                tails = ft.FamilyTree.make_random_tree(self.tails.tree)
+                heads = ft.FamilyTree.make_random_tree(self.heads.tree)
+                tail = tails.sample_from_tree()
+                head = heads.sample_from_tree()
+            else:
+                tail = self.tails.sample_from_tree()
+                head = self.heads.sample_from_tree()
 
             join_start_year, join_end_year = choose_start_and_end_year(head.get_start_year(), self.latest_join_year)
 

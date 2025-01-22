@@ -1,3 +1,19 @@
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import copy
 import random
 import json
@@ -69,10 +85,7 @@ def read_tree(lst, data_dir):
         if isinstance(elem, list):
             gst[i] = read_tree(elem, data_dir)
         else:
-            filestub = 'ensemble_time_series.csv'
-            df = pd.read_csv(data_dir / elem / filestub, header=None)
-            df = df.to_numpy()
-            gst[i] = ds.Dataset(df, name=elem)
+            gst[i] = ds.Dataset.read_csv(elem, data_dir)
     return gst
 
 

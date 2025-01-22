@@ -1,3 +1,19 @@
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 from pathlib import Path
 
@@ -17,7 +33,9 @@ def build_ensemble_and_plot(tree_filename, tag, n_meta_ensemble):
 
     factory = mef.MetaEnsembleFactory(tails, heads)
 
-    meta_ensemble = factory.make_meta_ensemble(n_meta_ensemble)
+    randomize = (tag == 'random')
+
+    meta_ensemble = factory.make_meta_ensemble(n_meta_ensemble, randomize=randomize)
     meta_ensemble.to_csv(f'Output/{tag}.csv')
 
     meta_ensemble.anomalize(1850, 1900)
@@ -46,6 +64,6 @@ if __name__ == '__main__':
     n_meta_ensemble = 10000
     cover_factor = 1.96  # 1.645
 
-    for tree in ['ur_ensembles_only', 'ur', 'sst', 'lsat', 'interp',
+    for tree in ['ur_pseudo', 'random', 'ur_ensembles_only', 'ur', 'sst', 'lsat', 'interp',
                  'sst_ensembles_only', 'lsat_ensembles_only', 'equal']:
         build_ensemble_and_plot(f'FamilyTrees/hierarchy_{tree}.json', tree, n_meta_ensemble)

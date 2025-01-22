@@ -1,86 +1,69 @@
-import copy
-from pathlib import Path
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
-
+from pathlib import Path
 import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
 
-
-def make_perturbations(ensemble):
-    """
-    Given an ensemble array (ntime, n_ensemble_members) then calculate the mean of the ensemble members and
-    subtract that from each ensemble member
-
-    Args:
-        ensemble: ndarray
-
-    Returns:
-
-    """
-    perturbations = copy.deepcopy(ensemble)
-    n_time = perturbations.shape[0]
-    mean_series = np.mean(ensemble[:, 1:], axis=1)
-    perturbations[:, 1:] = ensemble[:, 1:] - np.reshape(mean_series, (n_time, 1))
-    return perturbations
-
-
-def perturb_dataset(dataset, perturbations):
-    fyr = int(dataset[0, 0])
-    lyr = int(dataset[-1, 0])
-    p_fyr = int(perturbations[0, 0])
-
-    n_time = dataset.shape[0]
-    n_ensemble_members = perturbations.shape[1]
-    out_dataset = np.zeros((n_time, n_ensemble_members))
-
-    out_dataset[:, 0] = dataset[:, 0]
-    out_dataset[:, 1:] = np.reshape(dataset[:, 1], (n_time, 1)) + perturbations[fyr - p_fyr:lyr - p_fyr + 1, 1:]
-
-    return out_dataset
-
+import gmst_merge.family_tree as ft
+import gmst_merge.dataset as ds
+import gmst_merge.metaensemblefactory as mef
 
 if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    start_year = 1981
-    end_year = 2010
-    n_meta_ensemble = 10000
-    cover_factor = 1.96  # 1.645
-    plot_full_input_ensemble = False
+    ensemble_datasets = ["GloSAT", "HadCRUT5", "GETQUOCS", "Calvert 2024", "Vaccaro", "GISTEMP_ensemble",
+                         "Kadow_ensemble", "NOAA_ensemble", "DCENT"]
+    ensemble_datasets = ["HadCRUT5"]
 
-    # Each dataset directory contains a file with this name which has n + 1 columns and m rows where n is the
-    # number of ensemble members and m is the number of years. The first column is the year column
-    filestub = 'ensemble_time_series.csv'
-
-    ensemble_datasets = [
-        'DCENT', 'GETQUOCS', 'HadCRUT5', 'Kadow_ensemble', 'Calvert 2024',
-        'GISTEMP_ensemble', 'GloSAT', 'Vaccaro', 'NOAA_ensemble'
-    ]
-    ensemble_datasets = ['HadCRUT5']
-
-    non_ensemble_datasets = ['Berkeley Earth', 'NOAA v6', 'COBE-STEMP3', 'CMST', 'ERA5', 'JRA-3Q']
-
-    filenames = [DATA_DIR / x / filestub for x in ensemble_datasets]
-    ensemble_df = []
-    for file in filenames:
-        ensemble_df.append(pd.read_csv(file, header=None).to_numpy())
-
-    filenames = [DATA_DIR / x / filestub for x in non_ensemble_datasets]
-    non_ensemble_df = []
-    for file in filenames:
-        non_ensemble_df.append(pd.read_csv(file, header=None).to_numpy())
+    regular_datasets = ["Berkeley Earth", "NOAA v6", "CMST", "COBE-STEMP3", "ERA5", "JRA-3Q"]
 
     all_perturbations = []
-    for df in ensemble_df:
-        all_perturbations.append(make_perturbations(df))
+    for name in ensemble_datasets:
+        df = ds.Dataset.read_csv(name, DATA_DIR)
+        df.anomalize(1981, 2010)
+        df.convert_to_perturbations()
+        all_perturbations.append(df)
+        plt.plot(df.time, df.data, alpha=0.1)
 
-    all_perturbed = []
-    for df in non_ensemble_df:
-        all_perturbed.append(perturb_dataset(df, all_perturbations[0]))
-
-    for p in all_perturbed:
-        plt.plot(p[:, 0], p[:, 1:])
     plt.show()
     plt.close()
+
+    all_perturbed_datasets = []
+    for name in regular_datasets:
+        df = ds.Dataset.read_csv(name, DATA_DIR)
+        df.anomalize(1981,2010)
+        y1 = df.get_start_year()
+        y2 = df.get_end_year()
+
+        matching_perturbations = []
+        for ptb in all_perturbations:
+            py1 = ptb.get_start_year()
+            py2 = ptb.get_end_year()
+            if py1 <= y1 and py2 >= y2:
+                all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
+
+    for df in all_perturbed_datasets:
+        plt.plot(df.time, df.data, alpha=0.01, linewidth=2)
+        directory = DATA_DIR / df.name
+        directory.mkdir(exist_ok=True)
+        filename = directory / 'ensemble_time_series.csv'
+        df.to_csv(filename)
+
+    plt.show()
+    plt.close()
+

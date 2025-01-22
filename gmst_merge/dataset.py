@@ -1,3 +1,19 @@
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import copy
 import numpy as np
 import pandas as pd
@@ -11,6 +27,7 @@ class Dataset:
     """
     Simple data class using numpy arrays for the time axis and a data ensemble.
     """
+
     def __init__(self, inarr, name='none'):
         self.data = inarr[:, 1:]
         self.time = inarr[:, 0]
@@ -25,9 +42,39 @@ class Dataset:
         return self.name
 
     @staticmethod
+    def read_csv(name, data_dir, header=None):
+        """
+        Read a file from the data directory
+
+        :param name: str
+            Name of the dataset
+        :param data_dir: str
+            Path of the data directory
+        :return: Dataset
+        """
+        filestub = 'ensemble_time_series.csv'
+        df = pd.read_csv(data_dir / name / filestub, header=header)
+        df = df.to_numpy()
+        return Dataset(df, name=name)
+
+    def read_csv_from_file(filename, name, header=None):
+        """
+        Read a file from the data directory
+
+        :param name: str
+            Name of the dataset
+        :param data_dir: str
+            Path of the data directory
+        :return: Dataset
+        """
+        df = pd.read_csv(filename, header=header)
+        df = df.to_numpy()
+        return Dataset(df, name=name)
+
+    @staticmethod
     def join(tail, head, join_start_year, join_end_year):
         """
-        Join two two Datasets together. The Dataset is made by joining a tail Dataset to a head Dataset. This is
+        Join two Datasets together. The Dataset is made by joining a tail Dataset to a head Dataset. This is
         done by anomalizing each Dataset to a common period specified by join_start_year and join_end_year and then
         cutting each Dataset at the midpoint of the common period and splicing them together.
 
@@ -78,7 +125,7 @@ class Dataset:
             out_arr = np.zeros((self.n_time, 2))
             out_arr[:, 0] = self.time[:]
             out_arr[:, 1] = self.data[:, selected_member]
-            return Dataset(out_arr)
+            return Dataset(out_arr, name=f'{self.name} {selected_member:04d}')
 
     def get_start_year(self):
         """
@@ -116,6 +163,14 @@ class Dataset:
         """
         return np.mean(self.data, axis=1)
 
+    def get_ensemble_std(self):
+        """
+        Calculate the mean of all the ensemble members.
+
+        :return: np.ndarray
+        """
+        return np.std(self.data, axis=1)
+
     def anomalize(self, in_start_year, in_end_year):
         """
         Calculate anomalies from the input array using the period from in_start_year to in_end_year to calculate the
@@ -133,6 +188,29 @@ class Dataset:
         mask = (self.time >= in_start_year) & (self.time <= in_end_year)
         self.data = self.data - np.mean(self.data[mask, :], axis=0)
 
+    def convert_to_perturbations(self):
+        ensemble_mean = self.get_ensemble_mean()
+        self.data = self.data - np.reshape(ensemble_mean, (self.n_time, 1))
+
+    def make_perturbed_dataset(self, perturbation):
+        if self.n_ensemble != 1:
+            raise RuntimeError('Trying to add perturbations to an ensemble dataset')
+        y1 = self.get_start_year()
+        y2 = self.get_end_year()
+        py1 = perturbation.get_start_year()
+        py2 = perturbation.get_end_year()
+        if py1 > y1 or py2 < y2:
+            raise RuntimeError('Perturbations do not cover whole dataset period')
+
+        out_ds = copy.deepcopy(self)
+
+        out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + perturbation.data[y1 - py1:y2 - py1 + 1, :]
+        out_ds.n_ensemble = perturbation.n_ensemble
+
+        out_ds.name = f'{self.name}_{perturbation.name}'
+
+        return out_ds
+
     def lowess_smooth(self):
         """
         Apply a lowess smoother to all ensemble members
@@ -148,7 +226,7 @@ class Dataset:
 
         return smoothed_ensemble
 
-    def to_csv(self, filename) -> None:
+    def to_csv(self, filename, header=False) -> None:
         """
         Write dataset to csv file
 
@@ -157,7 +235,7 @@ class Dataset:
         :return: None
         """
         df_full_ensemble = pd.DataFrame(data=self.data.astype(np.float16), index=self.time.astype(int))
-        df_full_ensemble.to_csv(filename, sep=',', encoding='utf-8')
+        df_full_ensemble.to_csv(filename, sep=',', encoding='utf-8', header=header)
 
     def plot_heat_map(self, filename, normalize=True) -> None:
         """

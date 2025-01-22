@@ -1,7 +1,24 @@
+#  Global Temperature Merge - a package for merging global temperature datasets.
+#  Copyright \(c\) 2025 John Kennedy
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import gmst_merge.dataset as ds
 
 STANDARD_PARAMETER_SET = {
     'axes.axisbelow': False,
@@ -45,11 +62,16 @@ frames = []
 
 variables = [
     'ur', 'sst', 'lsat', 'interp', 'equal', 'random', 'sst_ensembles_only', 'lsat_ensembles_only',
-    'ur_ensembles_only'
+    'ur_ensembles_only', 'ur_pseudo'
 ]
 
 for hierarchy_variable in variables:
-    df = pd.read_csv(f'Output/full_summary_{hierarchy_variable}.csv')
+    df = ds.Dataset.read_csv_from_file(
+        f'Output/{hierarchy_variable}.csv',
+        hierarchy_variable,
+        header=0
+    )
+    df.anomalize(1850, 1900)
     frames.append(df)
 
 colours = [
@@ -65,7 +87,7 @@ colours = [
     '#5DD0DB'
 ]
 linestyles = [
-    'solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed','dashed'
+    'solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dashed', 'dotted'
 ]
 
 sns.set(font='Franklin Gothic Book', rc=STANDARD_PARAMETER_SET)
@@ -74,15 +96,18 @@ fig, axs = plt.subplots(3, 1, sharex=True)
 fig.set_size_inches(16, 16)
 
 for i, df in enumerate(frames):
-    axs[0].plot(df.year, df["mean preindustrial"], color=colours[i], label=variables[i].upper(),
-                linestyle=linestyles[i])
-    axs[0].plot(df.year, df["mean lowess"], color=colours[i], linestyle=linestyles[i])
+    smoo =df.lowess_smooth()
 
-    axs[1].plot(df.year, df["stdev preindustrial"], color=colours[i], linestyle=linestyles[i])
-    axs[1].plot(df.year, df["stdev lowess"], color=colours[i], linestyle=linestyles[i])
+    axs[0].plot(df.time, df.get_ensemble_mean(), color=colours[i], label=variables[i].upper(), linestyle=linestyles[i])
+    axs[0].plot(df.time, smoo.get_ensemble_mean(), color=colours[i], linestyle=linestyles[i])
 
-    axs[2].plot(df.year, df["q975 preindustrial"] - df["q025 preindustrial"], color=colours[i], linestyle=linestyles[i])
-    axs[2].plot(df.year, df["q975 lowess"] - df["q025 lowess"], color=colours[i], linestyle=linestyles[i])
+    axs[1].plot(df.time, df.get_ensemble_std(), color=colours[i], linestyle=linestyles[i])
+    axs[1].plot(df.time, smoo.get_ensemble_std(), color=colours[i], linestyle=linestyles[i])
+
+    q1, q2 = df.get_quantile_range(95)
+    r1, r2 = smoo.get_quantile_range(95)
+    axs[2].plot(df.time, q2 - q1, color=colours[i], linestyle=linestyles[i])
+    axs[2].plot(df.time, r2 - r1, color=colours[i], linestyle=linestyles[i])
 
 axs[0].legend()
 handles, labels = axs[0].get_legend_handles_labels()
@@ -104,6 +129,8 @@ axs[2].set_title('(c) 95% range of annual and smoothed global mean temperatures'
 plt.savefig('Figures/summary_all.png', bbox_inches='tight')
 plt.savefig('Figures/summary_all.svg', bbox_inches='tight')
 plt.close()
+
+assert False
 
 fig, axs = plt.subplots(3, 1, sharex=True)
 fig.set_size_inches(16, 16)

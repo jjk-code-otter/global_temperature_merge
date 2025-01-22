@@ -8,7 +8,9 @@ import matplotlib.patches as patches
 
 
 class Dataset:
-
+    """
+    Simple data class using numpy arrays for the time axis and a data ensemble.
+    """
     def __init__(self, inarr, name='none'):
         self.data = inarr[:, 1:]
         self.time = inarr[:, 0]
@@ -24,6 +26,22 @@ class Dataset:
 
     @staticmethod
     def join(tail, head, join_start_year, join_end_year):
+        """
+        Join two two Datasets together. The Dataset is made by joining a tail Dataset to a head Dataset. This is
+        done by anomalizing each Dataset to a common period specified by join_start_year and join_end_year and then
+        cutting each Dataset at the midpoint of the common period and splicing them together.
+
+        :param tail: Dataset
+            Tail dataset
+        :param head: Dataset
+            Head dataset
+        :param join_start_year: int
+            First year for the common period used for splicing
+        :param join_end_year: int
+            Last year for the common period used for splicing
+        :return: Dataset
+            The spliced dataset.
+        """
 
         mid_point = int((join_end_year + join_start_year) / 2)
 
@@ -47,6 +65,12 @@ class Dataset:
         return Dataset(out_arr, 'meta_ensemble')
 
     def sample_from_ensemble(self):
+        """
+        Pick a single ensemble member from the Dataset and return it as a Dataset
+
+        :return: Dataset
+            A single ensemble member
+        """
         if self.n_ensemble == 1:
             return copy.deepcopy(self)
         else:
@@ -57,17 +81,39 @@ class Dataset:
             return Dataset(out_arr)
 
     def get_start_year(self):
+        """
+        Get the earliest year in the Dataset
+        :return:
+        """
         return int(np.min(self.time))
 
     def get_end_year(self):
+        """
+            Get the latest year in the Dataset
+            :return:
+        """
         return int(np.max(self.time))
 
     def get_quantile_range(self, percent_range):
+        """
+        Get the quantiles at each time point that correspond to a particular percent range. e.g. the 95% range is
+        between the 2.5 perctile and the 97.5 percentile.
+
+        :param percent_range: float
+            The percentage of the distribution for which the quantiles should be calculated.
+        :return: np.ndarray, np.ndarray
+            The lower and upper quantile bounds
+        """
         fraction = percent_range / 100.
         remainder = (1 - fraction) / 2
         return np.quantile(self.data, remainder, axis=1), np.quantile(self.data, 1 - remainder, axis=1)
 
     def get_ensemble_mean(self):
+        """
+        Calculate the mean of all the ensemble members.
+
+        :return: np.ndarray
+        """
         return np.mean(self.data, axis=1)
 
     def anomalize(self, in_start_year, in_end_year):
@@ -91,7 +137,8 @@ class Dataset:
         """
         Apply a lowess smoother to all ensemble members
 
-        :return:
+        :return: Dataset
+            Dataset containing smoothed ensemble members
         """
         lowess = sm.nonparametric.lowess
         smoothed_ensemble = copy.deepcopy(self)
@@ -112,7 +159,16 @@ class Dataset:
         df_full_ensemble = pd.DataFrame(data=self.data.astype(np.float16), index=self.time.astype(int))
         df_full_ensemble.to_csv(filename, sep=',', encoding='utf-8')
 
-    def plot_heat_map(self, filename, normalize=True):
+    def plot_heat_map(self, filename, normalize=True) -> None:
+        """
+        Plot a heatmap showing the ensemble density as a function of anomaly (x-axis) and time (y-axis)
+
+        :param filename: str
+            Path of filename to write the plot to.
+        :param normalize: bool
+            If set to True each year is normalized separately. If set to False, normalization is done globally
+        :return: None
+        """
 
         y1 = self.get_start_year()
         y2 = self.get_end_year()
@@ -142,11 +198,27 @@ class Dataset:
         plt.close()
 
     def get_exceedance_year(self, threshold):
+        """
+        For each ensemble member, find the first year at or above the specified threshold
+
+        :param threshold: float
+            Temperature threshold to use for the test
+        :return: np.ndarray
+            Array containing the years which first surpassed the threshold
+        """
         logic_board = np.argmax(self.data >= threshold, axis=0)
         passing_year = self.time[logic_board]
         return passing_year
 
     def get_normalised_count_by_year(self, threshold):
+        """
+        For a given threshold get a list of years in which the threshold was first exceeded in different ensemble
+        members along with a count for each year. i.e. 2000 might be the first year in 5 ensemble members. The
+        countrs are normalized by the size of the ensemble.
+
+        :param threshold:
+        :return:
+        """
         passing_year = self.get_exceedance_year(threshold)
         val, count = np.unique(passing_year, return_counts=True)
         count = count[val != 1850]
@@ -155,7 +227,14 @@ class Dataset:
         count = count / self.data.shape[1]
         return val, count
 
-    def plot_passing_thresholds(self, filename):
+    def plot_passing_thresholds(self, filename) -> None:
+        """
+        The gas gauge plot
+
+        :param filename: str
+            Path of the file to which the plot will be written
+        :return: None
+        """
 
         plt.figure(figsize=[9, 9])
         for threshold in np.arange(0.5, 1.6, 0.1):
@@ -215,7 +294,14 @@ class Dataset:
         plt.savefig(filename, bbox_inches='tight')
         plt.close()
 
-    def plot_whole_ensemble(self, filename):
+    def plot_whole_ensemble(self, filename) -> None:
+        """
+        Plot the whole ensemble as individual midnight blue lines. Alpha is set really low, to give it a smoky vibe.
+
+        :param filename: str
+            Path of the file to which the plot will be written
+        :return: None
+        """
         plt.figure(figsize=[16, 9])
         plt.plot(self.time, self.data, color='midnightblue', alpha=0.01)
         plt.gca().set_ylim(-0.5, 1.75)

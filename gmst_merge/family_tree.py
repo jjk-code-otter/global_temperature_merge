@@ -77,7 +77,7 @@ def read_tree(lst, data_dir):
 
 
 def get_all_members(lst):
-    """Get a list of all non-list items in a list of lists"""
+    """Get a list of all non-list items in a list of lists recursively"""
     members = []
     if isinstance(lst, list):
         for i in lst:
@@ -113,7 +113,10 @@ def plumb(ax, depth, all_members, inlist):
 
 
 class FamilyTree:
-
+    """
+    A FamilyTree is essentially a list of lists, which contains Datasets. Functionality is limited to sampling
+    from the tree and plotting the tree. Trees can be created from json files or randomly from a list of datasets.
+    """
     def __init__(self, inlist):
         self.tree = inlist
 
@@ -122,6 +125,19 @@ class FamilyTree:
 
     @staticmethod
     def read_from_json(json_file, data_dir, type):
+        """
+        Read from a json file containing a family tree. Data are read in from the data_dir. type is one of
+        'master', 'head' or 'tail'.
+
+        :param json_file: str
+            Path of the json file
+        :param data_dir: str
+            Path of the data directory
+        :param type: str
+            One of 'master', 'head', or 'tail'
+        :return: FamilyTree
+            FamilyTree containing the datasets specified in the json file
+        """
         if type not in ['heads', 'tails', 'master']:
             raise ValueError(f'Unknown type {type} must be one of head, tail, master')
         with open(json_file, 'r') as f:
@@ -132,6 +148,17 @@ class FamilyTree:
 
     @staticmethod
     def read_from_directory(basic_tree, data_dir):
+        """
+        Given a tree defined as a list of lists with strings giving the dataset names, create a list of lists holding
+        the actual datasets.
+
+        :param basic_tree: list
+            List of lists with strings giving the dataset names
+        :param data_dir: str
+            Path of the data directory from which the data will be read.
+        :return: list
+            List of lists containing the Datasets
+        """
         return read_tree(basic_tree, data_dir)
 
     @staticmethod
@@ -159,11 +186,24 @@ class FamilyTree:
         return FamilyTree(new_list)
 
     def sample_from_tree(self) -> ds.Dataset:
+        """
+        Choose a single dataset from the tree by sampling branches at random.
+
+        :return: Dataset
+            The chosen dataset
+        """
         chosen_dataset = pick_one(self.tree)
         chosen_dataset = chosen_dataset.sample_from_ensemble()
         return chosen_dataset
 
-    def plot_tree(self, filename):
+    def plot_tree(self, filename) -> None:
+        """
+        Plot the FamilyTree
+
+        :param filename: str
+            Path of file to which the plot will be written
+        :return: None
+        """
         # Plot all the interesting hierarchies
         fig, axs = plt.subplots()
         fig.set_size_inches(10, 16)

@@ -16,54 +16,80 @@
 
 import os
 from pathlib import Path
+import json
 
 import gmst_merge.family_tree as ft
 import gmst_merge.metaensemblefactory as mef
 
 
-def build_ensemble_and_plot(tree_filename, tag, n_meta_ensemble):
-    print(tag)
+def load_experiments():
+    experiment_dir = Path("Experiments")
+    experiments = []
+    for file in experiment_dir.glob("*.json"):
+        print(file)
+        with open(file, 'r') as f:
+            experiments.append(json.load(f))
+    print("")
+    return experiments
 
-    if tag in ['sst', 'lsat', 'interp']:
-        master = ft.FamilyTree.read_from_json(tree_filename, DATA_DIR, 'master')
-        master.plot_tree(f'Figures/{tag}_tree.svg')
 
-    tails = ft.FamilyTree.read_from_json(tree_filename, DATA_DIR, 'tails')
-    heads = ft.FamilyTree.read_from_json(tree_filename, DATA_DIR, 'heads')
+def run_experiment(experiment, data_dir):
+    experiment_name = experiment["name"]
 
-    factory = mef.MetaEnsembleFactory(tails, heads)
+    print(f"Running experiment {experiment_name}")
 
-    randomize = (tag == 'random')
+    figure_dir = Path("Figures") / f"{experiment_name}"
+    figure_dir.mkdir(exist_ok=True)
 
-    meta_ensemble = factory.make_meta_ensemble(n_meta_ensemble, randomize=randomize)
-    meta_ensemble.to_csv(f'Output/{tag}.csv')
+    output_dir = Path("Output") / f"{experiment_name}"
+    output_dir.mkdir(exist_ok=True)
 
-    meta_ensemble.anomalize(1850, 1900)
-    smoothed = meta_ensemble.lowess_smooth()
+    for tree in experiment['trees']:
+        print(f"Running tree {tree} in experiment {experiment_name}")
 
-    # Plot various outputs
-    meta_ensemble.plot_whole_ensemble(f'Figures/{tag}_whole_ensemble.png')
-    meta_ensemble.plot_heat_map(f'Figures/{tag}_heat_map.png')
-    meta_ensemble.plot_joy_division_histogram(f'Figures/{tag}_joy_division.png')
+        tree_filename = f'FamilyTrees/hierarchy_{tree}.json'
 
-    smoothed.plot_heat_map(f'Figures/{tag}_smoothed_heat_map.png')
-    smoothed.plot_passing_thresholds(f'Figures/{tag}_passing.png')
-    meta_ensemble.plot_joy_division_histogram(f'Figures/{tag}_smoothed_joy_division.png')
+        tails = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'tails')
+        heads = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'heads')
+        whole = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'master')
 
-    smoothed.plot_time_series_with_exceedances(f'Figures/{tag}_time_series_with_exceedances.png')
+        whole.plot_tree(figure_dir / f'{tree}_treeogram.svg')
+        tails.plot_tree(figure_dir / f'{tree}_tails_treeogram.svg')
+        heads.plot_tree(figure_dir / f'{tree}_heads_treeogram.svg')
 
-    print(tails)
-    print(heads)
-    print(meta_ensemble)
+        # factory = mef.MetaEnsembleFactory(tails, heads)
+        # factory.set_parameters(experiment)
+        #
+        # meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"])
+        # smoothed = meta_ensemble.lowess_smooth()
+        #
+        # # Write out the files
+        # meta_ensemble.to_csv(output_dir / f'{tree}.csv')
+        # meta_ensemble.summary_to_csv(output_dir / f'{tree}_summary.csv')
+        # smoothed.summary_to_csv(output_dir / f'{tree}_smoothed_summary.csv')
+        #
+        # # Plot various outputs
+        # meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_whole_ensemble.png')
+        # meta_ensemble.plot_heat_map(figure_dir / f'{tree}_heat_map.png')
+        # meta_ensemble.plot_joy_division_histogram(figure_dir / f'{tree}_joy_division.png')
+        #
+        # smoothed.plot_heat_map(figure_dir / f'{tree}_smoothed_heat_map.png')
+        # smoothed.plot_passing_thresholds(figure_dir / f'{tree}_passing.png')
+        # smoothed.plot_time_series_with_exceedances(figure_dir / f'{tree}_time_series_with_exceedances.png')
+        # smoothed.plot_joy_division_histogram(figure_dir / f'{tree}_smoothed_joy_division.png')
+
+        print(tails)
+        print(heads)
+        #print(meta_ensemble)
+        print()
+    print()
 
 
 if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
+    data_dir = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    n_meta_ensemble = 10000
-    cover_factor = 1.96  # 1.645
+    experiments = load_experiments()
 
-    for tree in ['ur_pseudo', 'random', 'ur_ensembles_only', 'ur', 'sst', 'lsat', 'interp',
-                 'sst_ensembles_only', 'lsat_ensembles_only', 'equal']:
-        build_ensemble_and_plot(f'FamilyTrees/hierarchy_{tree}.json', tree, n_meta_ensemble)
+    for experiment in experiments:
+        run_experiment(experiment, data_dir)

@@ -1,0 +1,30 @@
+{
+  "master": [
+    "GloSAT",
+    "HadCRUT5",
+    "Berkeley Earth",
+    "GETQUOCS",
+    "Calvert 2024",
+    "Vaccaro",
+    "Kadow_ensemble",
+    "DCENT",
+    "ERA5",
+    "JRA-3Q"
+  ],
+  "tails": [
+    "GloSAT",
+    "HadCRUT5",
+    "Berkeley Earth",
+    "GETQUOCS",
+    "Calvert 2024",
+    "Vaccaro",
+    "Kadow_ensemble",
+    "DCENT"
+  ],
+  "heads": [
+      "HadCRUT5",
+      "Berkeley Earth",
+      "ERA5",
+      "JRA-3Q"
+    ]
+}

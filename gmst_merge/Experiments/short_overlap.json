@@ -1,0 +1,15 @@
+{
+  "name": "short_overlap",
+  "description": "Use short random overlaps",
+  "trees": [
+    "ur_pseudo",
+    "ur_ensembles_only",
+    "ur"
+  ],
+  "latest_join_year": 2001,
+  "overlap_period": 10,
+  "random_overlap": true,
+  "random_tree": false,
+  "default_overlap": [1981, 2010],
+  "ensemble_size": 10000
+}

@@ -1,0 +1,13 @@
+{
+  "name": "random",
+  "description": "Random tree tests",
+  "trees": [
+    "random", "random_pseudo"
+  ],
+  "latest_join_year": 1981,
+  "overlap_period": 30,
+  "random_overlap": true,
+  "random_tree": true,
+  "default_overlap": [1981, 2010],
+  "ensemble_size": 10000
+}

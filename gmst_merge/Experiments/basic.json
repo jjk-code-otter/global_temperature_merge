@@ -1,0 +1,21 @@
+{
+  "name": "basic",
+  "description": "basic tests",
+  "trees": [
+    "ur_pseudo",
+    "ur_ensembles_only",
+    "ur",
+    "sst",
+    "lsat",
+    "interp",
+    "sst_ensembles_only",
+    "lsat_ensembles_only",
+    "equal"
+  ],
+  "latest_join_year": 1981,
+  "overlap_period": 30,
+  "random_overlap": true,
+  "random_tree": false,
+  "default_overlap": [1981, 2010],
+  "ensemble_size": 10000
+}

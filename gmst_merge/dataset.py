@@ -17,7 +17,7 @@
 import copy
 import numpy as np
 import pandas as pd
-from random import randrange
+from random import randrange, choice
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -237,6 +237,22 @@ class Dataset:
         df_full_ensemble = pd.DataFrame(data=self.data.astype(np.float16), index=self.time.astype(int))
         df_full_ensemble.to_csv(filename, sep=',', encoding='utf-8', header=header)
 
+
+    def summary_to_csv(self, filename) -> None:
+        """
+        Write the summary statistics to csv file
+
+        :param filename: str
+            File path
+        :return: None
+        """
+        mn = self.get_ensemble_mean().astype(np.float16)
+        sd = self.get_ensemble_std().astype(np.float16)
+        tm = self.time.astype(np.int)
+        df = pd.DataFrame({'time': tm, 'mean': mn, 'std': sd})
+        df.to_csv(filename, sep=',', encoding='utf-8')
+
+
     def plot_heat_map(self, filename, normalize=True) -> None:
         """
         Plot a heatmap showing the ensemble density as a function of anomaly (x-axis) and time (y-axis)
@@ -269,7 +285,10 @@ class Dataset:
         # hmap[hmap==0] = np.nan
         plt.figure(figsize=[16, 16])
         times = self.time
-        plt.pcolormesh(b, times, hmap, cmap='magma', vmin=0, vmax=max_value, shading='nearest')
+        # cmaps = ['terrain','gist_earth','cubehelix','turbo', 'flag', 'prism', 'twilight_shifted','copper']
+        # chosen = choice(cmaps)
+        # print(chosen)
+        plt.pcolormesh(b, times, hmap, cmap='pink', vmin=0, vmax=max_value, shading='nearest')
         plt.gca().tick_params(axis='both', which='major', labelsize=20)
         plt.gca().invert_yaxis()
         plt.savefig(filename, dpi=300)

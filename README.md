@@ -1,12 +1,11 @@
 Global temperature merge
 ========================
 
-Code for merging estimates of global mean temperature into a single ensemble dataset of global mean temperature.
+Code for merging estimates of global mean temperature into a single ensemble dataset of global 
+mean temperature.
 
 Input datasets are converted into a common format using code in the "translators" directory.
 
-Merging is performed using `combinator.py` based on dataset family trees defined in json files such as `hierarchy_ur.json`.
-
-Some other plots are produced by `compare_all_ensembles.py` and `plot_hierarchy.py`.
-
-The code has been refactored with `make_meta_ensemble.py` now doing most of what the old code used to do.
+Merging is performed using `make_meta_ensemble.py` based on dataset family trees defined in json files 
+such as `FamilyTrees/hierarchy_ur.json` which are organised into experiments 
+such as `Experiments/basic.json`.

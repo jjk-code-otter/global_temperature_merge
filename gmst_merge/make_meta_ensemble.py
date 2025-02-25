@@ -57,30 +57,30 @@ def run_experiment(experiment, data_dir):
         tails.plot_tree(figure_dir / f'{tree}_tails_treeogram.svg')
         heads.plot_tree(figure_dir / f'{tree}_heads_treeogram.svg')
 
-        # factory = mef.MetaEnsembleFactory(tails, heads)
-        # factory.set_parameters(experiment)
-        #
-        # meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"])
-        # smoothed = meta_ensemble.lowess_smooth()
-        #
-        # # Write out the files
-        # meta_ensemble.to_csv(output_dir / f'{tree}.csv')
-        # meta_ensemble.summary_to_csv(output_dir / f'{tree}_summary.csv')
-        # smoothed.summary_to_csv(output_dir / f'{tree}_smoothed_summary.csv')
-        #
-        # # Plot various outputs
-        # meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_whole_ensemble.png')
-        # meta_ensemble.plot_heat_map(figure_dir / f'{tree}_heat_map.png')
-        # meta_ensemble.plot_joy_division_histogram(figure_dir / f'{tree}_joy_division.png')
-        #
-        # smoothed.plot_heat_map(figure_dir / f'{tree}_smoothed_heat_map.png')
-        # smoothed.plot_passing_thresholds(figure_dir / f'{tree}_passing.png')
-        # smoothed.plot_time_series_with_exceedances(figure_dir / f'{tree}_time_series_with_exceedances.png')
-        # smoothed.plot_joy_division_histogram(figure_dir / f'{tree}_smoothed_joy_division.png')
+        factory = mef.MetaEnsembleFactory(tails, heads)
+        factory.set_parameters(experiment)
+
+        meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"])
+        smoothed = meta_ensemble.lowess_smooth()
+
+        # Write out the files
+        meta_ensemble.to_csv(output_dir / f'{tree}.csv')
+        meta_ensemble.summary_to_csv(output_dir / f'{tree}_summary.csv')
+        smoothed.summary_to_csv(output_dir / f'{tree}_smoothed_summary.csv')
+
+        # Plot various outputs
+        meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_whole_ensemble.png')
+        meta_ensemble.plot_heat_map(figure_dir / f'{tree}_heat_map.png')
+        meta_ensemble.plot_joy_division_histogram(figure_dir / f'{tree}_joy_division.png')
+
+        smoothed.plot_heat_map(figure_dir / f'{tree}_smoothed_heat_map.png')
+        smoothed.plot_passing_thresholds(figure_dir / f'{tree}_passing.png')
+        smoothed.plot_time_series_with_exceedances(figure_dir / f'{tree}_time_series_with_exceedances.png')
+        smoothed.plot_joy_division_histogram(figure_dir / f'{tree}_smoothed_joy_division.png')
 
         print(tails)
         print(heads)
-        #print(meta_ensemble)
+
         print()
     print()
 

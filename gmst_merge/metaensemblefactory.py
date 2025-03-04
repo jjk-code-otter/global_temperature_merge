@@ -21,7 +21,7 @@ import gmst_merge.family_tree as ft
 import random
 
 
-def choose_start_and_end_year(y1: int, y2: int, overlap_period=30) -> Tuple[int, int]:
+def choose_start_and_end_year(y1: int, y2: int, rng, overlap_period=30) -> Tuple[int, int]:
     """
     Given the start and end years of a particular dataset, choose a start year for the overlap
 
@@ -32,7 +32,7 @@ def choose_start_and_end_year(y1: int, y2: int, overlap_period=30) -> Tuple[int,
     :return:
         Tuple[int, int]
     """
-    trans_start_year = random.randint(y1, y2)
+    trans_start_year = rng.integers(y1, y2+1)
     trans_end_year = trans_start_year + overlap_period - 1
     return trans_start_year, trans_end_year
 
@@ -61,7 +61,7 @@ class MetaEnsembleFactory:
             if hasattr(self, key):
                 setattr(self, key, parameter_dictionary[key])
 
-    def make_meta_ensemble(self, n_meta_ensemble):
+    def make_meta_ensemble(self, n_meta_ensemble, rng):
         """
         Make a meta ensemble
 
@@ -73,19 +73,19 @@ class MetaEnsembleFactory:
         for i in range(n_meta_ensemble):
             # If random_tree is set to True then generate a random tree for each ensemble member
             if self.random_tree:
-                tails = ft.FamilyTree.make_random_tree(self.tails.tree)
-                heads = ft.FamilyTree.make_random_tree(self.heads.tree)
-                tail = tails.sample_from_tree()
-                head = heads.sample_from_tree()
+                tails = ft.FamilyTree.make_random_tree(self.tails.tree, rng)
+                heads = ft.FamilyTree.make_random_tree(self.heads.tree, rng)
+                tail = tails.sample_from_tree(rng)
+                head = heads.sample_from_tree(rng)
             # else select from the tree
             else:
-                tail = self.tails.sample_from_tree()
-                head = self.heads.sample_from_tree()
+                tail = self.tails.sample_from_tree(rng)
+                head = self.heads.sample_from_tree(rng)
 
             # If random_overlap is set to True then randomly choose the start year
             if self.random_overlap:
                 join_start_year, join_end_year = choose_start_and_end_year(
-                    head.get_start_year(), self.latest_join_year, overlap_period=self.overlap_period
+                    head.get_start_year(), self.latest_join_year, rng, overlap_period=self.overlap_period
                 )
             # else use the class defaults
             else:

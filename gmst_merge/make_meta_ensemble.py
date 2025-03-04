@@ -17,6 +17,7 @@
 import os
 from pathlib import Path
 import json
+import numpy as np
 
 import gmst_merge.family_tree as ft
 import gmst_merge.metaensemblefactory as mef
@@ -33,7 +34,7 @@ def load_experiments():
     return experiments
 
 
-def run_experiment(experiment, data_dir):
+def run_experiment(experiment, data_dir, rng):
     experiment_name = experiment["name"]
 
     print(f"Running experiment {experiment_name}")
@@ -60,7 +61,12 @@ def run_experiment(experiment, data_dir):
         factory = mef.MetaEnsembleFactory(tails, heads)
         factory.set_parameters(experiment)
 
-        meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"])
+        meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"], rng)
+        meta_ensemble = meta_ensemble.thin_ensemble(100)
+        #meta_ensemble = meta_ensemble.cluster_ensemble(100, rng)
+
+        meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_clusters.png', alpha=1)
+
         smoothed = meta_ensemble.lowess_smooth()
 
         # Write out the files
@@ -91,5 +97,7 @@ if __name__ == '__main__':
 
     experiments = load_experiments()
 
+    rng = np.random.default_rng(98267)
+
     for experiment in experiments:
-        run_experiment(experiment, data_dir)
+        run_experiment(experiment, data_dir, rng)

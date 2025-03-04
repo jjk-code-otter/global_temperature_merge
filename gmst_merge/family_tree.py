@@ -15,7 +15,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import copy
-import random
+# import random
 import json
 import numpy as np
 import pandas as pd
@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 import gmst_merge.dataset as ds
 
 
-def pick_one(inarr: list):
+def pick_one(inarr: list, rng):
     """
     Given a list of lists, recursively pick from the entries until you find a non-list item and return that
 
@@ -32,15 +32,20 @@ def pick_one(inarr: list):
         List containing lists and/or strings
     :return:
     """
-    selection = random.choice(inarr)
+    selection = rng.choice(inarr)
+
+    # Sometimes this version of "choice" returns a list and sometimes it converts the list into a numpy ndarray.
+    if isinstance(selection, np.ndarray):
+        selection = selection.tolist()
+
     if isinstance(selection, list):
-        selection = pick_one(selection)
+        selection = pick_one(selection, rng)
     else:
         return selection
     return selection
 
 
-def split_list(in_lst: list, n_splits: int) -> list:
+def split_list(in_lst: list, n_splits: int, rng) -> list:
     """
     Given a list, split it into n_splits random groups
 
@@ -53,11 +58,11 @@ def split_list(in_lst: list, n_splits: int) -> list:
     new_lst = copy.deepcopy(in_lst)
 
     # mix the list up
-    random.shuffle(new_lst)
+    rng.shuffle(new_lst)
 
     # partition list randomly
     number_of_items = len(new_lst)
-    split_points = np.random.choice(number_of_items - 2, n_splits - 1, replace=False) + 1
+    split_points = rng.choice(number_of_items - 2, n_splits - 1, replace=False) + 1
     split_points.sort()
     result = np.split(new_lst, split_points)
 
@@ -130,6 +135,7 @@ class FamilyTree:
     A FamilyTree is essentially a list of lists, which contains Datasets. Functionality is limited to sampling
     from the tree and plotting the tree. Trees can be created from json files or randomly from a list of datasets.
     """
+
     def __init__(self, inlist):
         self.tree = inlist
 
@@ -175,38 +181,42 @@ class FamilyTree:
         return read_tree(basic_tree, data_dir)
 
     @staticmethod
-    def make_random_tree(list_of_datasets):
+    def make_random_tree(list_of_datasets, rng):
         """
         Given a list of datasets, generate a list of lists specifying a hierarchical family tree by repeatedly
         grouping elements.
 
         :param list_of_datasets: List[str]
             List of datasets to be
+        :param rng:
+            numpy random number generator
         :return:
         """
         new_list = copy.deepcopy(list_of_datasets)
 
-        for i in range(4):
+        max_depth = 4
+
+        for i in range(max_depth):
             # choose how many breaks to have
             n_items = len(new_list)
-            breaks = random.randint(0, n_items - 1)
+            breaks = rng.integers(0, n_items)  # The largest number of breaks for n items is n-1
             # bail if no breaks selected
             if breaks == 0:
                 break
             # split list chosen number of times
-            new_list = split_list(new_list, breaks)
+            new_list = split_list(new_list, breaks, rng)
 
         return FamilyTree(new_list)
 
-    def sample_from_tree(self) -> ds.Dataset:
+    def sample_from_tree(self, rng) -> ds.Dataset:
         """
         Choose a single dataset from the tree by sampling branches at random.
 
         :return: Dataset
             The chosen dataset
         """
-        chosen_dataset = pick_one(self.tree)
-        chosen_dataset = chosen_dataset.sample_from_ensemble()
+        chosen_dataset = pick_one(self.tree, rng)
+        chosen_dataset = chosen_dataset.sample_from_ensemble(rng)
         return chosen_dataset
 
     def plot_tree(self, filename) -> None:

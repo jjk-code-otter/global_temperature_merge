@@ -37,3 +37,10 @@ output[:,0] = years[:]
 output[:,1] = anoms[:]
 
 np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, delimiter=",")
+
+output = np.zeros((nyears, 2))
+
+output[:,0] = years[:]
+output[:,1] = anoms[:] * 0.0 + 0.03
+
+np.savetxt(hadcrut5_dir / "uncertainty_time_series.csv", output, delimiter=",")

@@ -122,17 +122,23 @@ def plot_comparisons(filename, to_compare, colours, linestyles):
 
 
 if __name__ == '__main__':
+    # Summary plots
     trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only', 'ur_pseudo']
     to_compare = [['basic', x] for x in trees]
     to_compare.append(['random', 'random'])
+
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid']
+
     plot_comparisons('Figures/summary_all.png', to_compare, colours, linestyles)
 
+    # Sensitivity tests summary plots
     to_compare = [[x, 'ur_pseudo'] for x in ['basic', 'short_overlap', 'fixed_overlap', 'shortest_overlap']]
     to_compare = to_compare + [['random', x] for x in ['random_pseudo']]
     to_compare = to_compare + [['no_hadcrut4', x] for x in ['no_hadcrut4_pseudo']]
     to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
+
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#cccccc', '#386cb0']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
+
     plot_comparisons('Figures/sensitivity_all.png', to_compare, colours, linestyles)

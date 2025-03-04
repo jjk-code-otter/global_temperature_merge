@@ -17,6 +17,8 @@
 import os
 from pathlib import Path
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 import gmst_merge.family_tree as ft
 import gmst_merge.dataset as ds
@@ -26,13 +28,20 @@ if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    ensemble_datasets = ["GloSAT", "HadCRUT5", "GETQUOCS", "Calvert 2024", "Vaccaro", "GISTEMP_ensemble",
-                         "Kadow_ensemble", "NOAA_ensemble", "DCENT"]
+    all_ensemble_datasets = [
+        "GloSAT", "HadCRUT5", "GETQUOCS",
+        "Calvert 2024", "Vaccaro", "GISTEMP_ensemble",
+        "Kadow_ensemble", "NOAA_ensemble", "DCENT"
+    ]
+
     ensemble_datasets = ["HadCRUT5"]
 
-    regular_datasets = ["Berkeley Earth", "NOAA v6", "CMST", "COBE-STEMP3", "ERA5", "JRA-3Q"]
+    regular_datasets = [
+        "Berkeley Earth", "NOAA v6", "CMST", "COBE-STEMP3", "ERA5", "JRA-3Q"
+    ]
 
     all_perturbations = []
+    all_standardised_perturbations = []
     for name in ensemble_datasets:
         df = ds.Dataset.read_csv(name, DATA_DIR)
         df.anomalize(1981, 2010)
@@ -40,22 +49,39 @@ if __name__ == '__main__':
         all_perturbations.append(df)
         plt.plot(df.time, df.data, alpha=0.1)
 
+        df = ds.Dataset.read_csv(name, DATA_DIR)
+        df.anomalize(1981, 2010)
+        df.convert_to_standardised_perturbations()
+        all_standardised_perturbations.append(df)
+
     plt.show()
     plt.close()
 
     all_perturbed_datasets = []
     for name in regular_datasets:
         df = ds.Dataset.read_csv(name, DATA_DIR)
-        df.anomalize(1981,2010)
+        df.anomalize(1981, 2010)
         y1 = df.get_start_year()
         y2 = df.get_end_year()
 
-        matching_perturbations = []
-        for ptb in all_perturbations:
-            py1 = ptb.get_start_year()
-            py2 = ptb.get_end_year()
-            if py1 <= y1 and py2 >= y2:
-                all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
+        # If the uncertainty file exists
+        unc_file = DATA_DIR / name / "uncertainty_time_series.csv"
+        if unc_file.exists():
+            uf = pd.read_csv(unc_file, header=None)
+            uf = uf.to_numpy()
+            matching_perturbations = []
+            for ptb in all_standardised_perturbations:
+                py1 = ptb.get_start_year()
+                py2 = ptb.get_end_year()
+                if py1 <= y1 and py2 >= y2:
+                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
+        else:
+            matching_perturbations = []
+            for ptb in all_perturbations:
+                py1 = ptb.get_start_year()
+                py2 = ptb.get_end_year()
+                if py1 <= y1 and py2 >= y2:
+                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
 
     for df in all_perturbed_datasets:
         plt.plot(df.time, df.data, alpha=0.01, linewidth=2)
@@ -66,4 +92,3 @@ if __name__ == '__main__':
 
     plt.show()
     plt.close()
-

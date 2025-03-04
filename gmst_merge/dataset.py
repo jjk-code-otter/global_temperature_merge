@@ -22,6 +22,9 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+from sklearn.cluster import KMeans
+from scipy.optimize import linear_sum_assignment
+
 
 class Dataset:
     """
@@ -111,7 +114,7 @@ class Dataset:
 
         return Dataset(out_arr, 'meta_ensemble')
 
-    def sample_from_ensemble(self):
+    def sample_from_ensemble(self, rng):
         """
         Pick a single ensemble member from the Dataset and return it as a Dataset
 
@@ -121,7 +124,7 @@ class Dataset:
         if self.n_ensemble == 1:
             return copy.deepcopy(self)
         else:
-            selected_member = randrange(self.n_ensemble - 1)
+            selected_member = rng.integers(self.n_ensemble)
             out_arr = np.zeros((self.n_time, 2))
             out_arr[:, 0] = self.time[:]
             out_arr[:, 1] = self.data[:, selected_member]
@@ -192,7 +195,13 @@ class Dataset:
         ensemble_mean = self.get_ensemble_mean()
         self.data = self.data - np.reshape(ensemble_mean, (self.n_time, 1))
 
-    def make_perturbed_dataset(self, perturbation):
+    def convert_to_standardised_perturbations(self):
+        ensemble_mean = self.get_ensemble_mean()
+        ensemble_std = self.get_ensemble_std()
+        self.data = self.data - np.reshape(ensemble_mean, (self.n_time, 1))
+        self.data = self.data / np.reshape(ensemble_std, (self.n_time, 1))
+
+    def make_perturbed_dataset(self, perturbation, scaling=None):
         if self.n_ensemble != 1:
             raise RuntimeError('Trying to add perturbations to an ensemble dataset')
         y1 = self.get_start_year()
@@ -204,7 +213,14 @@ class Dataset:
 
         out_ds = copy.deepcopy(self)
 
-        out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + perturbation.data[y1 - py1:y2 - py1 + 1, :]
+        if scaling is None:
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + perturbation.data[y1 - py1:y2 - py1 + 1, :]
+        else:
+            n = perturbation.n_ensemble
+            expanded_scaling = np.tile(scaling[:, 1:], (1, n))
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[
+                                                                                           y1 - py1:y2 - py1 + 1, :]
+
         out_ds.n_ensemble = perturbation.n_ensemble
 
         out_ds.name = f'{self.name}_{perturbation.name}'
@@ -226,6 +242,65 @@ class Dataset:
 
         return smoothed_ensemble
 
+    def thin_ensemble(self, n_thinned):
+
+        # calculate long term change
+        early_average = np.mean(self.data[0:51, :], axis=0)
+        late_average = np.mean(self.data[-10:, :], axis=0)
+
+        long_term_change = late_average - early_average
+        order = np.argsort(long_term_change)
+
+        out_data = np.zeros((self.n_time, n_thinned + 1))
+
+        n_per_bin = self.n_ensemble / n_thinned
+
+        out_data[:, 0] = self.time[:]
+        for i in range(n_thinned):
+            index = int((i * n_per_bin) + (n_per_bin / 2))
+            out_data[:, i + 1] = self.data[:, order[index]]
+
+        return Dataset(out_data, name=self.name)
+
+    def cluster_ensemble(self, cluster_size, rng):
+
+        ensemble = self.data
+
+        if round(cluster_size, 0) != cluster_size or cluster_size < 1:
+            raise TypeError("cluster size must be a positive integer")
+        if ensemble.ndim == 1:
+            ensemble = ensemble.reshape((-1, 1))
+        if ensemble.ndim != 2:
+            raise TypeError("ensemble must be a 2 dimensional array")
+        if ensemble.shape[1] % cluster_size != 0:
+            raise TypeError("number of ensemble members must be divisible by cluster size")
+
+        number_of_clusters = int(ensemble.shape[1] / cluster_size)
+        ensemble = np.transpose(ensemble)
+
+        # Initialize clusters using K means algorithm
+        kmeans = KMeans(n_clusters=number_of_clusters, random_state=np.random.randint((1 << 31) - 1)).fit(ensemble)
+        cluster_centers = kmeans.cluster_centers_
+
+        # Iteratively assign equal numbers of ensemble members to each cluster using Hungarian-like
+        # algorithm and recalculate cluster centers
+        for iterations in range(1, 100):
+            distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
+            for i in range(ensemble.shape[0]):
+                for j in range(number_of_clusters):
+                    distance_matrix[i, j] = np.linalg.norm(ensemble[i] - cluster_centers[j])
+            row_index, column_index = linear_sum_assignment(np.kron(np.ones((1, int(cluster_size))), distance_matrix))
+            assigned_cluster = column_index % number_of_clusters
+            for i in range(number_of_clusters):
+                cluster_centers[i] = ensemble[assigned_cluster == i].mean(axis=0)
+
+        out_ensemble = copy.deepcopy(self)
+        out_ensemble.data = np.transpose(cluster_centers)
+        out_ensemble.n_time = len(out_ensemble.time)
+        out_ensemble.n_ensemble = out_ensemble.data.shape[1]
+
+        return out_ensemble
+
     def to_csv(self, filename, header=False) -> None:
         """
         Write dataset to csv file
@@ -236,7 +311,6 @@ class Dataset:
         """
         df_full_ensemble = pd.DataFrame(data=self.data.astype(np.float16), index=self.time.astype(int))
         df_full_ensemble.to_csv(filename, sep=',', encoding='utf-8', header=header)
-
 
     def summary_to_csv(self, filename) -> None:
         """
@@ -251,7 +325,6 @@ class Dataset:
         tm = self.time.astype(np.int)
         df = pd.DataFrame({'time': tm, 'mean': mn, 'std': sd})
         df.to_csv(filename, sep=',', encoding='utf-8')
-
 
     def plot_heat_map(self, filename, normalize=True) -> None:
         """
@@ -391,7 +464,7 @@ class Dataset:
         plt.savefig(filename, bbox_inches='tight')
         plt.close()
 
-    def plot_whole_ensemble(self, filename) -> None:
+    def plot_whole_ensemble(self, filename, alpha=0.01) -> None:
         """
         Plot the whole ensemble as individual midnight blue lines. Alpha is set really low, to give it a smoky vibe.
 
@@ -400,7 +473,7 @@ class Dataset:
         :return: None
         """
         plt.figure(figsize=[16, 9])
-        plt.plot(self.time, self.data, color='midnightblue', alpha=0.01)
+        plt.plot(self.time, self.data, color='midnightblue', alpha=alpha)
         plt.gca().set_ylim(-0.5, 1.75)
         plt.savefig(filename, dpi=300)
         plt.close()

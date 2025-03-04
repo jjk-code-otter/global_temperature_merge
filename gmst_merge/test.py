@@ -16,17 +16,17 @@
 
 import random
 
-from combinator import split_list, make_random_tree
-import matplotlib.pyplot as plt
+from family_tree import split_list, pick_one
 import numpy as np
 
 
 
 lst = ['a', 'b' ,'c','d','e','f','g','h','i','j','k']
 
-
-print(split_list(lst, 4))
-
+rng = np.random.default_rng(267)
 
 for i in range(100):
-    print(make_random_tree(lst))
+    new_list = split_list(lst, 4, rng)
+    print(new_list)
+    one = pick_one(new_list, rng)
+    print(one)

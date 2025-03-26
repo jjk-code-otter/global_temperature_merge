@@ -6,6 +6,7 @@
     "ur_ensembles_only",
     "ur",
     "sst",
+    "sst_pseudo",
     "lsat",
     "interp",
     "sst_ensembles_only",
@@ -17,5 +18,6 @@
   "random_overlap": true,
   "random_tree": false,
   "default_overlap": [1981, 2010],
-  "ensemble_size": 10000
+  "ensemble_size": 10000,
+  "thinning": null
 }

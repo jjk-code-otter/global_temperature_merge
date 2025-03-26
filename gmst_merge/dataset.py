@@ -262,7 +262,7 @@ class Dataset:
 
         return Dataset(out_data, name=self.name)
 
-    def cluster_ensemble(self, cluster_size, rng):
+    def cluster_ensemble(self, cluster_size, rng, centres=False):
 
         ensemble = self.data
 
@@ -294,10 +294,21 @@ class Dataset:
             for i in range(number_of_clusters):
                 cluster_centers[i] = ensemble[assigned_cluster == i].mean(axis=0)
 
-        out_ensemble = copy.deepcopy(self)
-        out_ensemble.data = np.transpose(cluster_centers)
-        out_ensemble.n_time = len(out_ensemble.time)
-        out_ensemble.n_ensemble = out_ensemble.data.shape[1]
+        # Use cluster centres
+        if centres:
+            out_ensemble = copy.deepcopy(self)
+            out_ensemble.data = np.transpose(cluster_centers)
+            out_ensemble.n_time = len(out_ensemble.time)
+            out_ensemble.n_ensemble = out_ensemble.data.shape[1]
+        else:
+            out_ensemble = copy.deepcopy(self)
+            out_ensemble.data = np.zeros((out_ensemble.n_time, number_of_clusters))
+            for i in range(number_of_clusters):
+                selection = ensemble[assigned_cluster == i]
+                chosen_member = rng.integers(cluster_size)
+                out_ensemble.data[:, i] = selection[chosen_member, :]
+            out_ensemble.n_time = len(out_ensemble.time)
+            out_ensemble.n_ensemble = out_ensemble.data.shape[1]
 
         return out_ensemble
 

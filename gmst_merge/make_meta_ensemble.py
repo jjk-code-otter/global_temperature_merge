@@ -62,8 +62,12 @@ def run_experiment(experiment, data_dir, rng):
         factory.set_parameters(experiment)
 
         meta_ensemble = factory.make_meta_ensemble(experiment["ensemble_size"], rng)
-        meta_ensemble = meta_ensemble.thin_ensemble(100)
-        #meta_ensemble = meta_ensemble.cluster_ensemble(100, rng)
+
+        if experiment["thinning"] is not None:
+            if experiment["thinning"] == 'long_term_change':
+                meta_ensemble = meta_ensemble.thin_ensemble(100)
+            if experiment["thinning"] == 'balanced k-means':
+                meta_ensemble = meta_ensemble.cluster_ensemble(100, rng)
 
         meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_clusters.png', alpha=1)
 

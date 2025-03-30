@@ -61,13 +61,19 @@ class MetaEnsembleFactory:
         for key in parameter_dictionary:
             if hasattr(self, key):
                 setattr(self, key, parameter_dictionary[key])
+            else:
+                print(f"Tried to set {key} but {key} is not a class attribute. These are defined in __init__")
 
-    def make_meta_ensemble(self, n_meta_ensemble, rng):
+    def make_meta_ensemble(self, n_meta_ensemble: int, rng) -> ds.Dataset:
         """
         Make a meta ensemble
 
-        :param n_meta_ensemble:
-        :return:
+        :param n_meta_ensemble: int
+            Number of ensemble members to generate
+        :param rng: Random Number Generator
+            Numpy random number generator
+        :return: ds.Dataset
+            Ensemble dataset
         """
         meta_ensemble = np.zeros((2024 - 1850 + 1, n_meta_ensemble + 1))
 
@@ -110,6 +116,6 @@ class MetaEnsembleFactory:
             if self.thinning == 'cluster_ensemble':
                 output_dataset = output_dataset.cluster_ensemble(100, rng)
             elif self.thinning == 'thin_ensemble':
-                output_dataset = output_dataset.thin_ensemble(100, rng)  # getattr(output_dataset, self.thinning)(100, rng)
+                output_dataset = output_dataset.thin_ensemble(100, rng)
 
         return output_dataset

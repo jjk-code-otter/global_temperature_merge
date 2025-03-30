@@ -25,6 +25,9 @@ import gmst_merge.dataset as ds
 import gmst_merge.metaensemblefactory as mef
 
 if __name__ == '__main__':
+    """
+    This generates the pseudo ensembles
+    """
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 

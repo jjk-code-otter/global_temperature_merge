@@ -32,7 +32,7 @@ def choose_start_and_end_year(y1: int, y2: int, rng, overlap_period=30) -> Tuple
     :return:
         Tuple[int, int]
     """
-    trans_start_year = rng.integers(y1, y2+1)
+    trans_start_year = rng.integers(y1, y2 + 1)
     trans_end_year = trans_start_year + overlap_period - 1
     return trans_start_year, trans_end_year
 
@@ -47,6 +47,7 @@ class MetaEnsembleFactory:
         self.random_overlap = True
         self.random_tree = False
         self.default_overlap = [1981, 2010]
+        self.thinning = None
 
     def set_parameters(self, parameter_dictionary) -> None:
         """
@@ -99,4 +100,16 @@ class MetaEnsembleFactory:
             if i == 0:
                 meta_ensemble[:, 0] = merged.time[:]
 
-        return ds.Dataset(meta_ensemble, 'meta_ensemble')
+        output_dataset = ds.Dataset(meta_ensemble, 'meta_ensemble')
+
+        # If a thinning method is specified then call that method on the ensemble
+        print(f"Thinning method: {self.thinning}")
+        if self.thinning is None:
+            return output_dataset
+        else:
+            if self.thinning == 'cluster_ensemble':
+                output_dataset = output_dataset.cluster_ensemble(100, rng)
+            elif self.thinning == 'thin_ensemble':
+                output_dataset = output_dataset.thin_ensemble(100, rng)  # getattr(output_dataset, self.thinning)(100, rng)
+
+        return output_dataset

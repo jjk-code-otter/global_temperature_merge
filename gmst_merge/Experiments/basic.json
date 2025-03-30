@@ -11,7 +11,9 @@
     "interp",
     "sst_ensembles_only",
     "lsat_ensembles_only",
-    "equal"
+    "equal",
+    "ur_pseudo_late_2024_updates",
+    "sst_pseudo_reanalysis_switch"
   ],
   "latest_join_year": 1981,
   "overlap_period": 30,

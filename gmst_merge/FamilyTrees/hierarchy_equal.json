@@ -12,7 +12,7 @@
     "NOAA_ensemble",
     "CMST",
     "COBE-STEMP3",
-    "DCENT",
+    "DCENT_MLE",
     "ERA5",
     "JRA-3Q"
   ],
@@ -28,7 +28,7 @@
     "NOAA_ensemble",
     "CMST",
     "COBE-STEMP3",
-    "DCENT"
+    "DCENT_MLE"
   ],
   "heads": [
       "HadCRUT5",

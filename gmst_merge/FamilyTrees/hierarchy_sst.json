@@ -1,6 +1,6 @@
 {
   "master": [
-    "DCENT",
+    "DCENT_MLE",
     "COBE-STEMP3",
     "GloSAT",
     ["ERA5", "JRA-3Q"],
@@ -16,7 +16,7 @@
     ]
   ],
   "tails": [
-    "DCENT",
+    "DCENT_MLE",
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
       ["GETQUOCS", "Vaccaro"],

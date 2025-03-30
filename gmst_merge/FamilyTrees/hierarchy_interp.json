@@ -1,22 +1,20 @@
 {
   "master": [
-    "DCENT",
     ["Kadow_ensemble", "NOAA v6"],
     ["NOAA_ensemble", "CMST","COBE-STEMP3"],
     ["ERA5", "JRA-3Q"],
     [
       ["GloSAT", "HadCRUT5","Berkeley Earth", "GETQUOCS"],
-      ["Calvert 2024", "Vaccaro", "GISTEMP_ensemble"]
+      ["Calvert 2024", "Vaccaro", "GISTEMP_ensemble", "DCENT_MLE"]
     ]
   ],
   "tails": [
     [
       ["GloSAT", "HadCRUT5","Berkeley Earth", "GETQUOCS"],
-      ["Calvert 2024", "Vaccaro"]
+      ["Calvert 2024", "Vaccaro", "DCENT_MLE"]
     ],
     ["Kadow_ensemble", "NOAA v6"],
-    ["NOAA_ensemble", "CMST","COBE-STEMP3"],
-    "DCENT"
+    ["NOAA_ensemble", "CMST","COBE-STEMP3"]
   ],
   "heads": [
     [

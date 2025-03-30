@@ -10,5 +10,5 @@
   "random_tree": false,
   "default_overlap": [1981, 2010],
   "ensemble_size": 10000,
-  "thinning": "balanced k-means"
+  "thinning": null
 }

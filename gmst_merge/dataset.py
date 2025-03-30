@@ -242,7 +242,7 @@ class Dataset:
 
         return smoothed_ensemble
 
-    def thin_ensemble(self, n_thinned):
+    def thin_ensemble(self, n_thinned, rng):
 
         # calculate long term change
         early_average = np.mean(self.data[0:51, :], axis=0)
@@ -262,20 +262,20 @@ class Dataset:
 
         return Dataset(out_data, name=self.name)
 
-    def cluster_ensemble(self, cluster_size, rng, centres=False):
+    def cluster_ensemble(self, number_of_clusters, rng, centres=False):
 
         ensemble = self.data
 
-        if round(cluster_size, 0) != cluster_size or cluster_size < 1:
+        if round(number_of_clusters, 0) != number_of_clusters or number_of_clusters < 1:
             raise TypeError("cluster size must be a positive integer")
         if ensemble.ndim == 1:
             ensemble = ensemble.reshape((-1, 1))
         if ensemble.ndim != 2:
             raise TypeError("ensemble must be a 2 dimensional array")
-        if ensemble.shape[1] % cluster_size != 0:
+        if ensemble.shape[1] % number_of_clusters != 0:
             raise TypeError("number of ensemble members must be divisible by cluster size")
 
-        number_of_clusters = int(ensemble.shape[1] / cluster_size)
+        cluster_size = int(ensemble.shape[1] / number_of_clusters)
         ensemble = np.transpose(ensemble)
 
         # Initialize clusters using K means algorithm
@@ -284,8 +284,9 @@ class Dataset:
 
         # Iteratively assign equal numbers of ensemble members to each cluster using Hungarian-like
         # algorithm and recalculate cluster centers
+        distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
         for iterations in range(1, 100):
-            distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
+            print(f'IteR: {iterations}')
             for i in range(ensemble.shape[0]):
                 for j in range(number_of_clusters):
                     distance_matrix[i, j] = np.linalg.norm(ensemble[i] - cluster_centers[j])

@@ -353,6 +353,7 @@ class Dataset:
         # Iteratively assign equal numbers of ensemble members to each cluster using Hungarian-like
         # algorithm and recalculate cluster centers
         distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
+        old_assigned_cluster = np.zeros((ensemble.shape[0]))
         for iterations in range(1, 100):
             for i in range(ensemble.shape[0]):
                 for j in range(number_of_clusters):
@@ -361,6 +362,15 @@ class Dataset:
             assigned_cluster = column_index % number_of_clusters
             for i in range(number_of_clusters):
                 cluster_centers[i] = ensemble[assigned_cluster == i].mean(axis=0)
+
+            # Have we converged yet?
+            if (assigned_cluster == old_assigned_cluster).all():
+                print(iterations, np.mean((assigned_cluster-old_assigned_cluster)**2))
+                break
+            else:
+                print(iterations, np.mean((assigned_cluster-old_assigned_cluster)**2))
+                old_assigned_cluster = assigned_cluster
+
 
         # Use cluster centres
         if centres:

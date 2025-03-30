@@ -126,11 +126,25 @@ if __name__ == '__main__':
     trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only', 'ur_pseudo']
     to_compare = [['basic', x] for x in trees]
     to_compare.append(['random', 'random'])
+    to_compare.append(['final', 'sst_pseudo'])
+    to_compare.append(['final_no_cluster', 'sst_pseudo'])
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0']
-    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid']
 
     plot_comparisons('Figures/summary_all.png', to_compare, colours, linestyles)
+
+    # Compare clustered and unclustered
+    to_compare = []
+    to_compare.append(['final_small_ensemble', 'sst_pseudo'])
+    to_compare.append(['final', 'sst_pseudo'])
+    to_compare.append(['final_thinned', 'sst_pseudo'])
+    to_compare.append(['final_no_cluster', 'sst_pseudo'])
+
+    colours = ['#fdc086', '#beaed4','#7fc97f', '#555555']
+    linestyles = ['solid', 'solid', 'solid', 'solid']
+
+    plot_comparisons('Figures/thinning_all.png', to_compare, colours, linestyles)
 
     # Sensitivity tests summary plots
     to_compare = [[x, 'ur_pseudo'] for x in ['basic', 'short_overlap', 'fixed_overlap', 'shortest_overlap']]

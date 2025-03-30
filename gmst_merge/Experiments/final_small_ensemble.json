@@ -1,5 +1,5 @@
 {
-  "name": "final_no_cluster",
+  "name": "final_small_ensemble",
   "description": "production run",
   "trees": [
     "sst_pseudo"
@@ -9,6 +9,6 @@
   "random_overlap": false,
   "random_tree": false,
   "default_overlap": [1981, 2010],
-  "ensemble_size": 10000,
+  "ensemble_size": 100,
   "thinning": null
 }

@@ -31,12 +31,6 @@ if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    all_ensemble_datasets = [
-        "GloSAT", "HadCRUT5",
-        "Calvert 2024", "GISTEMP_ensemble",
-        "Kadow_ensemble", "NOAA_ensemble", "DCENT"
-    ]
-
     ensemble_datasets = ["HadCRUT5", "NOAA_ensemble"]
 
     regular_datasets = [
@@ -59,15 +53,11 @@ if __name__ == '__main__':
         df.anomalize(1981, 2010)
         df.convert_to_perturbations()
         all_perturbations[name] = df
-        plt.plot(df.time, df.data, alpha=0.1)
 
         df = ds.Dataset.read_csv(name, DATA_DIR)
         df.anomalize(1981, 2010)
         df.convert_to_standardised_perturbations()
         all_standardised_perturbations[name] = df
-
-    plt.show()
-    plt.close()
 
     all_perturbed_datasets = []
     for name in regular_datasets:
@@ -121,11 +111,7 @@ if __name__ == '__main__':
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
 
     for df in all_perturbed_datasets:
-        plt.plot(df.time, df.data, alpha=0.01, linewidth=2)
         directory = DATA_DIR / df.name
         directory.mkdir(exist_ok=True)
         filename = directory / 'ensemble_time_series.csv'
         df.to_csv(filename)
-
-    plt.show()
-    plt.close()

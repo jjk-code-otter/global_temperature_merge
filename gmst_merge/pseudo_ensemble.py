@@ -32,58 +32,92 @@ if __name__ == '__main__':
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
     all_ensemble_datasets = [
-        "GloSAT", "HadCRUT5", "GETQUOCS",
-        "Calvert 2024", "Vaccaro", "GISTEMP_ensemble",
+        "GloSAT", "HadCRUT5",
+        "Calvert 2024", "GISTEMP_ensemble",
         "Kadow_ensemble", "NOAA_ensemble", "DCENT"
     ]
 
-    ensemble_datasets = ["HadCRUT5"]
+    ensemble_datasets = ["HadCRUT5", "NOAA_ensemble"]
 
     regular_datasets = [
         "Berkeley Earth", "NOAA v6", "CMST", "COBE-STEMP3", "ERA5", "JRA-3Q"
     ]
 
-    all_perturbations = []
-    all_standardised_perturbations = []
+    matched_ensembles = {
+        "Berkeley Earth": ["HadCRUT5"],
+        "NOAA v6": ["NOAA_ensemble", "HadCRUT5"],
+        "CMST": ["NOAA_ensemble"],
+        "COBE-STEMP3": ["HadCRUT5"],
+        "ERA5": ["HadCRUT5"],
+        "JRA-3Q": ["HadCRUT5"]
+    }
+
+    all_perturbations = {}
+    all_standardised_perturbations = {}
     for name in ensemble_datasets:
         df = ds.Dataset.read_csv(name, DATA_DIR)
         df.anomalize(1981, 2010)
         df.convert_to_perturbations()
-        all_perturbations.append(df)
+        all_perturbations[name] = df
         plt.plot(df.time, df.data, alpha=0.1)
 
         df = ds.Dataset.read_csv(name, DATA_DIR)
         df.anomalize(1981, 2010)
         df.convert_to_standardised_perturbations()
-        all_standardised_perturbations.append(df)
+        all_standardised_perturbations[name] = df
 
     plt.show()
     plt.close()
 
     all_perturbed_datasets = []
     for name in regular_datasets:
-        df = ds.Dataset.read_csv(name, DATA_DIR)
-        df.anomalize(1981, 2010)
-        y1 = df.get_start_year()
-        y2 = df.get_end_year()
+        print(f"Processing {name}")
 
         # If the uncertainty file exists
         unc_file = DATA_DIR / name / "uncertainty_time_series.csv"
         if unc_file.exists():
-            uf = pd.read_csv(unc_file, header=None)
-            uf = uf.to_numpy()
-            matching_perturbations = []
-            for ptb in all_standardised_perturbations:
+            print(f"Using scaled perturbations from {matched_ensembles[name]}")
+
+            ptbs = matched_ensembles[name]
+            for ptb2 in ptbs:
+
+                ptb = all_standardised_perturbations[ptb2]
+
+                df = ds.Dataset.read_csv(name, DATA_DIR)
+                df.anomalize(1981, 2010)
+                y1 = df.get_start_year()
+                y2 = df.get_end_year()
+
+                uf = pd.read_csv(unc_file, header=None)
+                uf = uf.to_numpy()
+
                 py1 = ptb.get_start_year()
                 py2 = ptb.get_end_year()
                 if py1 <= y1 and py2 >= y2:
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
+                else:
+                    print("Cannot do that, sorry")
+
         else:
-            matching_perturbations = []
-            for ptb in all_perturbations:
+            print(f"Using non-scaled perturbations from {matched_ensembles[name]}")
+
+            ptbs = matched_ensembles[name]
+            for ptb2 in ptbs:
+
+                ptb = all_perturbations[ptb2]
+
+                df = ds.Dataset.read_csv(name, DATA_DIR)
+                df.anomalize(1981, 2010)
+                y1 = df.get_start_year()
+                y2 = df.get_end_year()
+
                 py1 = ptb.get_start_year()
                 py2 = ptb.get_end_year()
                 if py1 <= y1 and py2 >= y2:
+                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
+                else:
+                    df = df.select_year_range(py1, py2)
+
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
 
     for df in all_perturbed_datasets:

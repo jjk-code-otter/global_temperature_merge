@@ -130,17 +130,21 @@ class Dataset:
             out_arr[:, 1] = self.data[:, selected_member]
             return Dataset(out_arr, name=f'{self.name} {selected_member:04d}')
 
-    def get_start_year(self):
+    def get_start_year(self) -> int:
         """
         Get the earliest year in the Dataset
-        :return:
+
+        :return: int
+            First year in the dataset
         """
         return int(np.min(self.time))
 
-    def get_end_year(self):
+    def get_end_year(self) -> int:
         """
             Get the latest year in the Dataset
-            :return:
+
+            :return: int
+                Last year in the dataset
         """
         return int(np.max(self.time))
 
@@ -192,16 +196,35 @@ class Dataset:
         self.data = self.data - np.mean(self.data[mask, :], axis=0)
 
     def convert_to_perturbations(self):
+        """
+        Turn the ensemble into a set of perturbations. Perturbations are differences from the ensemble mean.
+
+        :return:
+        """
         ensemble_mean = self.get_ensemble_mean()
         self.data = self.data - np.reshape(ensemble_mean, (self.n_time, 1))
 
     def convert_to_standardised_perturbations(self):
+        """
+        Turn the ensemble into a set of standardised perturbations. Standardised perturbations are differences
+        from the ensemble mean divided by the ensemble standard deviations.
+
+        :return:
+        """
         ensemble_mean = self.get_ensemble_mean()
         ensemble_std = self.get_ensemble_std()
         self.data = self.data - np.reshape(ensemble_mean, (self.n_time, 1))
         self.data = self.data / np.reshape(ensemble_std, (self.n_time, 1))
 
     def make_perturbed_dataset(self, perturbation, scaling=None):
+        """
+        Given a set of perturbations, create an ensemble by adding those perturbations to the best estimate
+        in the dataset.
+
+        :param perturbation:
+        :param scaling:
+        :return:
+        """
         if self.n_ensemble != 1:
             raise RuntimeError('Trying to add perturbations to an ensemble dataset')
         y1 = self.get_start_year()
@@ -218,8 +241,7 @@ class Dataset:
         else:
             n = perturbation.n_ensemble
             expanded_scaling = np.tile(scaling[:, 1:], (1, n))
-            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[
-                                                                                           y1 - py1:y2 - py1 + 1, :]
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[y1 - py1:y2 - py1 + 1, :]
 
         out_ds.n_ensemble = perturbation.n_ensemble
 
@@ -243,6 +265,17 @@ class Dataset:
         return smoothed_ensemble
 
     def thin_ensemble(self, n_thinned, rng):
+        """
+        Rank ensemble members according to the estimated long-term change and then, split into n_thinned equal
+        sized groups and pick the centre member from each.
+
+        :param n_thinned: int
+            number of ensemble members to return
+        :param rng: random number generator
+            Numpy random number generator
+        :return:
+            Thinned ensemble
+        """
 
         # calculate long term change
         early_average = np.mean(self.data[0:51, :], axis=0)
@@ -263,6 +296,18 @@ class Dataset:
         return Dataset(out_data, name=self.name)
 
     def cluster_ensemble(self, number_of_clusters, rng, centres=False):
+        """
+        Use balanced k-means to cluster the ensemble in a chosen number of clusters
+
+        :param number_of_clusters: int
+            Number of clusters to be returned, must divide exactly into the current ensemble size
+        :param rng: random number generator
+            Numpy random number generator
+        :param centres: bool
+            Set to True to return cluster centres or False (default) to randomly sample once from each sample
+        :return:
+            clustered ensemble
+        """
 
         ensemble = self.data
 
@@ -301,6 +346,7 @@ class Dataset:
             out_ensemble.data = np.transpose(cluster_centers)
             out_ensemble.n_time = len(out_ensemble.time)
             out_ensemble.n_ensemble = out_ensemble.data.shape[1]
+        # Do not use cluster centres (default)
         else:
             out_ensemble = copy.deepcopy(self)
             out_ensemble.data = np.zeros((out_ensemble.n_time, number_of_clusters))
@@ -490,7 +536,14 @@ class Dataset:
         plt.savefig(filename, dpi=300)
         plt.close()
 
-    def plot_joy_division_histogram(self, filename):
+    def plot_joy_division_histogram(self, filename) -> None:
+        """
+        Plot the whole ensemble as a set of stacked histograms, one per five years
+
+        :param filename: str
+            Filename for output file
+        :return:
+        """
         # Calculate some histograms
         plt.figure(figsize=[16, 16])
         for y in range(1850, 2025, 5):

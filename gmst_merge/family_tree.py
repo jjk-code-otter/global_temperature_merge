@@ -73,7 +73,7 @@ def split_list(in_lst: list, n_splits: int, rng) -> list:
 
 
 def label_by_depth(lst, lbl=0):
-    """Label each non-list in a list of lists by its depth"""
+    """Recursively label each non-list in a list of lists by its depth"""
     gst = copy.deepcopy(lst)
     for i, elem in enumerate(gst):
         if isinstance(elem, list):
@@ -84,7 +84,7 @@ def label_by_depth(lst, lbl=0):
 
 
 def read_tree(lst, data_dir):
-    """Label each non-list in a list of lists by its depth"""
+    """Recursively read datasets from list of lists"""
     gst = copy.deepcopy(lst)
     for i, elem in enumerate(gst):
         if isinstance(elem, list):

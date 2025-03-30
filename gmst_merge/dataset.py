@@ -148,6 +148,28 @@ class Dataset:
         """
         return int(np.max(self.time))
 
+    def select_year_range(self, y1, y2):
+        """
+        Select only years between y1 and y2
+
+        :param y1: int
+            start year for shortened dataset
+        :param y2: int
+            end yer for shortened dataset
+        :return: Dataset
+        """
+        output = copy.deepcopy(self)
+
+        # Subset the time and data arrays
+        selection = ((self.time >= y1) & (self.time <= y2))
+        output.data = self.data[selection, :]
+        output.time = self.time[selection]
+        # Recalculate the dimensions
+        output.n_time = len(output.time)
+        output.n_ensemble = output.data.shape[1]
+
+        return output
+
     def get_quantile_range(self, percent_range):
         """
         Get the quantiles at each time point that correspond to a particular percent range. e.g. the 95% range is
@@ -241,7 +263,8 @@ class Dataset:
         else:
             n = perturbation.n_ensemble
             expanded_scaling = np.tile(scaling[:, 1:], (1, n))
-            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[y1 - py1:y2 - py1 + 1, :]
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[
+                                                                                           y1 - py1:y2 - py1 + 1, :]
 
         out_ds.n_ensemble = perturbation.n_ensemble
 

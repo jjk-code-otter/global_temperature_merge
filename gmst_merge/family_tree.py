@@ -32,7 +32,9 @@ def pick_one(inarr: list, rng):
         List containing lists and/or strings
     :return:
     """
-    selection = rng.choice(inarr)
+    n_choices = len(inarr)
+    chosen_one = rng.integers(n_choices)
+    selection = inarr[chosen_one]
 
     # Sometimes this version of "choice" returns a list and sometimes it converts the list into a numpy ndarray.
     if isinstance(selection, np.ndarray):
@@ -42,6 +44,7 @@ def pick_one(inarr: list, rng):
         selection = pick_one(selection, rng)
     else:
         return selection
+
     return selection
 
 
@@ -236,14 +239,20 @@ class FamilyTree:
 
         axs.set_ylim(-0.5, len(all_members))
 
+        max_depth = np.max(all_member_depths)
+
         # Draw all members
         for i, member in enumerate(all_members):
-            axs.text(-0.1, i, member, ha='right', va='center', fontsize=20)
-            axs.plot([0, 4 - all_member_depths[i]], [i, i], linewidth=3, color='black')
+            render_member = member
+            render_member = render_member.replace('_HadCRUT5', ' (HadCRUT5)')
+            render_member = render_member.replace('_NOAA_ensemble', ' (NOAA ensemble)')
 
-        final_midy = plumb(axs, 3, all_members, self.tree)
+            axs.text(-0.1, i, render_member, ha='right', va='center', fontsize=20)
+            axs.plot([0, 1 + max_depth - all_member_depths[i]], [i, i], linewidth=3, color='black')
 
-        axs.plot([3, 4], [final_midy, final_midy], linewidth=3, color='black')
+        final_midy = plumb(axs, max_depth, all_members, self.tree)
+
+        axs.plot([max_depth-1, max_depth], [final_midy, final_midy], linewidth=3, color='black')
         axs.axis('off')
         plt.subplots_adjust(wspace=0.6, hspace=0.6)
         plt.savefig(filename, bbox_inches='tight', dpi=300)

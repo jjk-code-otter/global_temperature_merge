@@ -10,16 +10,13 @@
     ],
     [
       "Berkeley Earth",
-      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"]
-
+      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"]
     ]
   ],
   "tails": [
     "DCENT_MLE",
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"],
       "Berkeley Earth"
     ],
     [

@@ -331,7 +331,6 @@ class Dataset:
         # algorithm and recalculate cluster centers
         distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
         for iterations in range(1, 100):
-            print(f'IteR: {iterations}')
             for i in range(ensemble.shape[0]):
                 for j in range(number_of_clusters):
                     distance_matrix[i, j] = np.linalg.norm(ensemble[i] - cluster_centers[j])

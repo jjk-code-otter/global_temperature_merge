@@ -7,7 +7,6 @@
     ["ERA5", "JRA-3Q"],
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"], 
       "GloSAT"
     ]
   ],
@@ -16,7 +15,6 @@
     "CMST",
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"],
       "GloSAT"
     ],
     "Berkeley Earth",

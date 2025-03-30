@@ -5,7 +5,6 @@
     ["ERA5", "JRA-3Q"],
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"], 
       "GloSAT"
     ]
   ],
@@ -13,7 +12,6 @@
     "DCENT_MLE",
     [
       ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
-      ["GETQUOCS", "Vaccaro"],
       "GloSAT"
     ],
     ["NOAA_ensemble"]

@@ -2,7 +2,8 @@
   "name": "final_thinned",
   "description": "production run",
   "trees": [
-    "sst_pseudo"
+    "sst_pseudo",
+    "lsat_pseudo"
   ],
   "latest_join_year": 1981,
   "overlap_period": 30,

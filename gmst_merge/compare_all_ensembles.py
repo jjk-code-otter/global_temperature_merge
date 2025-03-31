@@ -89,20 +89,6 @@ def plot_comparisons(filename, to_compare, colours, linestyles):
         i += 1
 
     axs[0].legend(labelcolor='linecolor', ncol=2, frameon=False, prop={'size': 20})
-    # handles, labels = axs[0].get_legend_handles_labels()
-    # # specify order of items in legend
-    # order = [x for x in range(len(handles))]
-    # # add legend to plot
-    # ncol = 1
-    # if len(to_compare) > 4:
-    #     ncol = 2
-    # leg = axs[0].legend([handles[idx] for idx in order], [labels[idx] for idx in order],
-    #                     frameon=False, prop={'size': 20}, labelcolor='linecolor', ncol=ncol,
-    #                     handlelength=0, handletextpad=0.3, loc="upper left", bbox_to_anchor=(0.02, 0.96))
-    # for line in leg.get_lines():
-    #     line.set_linewidth(3.0)
-    # for item in leg.legendHandles:
-    #     item.set_visible(False)
 
     axs[0].set_ylabel(r'Anomaly ($\!^\circ\!$C)')
     axs[1].set_ylabel(r'Standard deviation ($\!^\circ\!$C)')
@@ -126,30 +112,53 @@ if __name__ == '__main__':
     trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only', 'ur_pseudo']
     to_compare = [['basic', x] for x in trees]
     to_compare.append(['random', 'random'])
-    to_compare.append(['final', 'sst_pseudo'])
-    to_compare.append(['final_no_cluster', 'sst_pseudo'])
+    to_compare.append(['basic', 'sst_pseudo'])
+    to_compare.append(['basic', 'lsat_pseudo'])
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00']
-    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid', 'solid']
 
     plot_comparisons('Figures/summary_all.png', to_compare, colours, linestyles)
+
+
+    # Summary plot trees
+    trees = ['ur_pseudo', 'sst_pseudo', 'lsat_pseudo', 'interp_pseudo', 'equal_pseudo']
+    to_compare = [['basic', x] for x in trees]
+    to_compare.append(['random', 'random_pseudo'])
+    to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
+
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'solid']
+
+    plot_comparisons('Figures/summary_trees.png', to_compare, colours, linestyles)
+
+
+    # Summary of ensembles vs none vs pseudo plots
+    trees = ['ur', 'ur_ensembles_only', 'ur_pseudo']
+    to_compare = [['basic', x] for x in trees]
+
+    colours = ['#555555', '#7fc97f', '#beaed4']
+    linestyles = ['solid', 'solid', 'solid']
+
+    plot_comparisons('Figures/summary_ensembles_or_not.png', to_compare, colours, linestyles)
+
 
     # Compare clustered and unclustered
     to_compare = []
     to_compare.append(['final_small_ensemble', 'sst_pseudo'])
-    to_compare.append(['final', 'sst_pseudo'])
     to_compare.append(['final_thinned', 'sst_pseudo'])
-    to_compare.append(['final_no_cluster', 'sst_pseudo'])
+    to_compare.append(['final_clustered', 'sst_pseudo'])
+    to_compare.append(['basic', 'sst_pseudo'])
 
-    colours = ['#fdc086', '#beaed4','#7fc97f', '#555555']
-    linestyles = ['solid', 'solid', 'solid', 'solid']
+    colours = ['#fdc086', '#beaed4','#7fc97f', '#555555', '#E65656']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'dashed']
 
     plot_comparisons('Figures/thinning_all.png', to_compare, colours, linestyles)
 
+
     # Sensitivity tests summary plots
-    to_compare = [[x, 'ur_pseudo'] for x in ['basic', 'short_overlap', 'fixed_overlap', 'shortest_overlap']]
+    to_compare = [[x, 'ur_pseudo'] for x in ['basic', 'short_overlap', 'variable_overlap', 'shortest_overlap']]
     to_compare = to_compare + [['random', x] for x in ['random_pseudo']]
-    to_compare = to_compare + [['no_hadcrut4', x] for x in ['no_hadcrut4_pseudo']]
     to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
 
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#cccccc', '#386cb0']

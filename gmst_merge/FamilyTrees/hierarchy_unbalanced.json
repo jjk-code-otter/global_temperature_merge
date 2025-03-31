@@ -4,7 +4,7 @@
     "HadCRUT5",
     "Berkeley Earth",
     "Calvert 2024",
-    "Kadow_ensemble",
+    "Kadow_new_ensemble",
     "DCENT_MLE",
     "ERA5",
     "JRA-3Q"
@@ -14,7 +14,7 @@
     "HadCRUT5",
     "Berkeley Earth",
     "Calvert 2024",
-    "Kadow_ensemble",
+    "Kadow_new_ensemble",
     "DCENT_MLE"
   ],
   "heads": [

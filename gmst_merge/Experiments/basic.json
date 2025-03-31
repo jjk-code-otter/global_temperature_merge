@@ -1,23 +1,33 @@
 {
   "name": "basic",
-  "description": "basic tests",
+  "description": "basic tests using basic set up - no thinning, fixed 30-year overlap",
   "trees": [
+    "ur",
     "ur_pseudo",
     "ur_ensembles_only",
-    "ur",
+
     "sst",
     "sst_pseudo",
-    "lsat",
-    "interp",
     "sst_ensembles_only",
+
+    "lsat",
+    "lsat_pseudo",
     "lsat_ensembles_only",
+
+    "interp",
+    "interp_pseudo",
+
     "equal",
+    "equal_pseudo",
+
     "ur_pseudo_late_2024_updates",
-    "sst_pseudo_reanalysis_switch"
+    "sst_pseudo_reanalysis_switch",
+    "lsat_pseudo_no_US",
+    "sst_pseudo_no_US"
   ],
   "latest_join_year": 1981,
   "overlap_period": 30,
-  "random_overlap": true,
+  "random_overlap": false,
   "random_tree": false,
   "default_overlap": [1981, 2010],
   "ensemble_size": 10000,

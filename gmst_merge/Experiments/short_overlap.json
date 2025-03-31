@@ -2,9 +2,7 @@
   "name": "short_overlap",
   "description": "Use short random overlaps",
   "trees": [
-    "ur_pseudo",
-    "ur_ensembles_only",
-    "ur"
+    "ur_pseudo"
   ],
   "latest_join_year": 2001,
   "overlap_period": 10,

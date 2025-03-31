@@ -10,13 +10,13 @@
     ],
     [
       "Berkeley Earth",
-      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"]
+      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]
     ]
   ],
   "tails": [
     "DCENT_MLE",
     [
-      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
+      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
       "Berkeley Earth"
     ],
     [

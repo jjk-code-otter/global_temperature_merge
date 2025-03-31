@@ -4,14 +4,14 @@
     ["NOAA_ensemble", "GISTEMP_ensemble"],
     ["ERA5", "JRA-3Q"],
     [
-      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
+      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
       "GloSAT"
     ]
   ],
   "tails": [
     "DCENT_MLE",
     [
-      ["Kadow_ensemble", "Calvert 2024", "HadCRUT5"],
+      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
       "GloSAT"
     ],
     ["NOAA_ensemble"]

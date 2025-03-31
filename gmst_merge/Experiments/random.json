@@ -2,7 +2,8 @@
   "name": "random",
   "description": "Random tree tests",
   "trees": [
-    "random", "random_pseudo"
+    "random",
+    "random_pseudo"
   ],
   "latest_join_year": 1981,
   "overlap_period": 30,

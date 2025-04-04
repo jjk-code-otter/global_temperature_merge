@@ -62,7 +62,7 @@ class MetaEnsembleFactory:
             if hasattr(self, key):
                 setattr(self, key, parameter_dictionary[key])
             else:
-                if key not in ['name', 'description', 'trees', 'ensemble_size']:
+                if key not in ['name', 'description', 'trees', 'ensemble_size', 'seed']:
                     print(f"Tried to set {key} but {key} is not a class attribute. These are defined in __init__")
 
     def make_meta_ensemble(self, n_meta_ensemble: int, rng) -> ds.Dataset:

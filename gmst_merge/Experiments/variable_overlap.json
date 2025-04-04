@@ -10,5 +10,6 @@
   "random_tree": false,
   "default_overlap": [1981, 2010],
   "ensemble_size": 10000,
-  "thinning": null
+  "thinning": null,
+  "seed": 134435
 }

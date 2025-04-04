@@ -21,7 +21,7 @@ import seaborn as sns
 import gmst_merge.dataset as ds
 
 
-def plot_ensemble(filename, to_compare, colours, linestyles):
+def plot_ensemble(filename, to_compare, colours, linestyles, size):
     STANDARD_PARAMETER_SET = {
         'axes.axisbelow': False,
         'axes.labelsize': 20,
@@ -61,44 +61,52 @@ def plot_ensemble(filename, to_compare, colours, linestyles):
     }
 
     columns = ['time']
-    columns = columns + [f'{x}' for x in range(100)]
+    columns = columns + [f'{x}' for x in range(size)]
 
     # Read in the data
     frames = {}
     smooth = {}
     for combos in to_compare:
-        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None, names=columns)
-        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None, names=columns)
+        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
+                                                         names=columns)
+        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
+                                                         names=columns)
 
     sns.set(font='Franklin Gothic Book', rc=STANDARD_PARAMETER_SET)
 
     fig, axs = plt.subplots(2, 1, sharex=True)
-    fig.set_size_inches(16, 16*2/3)
+    fig.set_size_inches(16, 16 * 2 / 3)
 
     i = 0
     for key in frames:
         annual = frames[key]
 
-        for j in range(100):
+        for j in range(size):
 
             values = annual[f'{j}']
             values = values - np.mean(values[(annual.time >= 1981) & (annual.time <= 2010)])
 
-            axs[0].plot(annual.time, annual[f'{j}'], color='black', label=None, linestyle='solid', alpha=0.1)
-            axs[1].plot(annual.time, values, color='black', label=None, linestyle='solid', alpha=0.1)
+            alf = 0.1
+            if size == 10000:
+                alf = 0.01
+
+            axs[0].plot(annual.time, annual[f'{j}'], color='black', label=None, linestyle='solid', alpha=alf)
+            axs[1].plot(annual.time, values, color='black', label=None, linestyle='solid', alpha=alf)
 
         i += 1
 
         annual = annual.to_numpy()
 
-    years = annual[:,0]
-    data = annual[:,1:]
+    years = annual[:, 0]
+    data = annual[:, 1:]
 
     print(f'Median = {np.median(data[-1, :]):.2f}')
     print(f'Mean = {np.mean(data[-1, :]):.2f}')
-    print(f'2.5% = {np.quantile(data[-1,:], 0.025):.2f}')
-    print(f'97.5% = {np.quantile(data[-1,:], 0.975):.2f}')
-
+    print(f'2.5% = {np.quantile(data[-1, :], 0.025):.2f}')
+    print(f'97.5% = {np.quantile(data[-1, :], 0.975):.2f}')
+    print(f'5% = {np.quantile(data[-1, :], 0.05):.2f}')
+    print(f'95% = {np.quantile(data[-1, :], 0.95):.2f}')
+    print('')
 
     axs[0].set_ylabel(r'Anomaly ($\!^\circ\!$C)')
     axs[1].set_ylabel(r'Anomaly ($\!^\circ\!$C)')
@@ -107,7 +115,7 @@ def plot_ensemble(filename, to_compare, colours, linestyles):
     axs[1].set_title('(b) Annual global mean temperatures, 1981-2010 baseline', loc='left', fontsize=20)
 
     axs[0].set_ylim(-0.5, 1.9)
-    axs[1].set_ylim(-0.5-0.9, 1.9-0.9)
+    axs[1].set_ylim(-0.5 - 0.9, 1.9 - 0.9)
 
     plt.savefig(filename, bbox_inches='tight')
     plt.savefig(filename.replace('.png', '.svg'), bbox_inches='tight')
@@ -115,12 +123,20 @@ def plot_ensemble(filename, to_compare, colours, linestyles):
 
 
 if __name__ == '__main__':
-
-     # Compare clustered and unclustered
+    # Compare clustered and unclustered
     to_compare = []
-    to_compare.append(['final_clustered', 'sst_pseudo'])
+    to_compare.append(['final_clustered', 'lsat_pseudo'])
 
-    colours = ['#fdc086', '#beaed4','#7fc97f', '#555555', '#E65656']
+    colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
 
-    plot_ensemble('Figures/final.png', to_compare, colours, linestyles)
+    plot_ensemble('Figures/final.png', to_compare, colours, linestyles, 100)
+
+    # Compare clustered and unclustered
+    to_compare = []
+    to_compare.append(['basic', 'lsat_pseudo'])
+
+    colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
+    linestyles = ['solid']
+
+    plot_ensemble('Figures/final_full.png', to_compare, colours, linestyles, 10000)

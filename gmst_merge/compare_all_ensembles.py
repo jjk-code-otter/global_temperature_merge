@@ -127,7 +127,7 @@ if __name__ == '__main__':
     to_compare.append(['random', 'random_pseudo'])
     to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#91a19f', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'solid']
 
     plot_comparisons('Figures/summary_trees.png', to_compare, colours, linestyles)
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     to_compare = to_compare + [['random', x] for x in ['random_pseudo']]
     to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#cccccc', '#386cb0']
-    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#91a19f', '#386cb0']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
     plot_comparisons('Figures/sensitivity_all.png', to_compare, colours, linestyles)

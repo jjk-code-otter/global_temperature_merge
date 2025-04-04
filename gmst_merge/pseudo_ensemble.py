@@ -86,7 +86,10 @@ if __name__ == '__main__':
                 if py1 <= y1 and py2 >= y2:
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
                 else:
-                    print("Cannot do that, sorry")
+                    df = df.select_year_range(py1, py2)
+                    uf = uf[py1-y1: py2-y1+1]
+                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
+                    print("Length mismatch, subset will be processed")
 
         else:
             print(f"Using non-scaled perturbations from {matched_ensembles[name]}")
@@ -107,8 +110,10 @@ if __name__ == '__main__':
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
                 else:
                     df = df.select_year_range(py1, py2)
-
                     all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
+                    print("Length mismatch, subset will be processed")
+
+        print("")
 
     for df in all_perturbed_datasets:
         directory = DATA_DIR / df.name

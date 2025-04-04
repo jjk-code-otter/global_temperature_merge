@@ -28,4 +28,17 @@ time = np.arange(1850,1850+nyears, 1)
 output[:, 0] = time
 output[:, 1] = np.mean(anomalies.reshape(nyears, 12), axis=1)
 
-np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, delimiter=",")
+np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+
+# Now the uncertainties digitised from the paper Figure 8b
+# https://essd.copernicus.org/articles/14/1677/2022/#section3
+df = pd.read_csv(hadcrut5_dir / 'plot-data.csv')
+
+nyears = len(df.time)
+
+output = np.zeros((nyears, 2))
+
+output[:, 0] = df.time
+output[:, 1] = df.uncertainty
+
+np.savetxt(hadcrut5_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")

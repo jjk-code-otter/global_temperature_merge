@@ -347,7 +347,7 @@ class Dataset:
         ensemble = np.transpose(ensemble)
 
         # Initialize clusters using K means algorithm
-        kmeans = KMeans(n_clusters=number_of_clusters, random_state=np.random.randint((1 << 31) - 1)).fit(ensemble)
+        kmeans = KMeans(n_clusters=number_of_clusters, random_state=rng.integers(100)).fit(ensemble)
         cluster_centers = kmeans.cluster_centers_
 
         # Iteratively assign equal numbers of ensemble members to each cluster using Hungarian-like

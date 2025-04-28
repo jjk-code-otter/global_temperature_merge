@@ -5,7 +5,7 @@
     "GloSAT",
     ["ERA5 ensemble", "JRA-3Q"],
     [
-      "CMST",
+      "CMST3",
       ["NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"]
     ],
     [
@@ -20,7 +20,7 @@
       "Berkeley Earth"
     ],
     [
-      "CMST",
+      "CMST3",
       ["NOAA v6", "NOAA_ensemble"]
     ],
     "COBE-STEMP3",

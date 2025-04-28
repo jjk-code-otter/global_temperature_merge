@@ -1,7 +1,7 @@
 {
   "master": [
     ["Kadow_new_ensemble", "NOAA v6"],
-    ["NOAA_ensemble", "CMST","COBE-STEMP3"],
+    ["NOAA_ensemble", "CMST3","COBE-STEMP3"],
     ["ERA5 ensemble", "JRA-3Q"],
     [
       ["GloSAT", "HadCRUT5","Berkeley Earth"],
@@ -14,7 +14,7 @@
       ["Calvert 2024", "DCENT_MLE"]
     ],
     ["Kadow_new_ensemble", "NOAA v6"],
-    ["NOAA_ensemble", "CMST","COBE-STEMP3"]
+    ["NOAA_ensemble", "CMST3","COBE-STEMP3"]
   ],
   "heads": [
     [

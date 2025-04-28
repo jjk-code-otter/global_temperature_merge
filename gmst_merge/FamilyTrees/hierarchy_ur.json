@@ -1,13 +1,13 @@
 {
   "master": [
-    ["DCENT_MLE", "COBE-STEMP3", "GloSAT", ["ERA5 ensemble", "JRA-3Q"], ["CMST", ["NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"]], ["Berkeley Earth", ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]]],
-    ["DCENT_MLE", "CMST", "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5 ensemble", "JRA-3Q"], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"]],
-    [["Kadow_new_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST","COBE-STEMP3"], ["ERA5 ensemble", "JRA-3Q"], [["GloSAT", "HadCRUT5","Berkeley Earth"], ["DCENT_MLE", "Calvert 2024", "GISTEMP_ensemble"]]]
+    ["DCENT_MLE", "COBE-STEMP3", "GloSAT", ["ERA5 ensemble", "JRA-3Q"], ["CMST3", ["NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"]], ["Berkeley Earth", ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]]],
+    ["DCENT_MLE", "CMST3", "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5 ensemble", "JRA-3Q"], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"]],
+    [["Kadow_new_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST3","COBE-STEMP3"], ["ERA5 ensemble", "JRA-3Q"], [["GloSAT", "HadCRUT5","Berkeley Earth"], ["DCENT_MLE", "Calvert 2024", "GISTEMP_ensemble"]]]
   ],
   "tails": [
-    ["DCENT_MLE", [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "Berkeley Earth"], ["CMST", ["NOAA v6", "NOAA_ensemble"]], "COBE-STEMP3", "GloSAT"],
-    ["DCENT_MLE", "CMST", [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"], "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble"]],
-    [[["GloSAT", "HadCRUT5","Berkeley Earth"], ["Calvert 2024", "DCENT_MLE"]], ["Kadow_new_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST","COBE-STEMP3"]]
+    ["DCENT_MLE", [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "Berkeley Earth"], ["CMST3", ["NOAA v6", "NOAA_ensemble"]], "COBE-STEMP3", "GloSAT"],
+    ["DCENT_MLE", "CMST3", [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"], "Berkeley Earth", ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble"]],
+    [[["GloSAT", "HadCRUT5","Berkeley Earth"], ["Calvert 2024", "DCENT_MLE"]], ["Kadow_new_ensemble", "NOAA v6"], ["NOAA_ensemble", "CMST3","COBE-STEMP3"]]
   ],
   "heads": [
     [["HadCRUT5", "Berkeley Earth"], ["NOAA v6", "GISTEMP_ensemble"], ["ERA5 ensemble", "JRA-3Q"]],

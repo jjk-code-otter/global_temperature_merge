@@ -9,7 +9,7 @@
     "NOAA v6_NOAA_ensemble",
     "NOAA v6_HadCRUT5",
     "NOAA_ensemble",
-    "CMST_NOAA_ensemble",
+    "CMST3_NOAA_ensemble",
     "COBE-STEMP3_HadCRUT5",
     "DCENT_MLE",
     "ERA5 ensemble",
@@ -24,7 +24,7 @@
     "NOAA v6_NOAA_ensemble",
     "NOAA v6_HadCRUT5",
     "NOAA_ensemble",
-    "CMST_NOAA_ensemble",
+    "CMST3_NOAA_ensemble",
     "COBE-STEMP3_HadCRUT5",
     "DCENT_MLE"
   ],

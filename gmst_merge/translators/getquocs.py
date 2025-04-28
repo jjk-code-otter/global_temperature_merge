@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-getquocs_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GETQUOCS'
-filename =  getquocs_dir / 'GETQUOCS_ensemble_subsample_monthly.packed.nc'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GETQUOCS'
+filename = data_file_dir / 'GETQUOCS_ensemble_subsample_monthly.packed.nc'
 
 # Open file get area weights
 df = xa.open_dataset(filename)
@@ -30,5 +30,5 @@ output = np.zeros((169,101))
 output[:,0] = time[:]
 output[:,1:] = regional_ts[:,:]
 
-np.savetxt(getquocs_dir / "ensemble_time_series.csv", output, delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
 

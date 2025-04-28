@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'HadCRUT5'
-filename = hadcrut5_dir / 'HadCRUT.5.0.2.0.analysis.ensemble_series.global.annual.csv'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'HadCRUT5'
+filename = data_file_dir / 'HadCRUT.5.0.2.0.analysis.ensemble_series.global.annual.csv'
 
-with open(hadcrut5_dir / 'ensemble_time_series.csv', 'w') as o:
+with open(data_file_dir / 'ensemble_time_series.csv', 'w') as o:
     with open(filename, 'r') as f:
         f.readline()
         for line in f:

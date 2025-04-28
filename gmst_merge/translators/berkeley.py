@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-berkeley_name = DATA_DIR / 'ManagedData' / 'Data' / 'Berkeley Earth'
-filename = berkeley_name / 'Land_and_Ocean_summary.txt'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'Berkeley Earth'
+filename = data_file_dir / 'Land_and_Ocean_summary.txt'
 
-with open(berkeley_name / 'ensemble_time_series.csv', 'w') as o:
+with open(data_file_dir / 'ensemble_time_series.csv', 'w') as o:
     with open(filename, 'r') as f:
         for i in range(58):
             f.readline()
@@ -22,7 +22,7 @@ with open(berkeley_name / 'ensemble_time_series.csv', 'w') as o:
             line = ','.join(columns) + '\n'
             o.write(line)
 
-with open(berkeley_name / 'uncertainty_time_series.csv', 'w') as o:
+with open(data_file_dir / 'uncertainty_time_series.csv', 'w') as o:
     with open(filename, 'r') as f:
         for i in range(58):
             f.readline()

@@ -138,7 +138,7 @@ def download_file(url, output_path):
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
 
 # File details
 rows = 72
@@ -152,12 +152,12 @@ output = np.zeros((nyears, n_ensemble + 1))
 
 for i in range(n_ensemble):
 
-    filename = hadcrut5_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
+    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
     url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg53.dat.{i + 1:04d}.gz'
 
-    if not (hadcrut5_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
+    if not (data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
         download_file(url, filename)
-    filename = hadcrut5_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
+    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
 
     print(filename)
 
@@ -190,4 +190,4 @@ for i in range(n_ensemble):
 
     os.remove(filename)
 
-    np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")
+    np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")

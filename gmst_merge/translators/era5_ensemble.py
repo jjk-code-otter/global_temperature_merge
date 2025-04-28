@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'ERA5 ensemble'
-filename = hadcrut5_dir / 'T2m_era51_time_series_from_1940.txt'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'ERA5 ensemble'
+filename = data_file_dir / 'T2m_era51_time_series_from_1940.txt'
 
 with open(filename, "rb") as f:
     num_lines = sum(1 for _ in f)
@@ -60,5 +60,5 @@ for i in range(11):
     output[:, i+1] = np.mean(data[:, i].reshape((nyears, 12)), axis=1)
     output[:, i+1] = output[:, i+1] - np.mean(output[:, i+1])
 
-np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
 

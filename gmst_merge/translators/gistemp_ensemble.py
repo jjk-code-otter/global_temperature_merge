@@ -10,8 +10,8 @@ data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP'
-filename = hadcrut5_dir / 'GLB.Ts+dSST.csv'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP'
+filename = data_file_dir / 'GLB.Ts+dSST.csv'
 
 years = []
 anoms = []
@@ -35,8 +35,8 @@ full_array[:,0] = np.array(years)
 full_array[:,1:] = np.repeat(np.reshape(np.array(anoms), (full_nyears,1)), 200, axis=1)
 
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP_ensemble'
-filename = hadcrut5_dir / 'ensembleCombinedSeries_Global.nc'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP_ensemble'
+filename = data_file_dir / 'ensembleCombinedSeries_Global.nc'
 
 df = xa.open_dataset(filename)
 
@@ -57,4 +57,4 @@ for i in range(200):
 
 output = full_array
 
-np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")

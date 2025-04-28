@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'ERA5'
-filename = hadcrut5_dir / 'C3S_Bulletin_temp_202411_Fig1b_timeseries_anomalies_ref1991-2020_global_allmonths_data.csv'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'ERA5'
+filename = data_file_dir / 'C3S_Bulletin_temp_202411_Fig1b_timeseries_anomalies_ref1991-2020_global_allmonths_data.csv'
 
 years = []
 anoms = []
@@ -36,11 +36,11 @@ output = np.zeros((nyears, 2))
 output[:,0] = years[:]
 output[:,1] = anoms[:]
 
-np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
 
 output = np.zeros((nyears, 2))
 
 output[:,0] = years[:]
 output[:,1] = anoms[:] * 0.0 + 0.03
 
-np.savetxt(hadcrut5_dir / "uncertainty_time_series.csv", output, delimiter=",")
+np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, delimiter=",")

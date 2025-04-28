@@ -24,7 +24,7 @@ def make_xarray(target_grid, times, latitudes, longitudes, variable: str = 'tas_
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-getquocs_dir = DATA_DIR / 'ManagedData' / 'Data' / 'Vaccaro'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'Vaccaro'
 
 n_ensemble = 100
 
@@ -33,7 +33,7 @@ nyears = int(ntime/12)
 output = np.zeros((nyears,n_ensemble+1))
 
 for i in range(n_ensemble):
-    filename =  getquocs_dir / f'HadCRUT4.6.0.0.anomalies.{i+1}_GraphEM_SP60.nc'
+    filename = data_file_dir / f'HadCRUT4.6.0.0.anomalies.{i + 1}_GraphEM_SP60.nc'
     print(filename)
 
     df = xa.open_dataset(filename)
@@ -62,5 +62,5 @@ for i in range(n_ensemble):
     output[:,0] = time[:]
     output[:,i+1] = regional_ts[:]
 
-np.savetxt(getquocs_dir / "ensemble_time_series.csv", output, delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
 

@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-hadcrut5_dir = DATA_DIR / 'ManagedData' / 'Data' / 'COBE-STEMP3'
-filename = hadcrut5_dir / 'annual_gm_cobe-stemp3.bin'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'COBE-STEMP3'
+filename = data_file_dir / 'annual_gm_cobe-stemp3.bin'
 
 years = []
 anoms = []
@@ -34,11 +34,11 @@ output = np.zeros((nyears, 2))
 output[:,0] = years[:]
 output[:,1] = anoms[:]
 
-np.savetxt(hadcrut5_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
 
 output = np.zeros((nyears, 2))
 
 output[:,0] = years[:]
 output[:,1] = uncertainties[:]
 
-np.savetxt(hadcrut5_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")
+np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")

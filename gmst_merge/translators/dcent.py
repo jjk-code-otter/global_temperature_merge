@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 data_dir_env = os.getenv('DATADIR')
 DATA_DIR = Path(data_dir_env)
 
-dcent_dir = DATA_DIR / 'ManagedData' / 'Data' / 'DCENT'
+data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'DCENT'
 
 n_years = 2024-1850+1
 n_months = 12 * n_years
@@ -19,7 +19,7 @@ output = np.zeros((n_years, n_ensemble+1))
 
 for i in range(1, n_ensemble+1):
     # filename =  dcent_dir / f'DCENT_ensemble_1850_2023_member_{i:03d}.nc'
-    filename = dcent_dir / f'DCENT_ensemble_reso_5_1850_2025_member_{i:03d}.nc'
+    filename = data_file_dir / f'DCENT_ensemble_reso_5_1850_2025_member_{i:03d}.nc'
     print(filename)
 
     # Open file get area weights
@@ -37,5 +37,5 @@ for i in range(1, n_ensemble+1):
 time = np.arange(1850,1850+n_years, 1)
 output[:,0] = time[:]
 
-np.savetxt(dcent_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
 

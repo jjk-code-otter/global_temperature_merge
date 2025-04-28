@@ -6,7 +6,7 @@
     "Calvert 2024",
     "Kadow_new_ensemble",
     "DCENT_MLE",
-    "ERA5",
+    "ERA5 ensemble",
     "JRA-3Q"
   ],
   "tails": [
@@ -20,7 +20,7 @@
   "heads": [
       "HadCRUT5",
       "Berkeley Earth",
-      "ERA5",
+      "ERA5 ensemble",
       "JRA-3Q"
     ]
 }

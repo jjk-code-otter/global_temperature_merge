@@ -100,12 +100,22 @@ def plot_ensemble(filename, to_compare, colours, linestyles, size):
     years = annual[:, 0]
     data = annual[:, 1:]
 
+    print("One year")
     print(f'Median = {np.median(data[-1, :]):.2f}')
     print(f'Mean = {np.mean(data[-1, :]):.2f}')
     print(f'2.5% = {np.quantile(data[-1, :], 0.025):.2f}')
     print(f'97.5% = {np.quantile(data[-1, :], 0.975):.2f}')
     print(f'5% = {np.quantile(data[-1, :], 0.05):.2f}')
     print(f'95% = {np.quantile(data[-1, :], 0.95):.2f}')
+    print('')
+
+    print("Five year")
+    print(f'Median = {np.median(np.mean(data[-5:, :], axis=0)):.2f}')
+    print(f'Mean = {np.mean(np.mean(data[-5:, :], axis=0)):.2f}')
+    print(f'2.5% = {np.quantile(np.mean(data[-5:, :], axis=0), 0.025):.2f}')
+    print(f'97.5% = {np.quantile(np.mean(data[-5:, :], axis=0), 0.975):.2f}')
+    print(f'5% = {np.quantile(np.mean(data[-5:, :], axis=0), 0.05):.2f}')
+    print(f'95% = {np.quantile(np.mean(data[-5:, :], axis=0), 0.95):.2f}')
     print('')
 
     axs[0].set_ylabel(r'Anomaly ($\!^\circ\!$C)')

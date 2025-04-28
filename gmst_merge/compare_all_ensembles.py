@@ -165,3 +165,12 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
     plot_comparisons('Figures/sensitivity_all.png', to_compare, colours, linestyles)
+
+
+    # Sensitivity tests reanalysis regrouping summary plots
+    to_compare = [['basic', x] for x in ['sst_pseudo', 'sst_pseudo_reanalysis_switch', 'sst_pseudo_no_US']]
+
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#91a19f', '#386cb0']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
+
+    plot_comparisons('Figures/sensitivity_reanalysis.png', to_compare, colours, linestyles)

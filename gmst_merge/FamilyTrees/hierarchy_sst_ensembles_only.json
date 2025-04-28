@@ -2,7 +2,7 @@
   "master": [
     "DCENT_MLE",
     "GloSAT",
-    ["ERA5", "JRA-3Q"],
+    ["ERA5 ensemble", "JRA-3Q"],
     ["NOAA_ensemble", "GISTEMP_ensemble"],
     ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]
   ],
@@ -15,6 +15,6 @@
   "heads": [
     "HadCRUT5",
     "GISTEMP_ensemble",
-    ["ERA5", "JRA-3Q"]
+    ["ERA5 ensemble", "JRA-3Q"]
   ]
 }

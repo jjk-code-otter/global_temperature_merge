@@ -1,8 +1,8 @@
 {
   "master": [
-    ["DCENT_MLE", "GloSAT", ["ERA5", "JRA-3Q"], [["NOAA_ensemble", "GISTEMP_ensemble"]], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]]],
-    ["DCENT_MLE", ["NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"]],
-    [["Kadow_new_ensemble"], ["NOAA_ensemble"], ["ERA5", "JRA-3Q"], [["GloSAT", "HadCRUT5"], ["DCENT_MLE", "Calvert 2024", "GISTEMP_ensemble"]]]
+    ["DCENT_MLE", "GloSAT", ["ERA5 ensemble", "JRA-3Q"], [["NOAA_ensemble", "GISTEMP_ensemble"]], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]]],
+    ["DCENT_MLE", ["NOAA_ensemble", "GISTEMP_ensemble"], ["ERA5 ensemble", "JRA-3Q"], [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"], "GloSAT"]],
+    [["Kadow_new_ensemble"], ["NOAA_ensemble"], ["ERA5 ensemble", "JRA-3Q"], [["GloSAT", "HadCRUT5"], ["DCENT_MLE", "Calvert 2024", "GISTEMP_ensemble"]]]
   ],
   "tails": [
     ["DCENT_MLE", [["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"]], [["NOAA_ensemble"]], "GloSAT"],
@@ -10,8 +10,8 @@
     [[["GloSAT", "HadCRUT5"], ["Calvert 2024", "DCENT_MLE"]], ["Kadow_new_ensemble"], ["NOAA_ensemble"]]
   ],
   "heads": [
-    ["HadCRUT5", "GISTEMP_ensemble", ["ERA5", "JRA-3Q"]],
-    ["HadCRUT5",  "GISTEMP_ensemble", ["ERA5", "JRA-3Q"]],
-    [["HadCRUT5", "GISTEMP_ensemble"], ["ERA5", "JRA-3Q"]]
+    ["HadCRUT5", "GISTEMP_ensemble", ["ERA5 ensemble", "JRA-3Q"]],
+    ["HadCRUT5",  "GISTEMP_ensemble", ["ERA5 ensemble", "JRA-3Q"]],
+    [["HadCRUT5", "GISTEMP_ensemble"], ["ERA5 ensemble", "JRA-3Q"]]
   ]
 }

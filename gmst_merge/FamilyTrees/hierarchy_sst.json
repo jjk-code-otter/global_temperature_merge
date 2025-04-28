@@ -3,7 +3,7 @@
     "DCENT_MLE",
     "COBE-STEMP3",
     "GloSAT",
-    ["ERA5", "JRA-3Q"],
+    ["ERA5 ensemble", "JRA-3Q"],
     [
       "CMST",
       ["NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"]
@@ -29,6 +29,6 @@
   "heads": [
     ["HadCRUT5", "Berkeley Earth"],
     ["NOAA v6", "GISTEMP_ensemble"],
-    ["ERA5", "JRA-3Q"]
+    ["ERA5 ensemble", "JRA-3Q"]
   ]
 }

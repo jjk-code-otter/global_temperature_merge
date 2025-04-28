@@ -4,7 +4,7 @@
     "CMST",
     "Berkeley Earth",
     ["COBE-STEMP3", "NOAA v6", "NOAA_ensemble", "GISTEMP_ensemble"],
-    ["ERA5", "JRA-3Q"],
+    ["ERA5 ensemble", "JRA-3Q"],
     [
       ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
       "GloSAT"
@@ -24,6 +24,6 @@
     "HadCRUT5",
     "Berkeley Earth",
     ["NOAA v6", "GISTEMP_ensemble"],
-    ["ERA5", "JRA-3Q"]
+    ["ERA5 ensemble", "JRA-3Q"]
   ]
 }

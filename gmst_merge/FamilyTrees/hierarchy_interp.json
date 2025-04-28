@@ -2,7 +2,7 @@
   "master": [
     ["Kadow_new_ensemble", "NOAA v6"],
     ["NOAA_ensemble", "CMST","COBE-STEMP3"],
-    ["ERA5", "JRA-3Q"],
+    ["ERA5 ensemble", "JRA-3Q"],
     [
       ["GloSAT", "HadCRUT5","Berkeley Earth"],
       ["Calvert 2024", "GISTEMP_ensemble", "DCENT_MLE"]
@@ -22,6 +22,6 @@
       ["GISTEMP_ensemble"]
     ],
     "NOAA v6",
-    ["ERA5", "JRA-3Q"]
+    ["ERA5 ensemble", "JRA-3Q"]
   ]
 }

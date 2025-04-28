@@ -11,7 +11,7 @@
     "CMST",
     "COBE-STEMP3",
     "DCENT_MLE",
-    "ERA5",
+    "ERA5 ensemble",
     "JRA-3Q"
   ],
   "tails": [
@@ -31,7 +31,7 @@
       "Berkeley Earth",
       "GISTEMP_ensemble",
       "NOAA v6",
-      "ERA5",
+      "ERA5 ensemble",
       "JRA-3Q"
     ]
     }

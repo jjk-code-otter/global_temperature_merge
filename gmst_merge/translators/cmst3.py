@@ -21,12 +21,7 @@ with open(filename, 'r') as f:
         columns = line.split(',')
         years.append(int(columns[0]))
         anoms.append(float(columns[1]))
-
-        upper = float(columns[2])
-        lower = float(columns[3])
-        unc = (upper - lower) / 3.92
-
-        uncertainties.append(unc)
+        uncertainties.append(float(columns[2]))
 
 years = np.array(years)
 anoms = np.array(anoms)

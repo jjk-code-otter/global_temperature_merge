@@ -232,7 +232,7 @@ class FamilyTree:
         """
         # Plot all the interesting hierarchies
         fig, axs = plt.subplots()
-        fig.set_size_inches(10, 16)
+        fig.set_size_inches(10, 10)
 
         all_members = get_all_members(self.tree)
         all_member_depths = get_all_members(label_by_depth(self.tree, 1))
@@ -246,13 +246,14 @@ class FamilyTree:
             render_member = member
             render_member = render_member.replace('_HadCRUT5', ' (HadCRUT5)')
             render_member = render_member.replace('_NOAA_ensemble', ' (NOAA ensemble)')
+            render_member = render_member.replace('_new_ensemble', ' et al.')
 
             axs.text(-0.1, i, render_member, ha='right', va='center', fontsize=20)
             axs.plot([0, 1 + max_depth - all_member_depths[i]], [i, i], linewidth=3, color='black')
 
         final_midy = plumb(axs, max_depth, all_members, self.tree)
 
-        axs.plot([max_depth-1, max_depth], [final_midy, final_midy], linewidth=3, color='black')
+       # axs.plot([max_depth-1, max_depth], [final_midy, final_midy], linewidth=3, color='black')
         axs.axis('off')
         plt.subplots_adjust(wspace=0.6, hspace=0.6)
         plt.savefig(filename, bbox_inches='tight', dpi=300)

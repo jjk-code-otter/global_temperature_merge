@@ -42,12 +42,13 @@ class MetaEnsembleFactory:
         self.tails = tails
         self.heads = heads
         self.latest_join_year = 1981
-        self.output_baseline = [1850, 1900]
+        self.output_baseline = [1850, 1900]  # BC suggests [1981, 2010]
         self.overlap_period = 30
         self.random_overlap = True
         self.random_tree = False
         self.default_overlap = [1981, 2010]
         self.thinning = None
+        self.balanced = False
 
     def set_parameters(self, parameter_dictionary) -> None:
         """
@@ -65,7 +66,7 @@ class MetaEnsembleFactory:
                 if key not in ['name', 'description', 'trees', 'ensemble_size', 'seed']:
                     print(f"Tried to set {key} but {key} is not a class attribute. These are defined in __init__")
 
-    def make_meta_ensemble(self, n_meta_ensemble: int, rng) -> ds.Dataset:
+    def make_meta_ensemble(self, n_meta_ensemble: int, rng, end_year=2024) -> ds.Dataset:
         """
         Make a meta ensemble
 
@@ -76,9 +77,19 @@ class MetaEnsembleFactory:
         :return: ds.Dataset
             Ensemble dataset
         """
-        meta_ensemble = np.zeros((2024 - 1850 + 1, n_meta_ensemble + 1))
+        meta_ensemble = np.zeros((end_year - 1850 + 1, n_meta_ensemble + 1))
+
+        if self.balanced and not self.random_tree:
+            # If balanced is set to True then generate a balanced ensemble; does not work if random_tree is True
+            tail_list = ft.balanced_pick_ensemble(self.tails.tree, n_meta_ensemble, rng)
+            head_list = ft.balanced_pick_ensemble(self.heads.tree, n_meta_ensemble, rng)
 
         for i in range(n_meta_ensemble):
+            if self.balanced and not self.random_tree:
+                tails = ft.FamilyTree([tail_list[i]])
+                heads = ft.FamilyTree([head_list[i]])
+                tail = tails.sample_from_tree(rng)
+                head = heads.sample_from_tree(rng)
             # If random_tree is set to True then generate a random tree for each ensemble member
             if self.random_tree:
                 tails = ft.FamilyTree.make_random_tree(self.tails.tree, rng)

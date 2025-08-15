@@ -1,38 +1,37 @@
 from pathlib import Path
-import xarray as xa
 import numpy as np
 import pandas as pd
 import os
 
-import matplotlib.pyplot as plt
+def convert_file():
 
-data_dir_env = os.getenv('DATADIR')
-DATA_DIR = Path(data_dir_env)
+    data_dir_env = os.getenv('DATADIR')
+    DATA_DIR = Path(data_dir_env)
 
-# http://www.gwpu.net/h-nd-155.html
-data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'CMST'
-filename = data_file_dir / 'annual_data.csv'
+    # http://www.gwpu.net/h-nd-155.html
+    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'CMST'
+    filename = data_file_dir / 'annual_data.csv'
 
-df = pd.read_csv(filename)
+    df = pd.read_csv(filename)
 
-anomalies = df.Global
-times = df.year
-uncertainties = df.GMST
+    anomalies = df.Global
+    times = df.year
+    uncertainties = df.GMST
 
-ntimes = len(anomalies)
-nyears = len(times)
-nuncs = len(uncertainties)
+    ntimes = len(anomalies)
+    nyears = len(times)
+    nuncs = len(uncertainties)
 
-output = np.zeros((nyears, 2))
+    output = np.zeros((nyears, 2))
 
-output[:, 0] = times
-output[:, 1] = anomalies
+    output[:, 0] = times
+    output[:, 1] = anomalies
 
-np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
 
-output = np.zeros((nyears, 2))
+    output = np.zeros((nyears, 2))
 
-output[:, 0] = times
-output[:, 1] = uncertainties
+    output[:, 0] = times
+    output[:, 1] = uncertainties
 
-np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")
+    np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")

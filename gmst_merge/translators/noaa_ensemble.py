@@ -135,59 +135,61 @@ def download_file(url, output_path):
         print(f"Failed to download file: {e}")
 
 
-data_dir_env = os.getenv('DATADIR')
-DATA_DIR = Path(data_dir_env)
+def convert_file_long():
 
-data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
+    data_dir_env = os.getenv('DATADIR')
+    DATA_DIR = Path(data_dir_env)
 
-# File details
-rows = 72
-cols = 36
-iterations = 2008
-nyears = 167
+    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
 
-n_ensemble = 1000
+    # File details
+    rows = 72
+    cols = 36
+    iterations = 2008
+    nyears = 167
 
-output = np.zeros((nyears, n_ensemble + 1))
+    n_ensemble = 1000
 
-for i in range(n_ensemble):
+    output = np.zeros((nyears, n_ensemble + 1))
 
-    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
-    url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg53.dat.{i + 1:04d}.gz'
+    for i in range(n_ensemble):
 
-    if not (data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
-        download_file(url, filename)
-    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
+        filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
+        url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg53.dat.{i + 1:04d}.gz'
 
-    print(filename)
+        if not (data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
+            download_file(url, filename)
+        filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
 
-    # Only want whole years
-    data_array = read_bin(filename)
-    data_array = data_array[0:167 * 12, :, :]
-    data_array[data_array < -900] = np.nan
+        print(filename)
 
-    latitudes = np.linspace(-87.5, 87.5, 36)
-    longitudes = np.linspace(-177.5, 177.5, 72)
-    times = pd.date_range(start=f'1850-01-01', freq='1MS', periods=nyears * 12)
+        # Only want whole years
+        data_array = read_bin(filename)
+        data_array = data_array[0:167 * 12, :, :]
+        data_array[data_array < -900] = np.nan
 
-    df = make_xarray(data_array, times, latitudes, longitudes)
+        latitudes = np.linspace(-87.5, 87.5, 36)
+        longitudes = np.linspace(-177.5, 177.5, 72)
+        times = pd.date_range(start=f'1850-01-01', freq='1MS', periods=nyears * 12)
 
-    # plot_map(df)
+        df = make_xarray(data_array, times, latitudes, longitudes)
 
-    # Open file get area weights
-    weights = np.cos(np.deg2rad(df.tas_mean.latitude))
+        # plot_map(df)
 
-    # Calculate the area-weighted average, then the annual average
-    regional_ts = df.tas_mean.weighted(weights).mean(dim=("latitude", "longitude"))
-    regional_ts = regional_ts.data
-    regional_ts = np.mean(regional_ts.reshape(nyears, 12), axis=1)
+        # Open file get area weights
+        weights = np.cos(np.deg2rad(df.tas_mean.latitude))
 
-    # Make a time axis
-    time = np.arange(1850, 1850 + nyears, 1)
+        # Calculate the area-weighted average, then the annual average
+        regional_ts = df.tas_mean.weighted(weights).mean(dim=("latitude", "longitude"))
+        regional_ts = regional_ts.data
+        regional_ts = np.mean(regional_ts.reshape(nyears, 12), axis=1)
 
-    output[:, 0] = time[:]
-    output[:, i + 1] = regional_ts[:]
+        # Make a time axis
+        time = np.arange(1850, 1850 + nyears, 1)
 
-    os.remove(filename)
+        output[:, 0] = time[:]
+        output[:, i + 1] = regional_ts[:]
 
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")
+        os.remove(filename)
+
+        np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")

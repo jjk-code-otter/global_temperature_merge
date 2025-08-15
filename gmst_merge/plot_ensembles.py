@@ -67,10 +67,16 @@ def plot_ensemble(filename, to_compare, colours, linestyles, size):
     frames = {}
     smooth = {}
     for combos in to_compare:
-        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
-                                                         names=columns)
-        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
-                                                         names=columns)
+        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(
+            f'Output/{combos[0]}/{combos[1]}.csv',
+            header=None,
+            names=columns
+        )
+        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(
+            f'Output/{combos[0]}/{combos[1]}.csv',
+            header=None,
+            names=columns
+        )
 
     sns.set(font='Franklin Gothic Book', rc=STANDARD_PARAMETER_SET)
 

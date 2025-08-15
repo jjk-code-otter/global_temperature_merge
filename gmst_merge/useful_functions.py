@@ -98,7 +98,7 @@ def balanced_kmeans(
             old_assigned_cluster = assigned_cluster
             old_square_distance = square_distance
 
-    return assigned_cluster
+    return assigned_cluster, cluster_centers
 
 
 def gridded_to_timeseries(array):

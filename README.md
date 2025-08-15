@@ -4,7 +4,6 @@ Global temperature merge
 Code for merging estimates of annual global mean temperature into a single ensemble dataset of global mean temperature. 
 Also produces ensembles of radiative forcing and ocean heat content.
 
-
 Python modules required:
 numpy scipy sklearn statsmodels torch openpyxl pandas pathlib matplotlib seaborn requests xarray netCDF4
 
@@ -67,7 +66,8 @@ Download instructions:
 Running code instructions:
 
 1. Input datasets are converted into a common format using code in the `translators` directory. You can use 
-   `run_translators.py` to run the code.
+   `run_translators.py` to run the code. The first time you run it set `run_long_conversions` to `True` to
+   make sure you convert the larger datasets. The default is `False` which only runs the quick conversions. 
 
 2. Generate pseudo-ensembles using `pseudo_ensembles.py`.
 

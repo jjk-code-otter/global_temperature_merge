@@ -42,10 +42,46 @@ def pick_one(inarr: list, rng):
 
     if isinstance(selection, list):
         selection = pick_one(selection, rng)
-    else:
-        return selection
 
     return selection
+
+
+def balanced_pick_ensemble(inarr: list, n_samples: int, rng):
+    """
+    Given a tree, returns a list of n_sample strings such that the allocation of strings closely represents the
+    underlying distribution of the tree (e.g., if 10 ensemble members are assigned to HadCRUT5-based datasets,
+    then the algorithm would allocate 3 strings to each of the three datasets (HadCRUT5 Analysis, HadCRU_MLE, Kadow)
+    and the remaining string randomly).
+
+    :param inarr: list
+        List containing lists and/or strings
+    :param n_samples: int
+        Number of ensemble members to retrieve
+    :return:
+    """
+    n_choices = len(inarr)
+
+    n_samples_by_child = rng.permutation(
+        np.append(
+            np.ones(n_choices - n_samples % n_choices, dtype=int) * (n_samples // n_choices),
+            np.ones(n_samples % n_choices, dtype=int) * (n_samples // n_choices + 1)
+        )
+    )
+
+    output_list = []
+    for i in range(n_choices):
+        selection = inarr[i]
+
+        # Sometimes this version of "choice" returns a list and sometimes it converts the list into a numpy ndarray.
+        if isinstance(selection, np.ndarray):
+            selection = selection.tolist()
+
+        if isinstance(selection, list):
+            output_list.extend(balanced_pick_ensemble(selection, n_samples_by_child[i], rng))
+        else:
+            output_list.extend([selection] * n_samples_by_child[i])
+
+    return output_list
 
 
 def split_list(in_lst: list, n_splits: int, rng) -> list:
@@ -253,7 +289,7 @@ class FamilyTree:
 
         final_midy = plumb(axs, max_depth, all_members, self.tree)
 
-       # axs.plot([max_depth-1, max_depth], [final_midy, final_midy], linewidth=3, color='black')
+        # axs.plot([max_depth-1, max_depth], [final_midy, final_midy], linewidth=3, color='black')
         axs.axis('off')
         plt.subplots_adjust(wspace=0.6, hspace=0.6)
         plt.savefig(filename, bbox_inches='tight', dpi=300)

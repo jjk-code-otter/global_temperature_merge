@@ -25,7 +25,7 @@ with open(data_file_dir / 'ensemble_time_series.csv', 'w') as o:
 
             coverage_unc = float(columns[2]) # Coverage uncertainty is one sigma according to the file
 
-            ensemble_std = np.std(ensemble)
+            ensemble_std = np.std(ensemble, ddof=1)
             ensemble_mean = np.mean(ensemble)
 
             total_unc = np.sqrt(coverage_unc ** 2 + ensemble_std ** 2)

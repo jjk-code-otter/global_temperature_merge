@@ -200,7 +200,3 @@ def convert_file_long():
         os.remove(filename)
 
         np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], fmt='%.4f', delimiter=",")
-
-
-if __name__ == "__main__":
-    convert_file_long()

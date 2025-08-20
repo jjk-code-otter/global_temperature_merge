@@ -45,18 +45,18 @@
   ],
   "heads": [
     [
-      [["HadCRUT5", "Kadow_ensemble"], "Berkeley Earth Hires"],
+      [["HadCRUT5", "Kadow_new_ensemble"], "Berkeley Earth Hires"],
       ["NOAA v6_HadCRUT5", "GISTEMP_HadCRUT5"],
       ["ERA5 ensemble", "JRA-3Q_HadCRUT5"]
     ],
     [
-      ["HadCRUT5", "Kadow_ensemble"],
+      ["HadCRUT5", "Kadow_new_ensemble"],
       "Berkeley Earth Hires",
       ["NOAA v6_HadCRUT5", "GISTEMP_HadCRUT5"],
       ["ERA5 ensemble", "JRA-3Q_HadCRUT5"]
     ],
     [
-      [[["HadCRUT5", "Kadow_ensemble"],"Berkeley Earth Hires"], ["GISTEMP_HadCRUT5"]],
+      [[["HadCRUT5", "Kadow_new_ensemble"],"Berkeley Earth Hires"], ["GISTEMP_HadCRUT5"]],
       "NOAA v6_HadCRUT5",
       ["ERA5 ensemble", "JRA-3Q_HadCRUT5"]
     ]

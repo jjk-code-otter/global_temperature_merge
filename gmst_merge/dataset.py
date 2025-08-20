@@ -406,9 +406,9 @@ class Dataset:
             out_ensemble = copy.deepcopy(self)
             out_ensemble.data = np.zeros((out_ensemble.n_time, number_of_clusters))
             for i in range(number_of_clusters):
-                selection = ensemble[assigned_cluster == i]
+                selection = ensemble[:, assigned_cluster == i]
                 chosen_member = rng.integers(cluster_size)
-                out_ensemble.data[:, i] = selection[chosen_member, :]
+                out_ensemble.data[:, i] = selection[:, chosen_member]
             out_ensemble.n_time = len(out_ensemble.time)
             out_ensemble.n_ensemble = out_ensemble.data.shape[1]
 

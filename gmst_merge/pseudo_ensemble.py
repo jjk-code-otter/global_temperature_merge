@@ -16,13 +16,8 @@
 
 import os
 from pathlib import Path
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-
-import gmst_merge.family_tree as ft
 import gmst_merge.dataset as ds
-import gmst_merge.metaensemblefactory as mef
 
 if __name__ == '__main__':
     """
@@ -34,14 +29,15 @@ if __name__ == '__main__':
     ensemble_datasets = ["HadCRUT5", "NOAA_ensemble"]
 
     regular_datasets = [
-        "Berkeley Earth", "NOAA v6", "CMST", "CMST3", "COBE-STEMP3", "ERA5", "JRA-3Q"
+        "Berkeley Earth", "NOAA Interim", "NOAA v6", "GISTEMP", "CMST3", "COBE-STEMP3", "ERA5", "JRA-3Q"
     ]
 
     matched_ensembles = {
         "Berkeley Earth": ["HadCRUT5"],
+        "NOAA Interim": ["NOAA_ensemble"],
         "NOAA v6": ["NOAA_ensemble", "HadCRUT5"],
-        "CMST": ["NOAA_ensemble"],
-        "CMST3": ["NOAA_ensemble"],
+        "GISTEMP": ["HadCRUT5"],
+        "CMST3": ["NOAA_ensemble", "HadCRUT5"],
         "COBE-STEMP3": ["HadCRUT5"],
         "ERA5": ["HadCRUT5"],
         "JRA-3Q": ["HadCRUT5"]

@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 
 
 def plot_map(df):
-
     variable = df["tas_mean"].isel(time=1776)
     fig, ax = plt.subplots(figsize=(10, 6), subplot_kw={"projection": ccrs.PlateCarree()})
     ax.add_feature(cfeature.COASTLINE)
@@ -40,7 +39,7 @@ def read_bin(filename):
     rows = 72
     cols = 36
     iterations = 2008
-    ngrid = 2594 # The actual grid 2592 but the files have an extra float at the start and end.
+    ngrid = 2594  # The actual grid 2592 but the files have an extra float at the start and end.
 
     # Open the binary file in read mode
     with open(filename, 'rb') as f:
@@ -135,8 +134,29 @@ def download_file(url, output_path):
         print(f"Failed to download file: {e}")
 
 
-def convert_file_long():
+def calculate_time_series(data_array, nyears, plot_map_bool=False):
 
+    latitudes = np.linspace(-87.5, 87.5, 36)
+    longitudes = np.linspace(-177.5, 177.5, 72)
+    times = pd.date_range(start=f'1850-01-01', freq='1MS', periods=nyears * 12)
+
+    df = make_xarray(data_array, times, latitudes, longitudes)
+
+    if plot_map_bool:
+        plot_map(df)
+
+    # Open file get area weights
+    weights = np.cos(np.deg2rad(df.tas_mean.latitude))
+
+    # Calculate the area-weighted average, then the annual average
+    regional_ts = df.tas_mean.weighted(weights).mean(dim=("latitude", "longitude"))
+    regional_ts = regional_ts.data
+    regional_ts = np.mean(regional_ts.reshape(nyears, 12), axis=1)
+
+    return regional_ts
+
+
+def convert_file_long():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 
@@ -154,12 +174,12 @@ def convert_file_long():
 
     for i in range(n_ensemble):
 
-        filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
-        url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg53.dat.{i + 1:04d}.gz'
+        filename = data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}.gz'
+        url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg5.dat.{i + 1:04d}.gz'
 
-        if not (data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
+        if not (data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}').exists():
             download_file(url, filename)
-        filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
+        filename = data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}'
 
         print(filename)
 
@@ -168,21 +188,8 @@ def convert_file_long():
         data_array = data_array[0:167 * 12, :, :]
         data_array[data_array < -900] = np.nan
 
-        latitudes = np.linspace(-87.5, 87.5, 36)
-        longitudes = np.linspace(-177.5, 177.5, 72)
-        times = pd.date_range(start=f'1850-01-01', freq='1MS', periods=nyears * 12)
-
-        df = make_xarray(data_array, times, latitudes, longitudes)
-
-        # plot_map(df)
-
-        # Open file get area weights
-        weights = np.cos(np.deg2rad(df.tas_mean.latitude))
-
-        # Calculate the area-weighted average, then the annual average
-        regional_ts = df.tas_mean.weighted(weights).mean(dim=("latitude", "longitude"))
-        regional_ts = regional_ts.data
-        regional_ts = np.mean(regional_ts.reshape(nyears, 12), axis=1)
+        # Calculate the time series
+        regional_ts = calculate_time_series(data_array, nyears, plot_map_bool=False)
 
         # Make a time axis
         time = np.arange(1850, 1850 + nyears, 1)
@@ -192,4 +199,8 @@ def convert_file_long():
 
         os.remove(filename)
 
-        np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")
+        np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], fmt='%.4f', delimiter=",")
+
+
+if __name__ == "__main__":
+    convert_file_long()

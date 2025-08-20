@@ -28,6 +28,19 @@ from scipy.optimize import linear_sum_assignment
 from gmst_merge.useful_functions import balanced_kmeans
 
 
+def get_axis_lims(data, step=0.25):
+    """Get some reasonable axis limits based on the data
+
+    :param data: ndarray
+        Array containing the data. Data max and min are used to set the axis limits
+    :param step: float
+        Increment of ticks on the axis
+    :return:
+        float, float
+    """
+    return np.floor(np.min(data) / step) * step, np.ceil(np.max(data) / step) * step
+
+
 class Dataset:
     """
     Simple data class using numpy arrays for the time axis and a data ensemble.
@@ -358,7 +371,7 @@ class Dataset:
 
         out_data[:, 0] = self.time[:]
         for i in range(n_thinned):
-            index = int((i * n_per_bin) + (n_per_bin / 2))
+            index = int((i * n_per_bin) + rng.integers(n_per_bin))
             out_data[:, i + 1] = self.data[:, order[index]]
 
         return Dataset(out_data, name=self.name)
@@ -440,12 +453,14 @@ class Dataset:
         y1 = self.get_start_year()
         y2 = self.get_end_year()
 
-        bins = np.arange(-0.5, 1.77, 0.01)
+        yrange_low, yrange_high = get_axis_lims(self.data, 0.25)
+
+        bins = np.arange(yrange_low, yrange_high, 0.01)
         hmap = np.zeros((y2 - y1 + 1, len(bins) - 1))
 
         for y in range(y1, y2 + 1):
             n_plot_years = y2 - y1 + 1
-            bins = np.arange(-0.5, 1.77, 0.01)
+            bins = np.arange(yrange_low, yrange_high, 0.01)
             h, b = np.histogram(self.data[y - y1, :], bins=bins)
             b = (b[0:-1] + b[1:]) / 2.
             h_prime = h / self.n_ensemble
@@ -586,11 +601,13 @@ class Dataset:
             Filename for output file
         :return:
         """
+        yrange_low, yrange_high = get_axis_lims(self.data, 0.25)
+
         # Calculate some histograms
         plt.figure(figsize=[16, 16])
         for y in range(1850, self.end_year+1, 5):
             n_plot_years = self.end_year - 1850 + 1
-            bins = np.arange(-0.5, 1.77, 0.01)
+            bins = np.arange(yrange_low, yrange_high, 0.01)
 
             h, b = np.histogram(self.data[y - 1850, :], bins=bins)
 
@@ -601,16 +618,16 @@ class Dataset:
             plt.fill_between(b, zero_line, h_prime, color='white', alpha=1, zorder=y - 1850, clip_on=False)
             plt.plot(b, h_prime, color='black', zorder=y - 1850 + 0.5, clip_on=False)
 
-        plt.gca().set_xlim(-0.5, 1.75)
-        plt.gca().set_ylim(0, 175 + 10)
+        plt.gca().set_xlim(yrange_low, yrange_high)
+        plt.gca().set_ylim(0, self.end_year-1850 + 100)
         plt.axis('off')
         plt.gca().set_xlabel(r"Global mean temperature anomaly ($\!^\circ\!$C)")
 
-        for x in [-0.5, 0.0, 0.5, 1.0, 1.5]:
+        for x in np.arange(yrange_low,yrange_high, 0.5):
             plt.text(x, -5, f'{x}', ha='center', fontsize=20)
 
         for y in [1850, 1900, 1950, 2000]:
-            plt.text(-0.7, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
+            plt.text(yrange_low, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
 
         plt.savefig(filename, dpi=300)
         plt.close()

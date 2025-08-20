@@ -42,7 +42,7 @@ class MetaEnsembleFactory:
         self.tails = tails
         self.heads = heads
         self.latest_join_year = 1981
-        self.output_baseline = [1981, 2010]
+        self.output_baseline = [1850, 1900]
         self.overlap_period = 30
         self.random_overlap = True
         self.random_tree = False

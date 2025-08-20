@@ -141,7 +141,7 @@ def plot_ensemble(filename, to_compare, colours, linestyles, size):
 if __name__ == '__main__':
     # Compare clustered and unclustered
     to_compare = []
-    to_compare.append(['final_clustered', 'lsat_pseudo'])
+    to_compare.append(['final_clustered', 'sst_pseudo'])
 
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
     # Compare clustered and unclustered
     to_compare = []
-    to_compare.append(['basic', 'lsat_pseudo'])
+    to_compare.append(['basic', 'sst_pseudo'])
 
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']

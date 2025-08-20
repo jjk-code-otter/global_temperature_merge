@@ -80,7 +80,7 @@ def balanced_kmeans(
                 distance_matrix[i, j] = np.linalg.norm(ensemble[i] - cluster_centers[j])
 
         row_index, column_index = linear_sum_assignment(np.kron(np.ones((1, int(cluster_size))), distance_matrix))
-        assigned_cluster = column_index % number_of_clusters;
+        assigned_cluster = column_index % number_of_clusters
         square_distance = np.zeros((1))
 
         for i in range(number_of_clusters):

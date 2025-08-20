@@ -42,11 +42,13 @@ class MetaEnsembleFactory:
         self.tails = tails
         self.heads = heads
         self.latest_join_year = 1981
-        self.output_baseline = [1850, 1900]  # BC suggests [1981, 2010]
+        self.output_baseline = [1981, 2010]
         self.overlap_period = 30
         self.random_overlap = True
         self.random_tree = False
         self.default_overlap = [1981, 2010]
+        self.ensemble_size = 1
+        self.modified_ensemble_size = 1
         self.thinning = None
         self.balanced = False
 
@@ -63,10 +65,10 @@ class MetaEnsembleFactory:
             if hasattr(self, key):
                 setattr(self, key, parameter_dictionary[key])
             else:
-                if key not in ['name', 'description', 'trees', 'ensemble_size', 'seed']:
+                if key not in ['name', 'description', 'trees', 'seed']:
                     print(f"Tried to set {key} but {key} is not a class attribute. These are defined in __init__")
 
-    def make_meta_ensemble(self, n_meta_ensemble: int, rng, end_year=2024) -> ds.Dataset:
+    def make_meta_ensemble(self, rng, end_year=2024) -> ds.Dataset:
         """
         Make a meta ensemble
 
@@ -77,21 +79,21 @@ class MetaEnsembleFactory:
         :return: ds.Dataset
             Ensemble dataset
         """
-        meta_ensemble = np.zeros((end_year - 1850 + 1, n_meta_ensemble + 1))
+        meta_ensemble = np.zeros((end_year - 1850 + 1, self.ensemble_size + 1))
 
         if self.balanced and not self.random_tree:
             # If balanced is set to True then generate a balanced ensemble; does not work if random_tree is True
-            tail_list = ft.balanced_pick_ensemble(self.tails.tree, n_meta_ensemble, rng)
-            head_list = ft.balanced_pick_ensemble(self.heads.tree, n_meta_ensemble, rng)
+            tail_list = ft.balanced_pick_ensemble(self.tails.tree, self.ensemble_size, rng)
+            head_list = ft.balanced_pick_ensemble(self.heads.tree, self.ensemble_size, rng)
 
-        for i in range(n_meta_ensemble):
+        for i in range(self.ensemble_size):
             if self.balanced and not self.random_tree:
                 tails = ft.FamilyTree([tail_list[i]])
                 heads = ft.FamilyTree([head_list[i]])
                 tail = tails.sample_from_tree(rng)
                 head = heads.sample_from_tree(rng)
-            # If random_tree is set to True then generate a random tree for each ensemble member
-            if self.random_tree:
+            # Else if random_tree is set to True then generate a random tree for each ensemble member
+            elif self.random_tree:
                 tails = ft.FamilyTree.make_random_tree(self.tails.tree, rng)
                 heads = ft.FamilyTree.make_random_tree(self.heads.tree, rng)
                 tail = tails.sample_from_tree(rng)
@@ -126,8 +128,8 @@ class MetaEnsembleFactory:
             return output_dataset
         else:
             if self.thinning == 'cluster_ensemble':
-                output_dataset = output_dataset.cluster_ensemble(100, rng)
+                output_dataset = output_dataset.cluster_ensemble(self.modified_ensemble_size, rng)
             elif self.thinning == 'thin_ensemble':
-                output_dataset = output_dataset.thin_ensemble(100, rng)
+                output_dataset = output_dataset.thin_ensemble(self.modified_ensemble_size, rng)
 
         return output_dataset

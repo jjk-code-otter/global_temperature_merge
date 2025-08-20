@@ -26,10 +26,19 @@ def Frechet_distance(data1, data2):
 
     mean1 = np.mean(data1, axis=1)
     mean2 = np.mean(data2, axis=1)
-    cov1 = np.cov(data1, ddof=1)
-    cov2 = np.cov(data2, ddof=1)
+    cov1 = np.cov(data1, ddof=0)
+    cov2 = np.cov(data2, ddof=0)
 
-    return np.sum(np.square(mean1 - mean2)) + np.trace(cov1 + cov2 - 2 * sp.linalg.sqrtm(np.matmul(cov1, cov2)))
+    # use eigendecomposition to calculate square root to deal with cases with nonpositive eigenvalues
+    # eigenvalues can be slightly negative due to numeric error
+    eigenvalues, eigenvectors = sp.linalg.eigh(cov1)
+    sqrt_cov1 = eigenvectors @ np.diag(np.sqrt(np.maximum(eigenvalues, 0))) @ eigenvectors.T
+    eigenvalues, eigenvectors = sp.linalg.eigh(sqrt_cov1 @ cov2 @ sqrt_cov1)
+
+    A = np.sum(np.square(mean1 - mean2))
+    B = np.trace(cov1 + cov2 - 2 * eigenvectors @ np.diag(np.sqrt(np.maximum(eigenvalues, 0))) @ eigenvectors.T)
+
+    return A + B
 
 
 if __name__ == '__main__':
@@ -53,11 +62,12 @@ if __name__ == '__main__':
     rescaled_ensemble.rescale_ensemble(datasets["large_ensemble"])
     datasets["rescaled_ensemble"] = rescaled_ensemble
 
-    # calculate Frechet distances relative to large ensemble
+    # calculate Frechet distances relative to large ensemble for all ensembles
     frechet_distances = {
         name: Frechet_distance(ds.data, datasets["large_ensemble"].data) for name, ds in datasets.items()
     }
 
+    # Then write the results out
     with open(Path("Output/Frechet.txt"), 'w') as file:
         for name, distance in frechet_distances.items():
             file.write(f"{name}: {distance}\n")

@@ -1,24 +1,27 @@
 {
   "master": [
     "DCENT_MLE",
-    ["NOAA_ensemble", "GISTEMP_ensemble"],
-    ["ERA5 ensemble", "JRA-3Q"],
+    "NOAA_ensemble",
+    "ERA5 ensemble",
+    "Berkeley Earth Hires",
     [
-      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
+      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"
     ]
   ],
   "tails": [
     "DCENT_MLE",
+    "NOAA_ensemble",
+    "Berkeley Earth Hires",
     [
-      ["Kadow_new_ensemble", "Calvert 2024", "HadCRUT5"],
+      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"
     ],
-    ["NOAA_ensemble"]
+    "NOAA_ensemble"
   ],
   "heads": [
     "HadCRUT5",
-    "GISTEMP_ensemble",
-    ["ERA5 ensemble", "JRA-3Q"]
+    "Berkeley Earth Hires",
+    "ERA5 ensemble"
   ]
 }

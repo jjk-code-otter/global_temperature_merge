@@ -1,6 +1,6 @@
 {
   "name": "final_clustered",
-  "description": "production run",
+  "description": "100 member subset of 10000 ensembles using balanced k means clustering",
   "trees": [
     "sst_pseudo",
     "lsat_pseudo"
@@ -11,6 +11,7 @@
   "random_tree": false,
   "default_overlap": [1981, 2010],
   "ensemble_size": 10000,
+  "modified_ensemble_size": 100,
   "thinning": "cluster_ensemble",
   "seed": 178525
 }

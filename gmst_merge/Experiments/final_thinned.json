@@ -1,6 +1,6 @@
 {
   "name": "final_thinned",
-  "description": "production run",
+  "description": "100 member subset of 10000 ensembles using warming rate clustering",
   "trees": [
     "sst_pseudo",
     "lsat_pseudo"
@@ -11,6 +11,7 @@
   "random_tree": false,
   "default_overlap": [1981, 2010],
   "ensemble_size": 10000,
+  "modified_ensemble_size": 100,
   "thinning": "thin_ensemble",
   "seed": 6552
 }

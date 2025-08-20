@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 
 
 def plot_map(df):
-
     variable = df["tas_mean"].isel(time=1776)
     fig, ax = plt.subplots(figsize=(10, 6), subplot_kw={"projection": ccrs.PlateCarree()})
     ax.add_feature(cfeature.COASTLINE)
@@ -40,7 +39,7 @@ def read_bin(filename):
     rows = 72
     cols = 36
     iterations = 2008
-    ngrid = 2594 # The actual grid 2592 but the files have an extra float at the start and end.
+    ngrid = 2594  # The actual grid 2592 but the files have an extra float at the start and end.
 
     # Open the binary file in read mode
     with open(filename, 'rb') as f:
@@ -135,36 +134,7 @@ def download_file(url, output_path):
         print(f"Failed to download file: {e}")
 
 
-data_dir_env = os.getenv('DATADIR')
-DATA_DIR = Path(data_dir_env)
-
-data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
-
-# File details
-rows = 72
-cols = 36
-iterations = 2008
-nyears = 167
-
-n_ensemble = 1000
-
-output = np.zeros((nyears, n_ensemble + 1))
-
-for i in range(n_ensemble):
-
-    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}.gz'
-    url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg53.dat.{i + 1:04d}.gz'
-
-    if not (data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}').exists():
-        download_file(url, filename)
-    filename = data_file_dir / f'temp.ano.merg53.dat.{i + 1:04d}'
-
-    print(filename)
-
-    # Only want whole years
-    data_array = read_bin(filename)
-    data_array = data_array[0:167 * 12, :, :]
-    data_array[data_array < -900] = np.nan
+def calculate_time_series(data_array, nyears, plot_map_bool=False):
 
     latitudes = np.linspace(-87.5, 87.5, 36)
     longitudes = np.linspace(-177.5, 177.5, 72)
@@ -172,7 +142,8 @@ for i in range(n_ensemble):
 
     df = make_xarray(data_array, times, latitudes, longitudes)
 
-    # plot_map(df)
+    if plot_map_bool:
+        plot_map(df)
 
     # Open file get area weights
     weights = np.cos(np.deg2rad(df.tas_mean.latitude))
@@ -182,12 +153,50 @@ for i in range(n_ensemble):
     regional_ts = regional_ts.data
     regional_ts = np.mean(regional_ts.reshape(nyears, 12), axis=1)
 
-    # Make a time axis
-    time = np.arange(1850, 1850 + nyears, 1)
+    return regional_ts
 
-    output[:, 0] = time[:]
-    output[:, i + 1] = regional_ts[:]
 
-    os.remove(filename)
+def convert_file_long():
+    data_dir_env = os.getenv('DATADIR')
+    DATA_DIR = Path(data_dir_env)
 
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], delimiter=",")
+    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'NOAA_ensemble'
+
+    # File details
+    rows = 72
+    cols = 36
+    iterations = 2008
+    nyears = 167
+
+    n_ensemble = 1000
+
+    output = np.zeros((nyears, n_ensemble + 1))
+
+    for i in range(n_ensemble):
+
+        filename = data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}.gz'
+        url = f'https://www.ncei.noaa.gov/pub/data/cmb/ersst/v5/tmp/2019.ngt.par.ensemble/temp.ano.merg5.dat.{i + 1:04d}.gz'
+
+        if not (data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}').exists():
+            download_file(url, filename)
+        filename = data_file_dir / f'temp.ano.merg5.dat.{i + 1:04d}'
+
+        print(filename)
+
+        # Only want whole years
+        data_array = read_bin(filename)
+        data_array = data_array[0:167 * 12, :, :]
+        data_array[data_array < -900] = np.nan
+
+        # Calculate the time series
+        regional_ts = calculate_time_series(data_array, nyears, plot_map_bool=False)
+
+        # Make a time axis
+        time = np.arange(1850, 1850 + nyears, 1)
+
+        output[:, 0] = time[:]
+        output[:, i + 1] = regional_ts[:]
+
+        os.remove(filename)
+
+        np.savetxt(data_file_dir / "ensemble_time_series.csv", output[:, 0:i + 2], fmt='%.4f', delimiter=",")

@@ -67,10 +67,16 @@ def plot_ensemble(filename, to_compare, colours, linestyles, size):
     frames = {}
     smooth = {}
     for combos in to_compare:
-        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
-                                                         names=columns)
-        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}.csv', header=None,
-                                                         names=columns)
+        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(
+            f'Output/{combos[0]}/{combos[1]}.csv',
+            header=None,
+            names=columns
+        )
+        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(
+            f'Output/{combos[0]}/{combos[1]}.csv',
+            header=None,
+            names=columns
+        )
 
     sns.set(font='Franklin Gothic Book', rc=STANDARD_PARAMETER_SET)
 
@@ -135,7 +141,7 @@ def plot_ensemble(filename, to_compare, colours, linestyles, size):
 if __name__ == '__main__':
     # Compare clustered and unclustered
     to_compare = []
-    to_compare.append(['final_clustered', 'lsat_pseudo'])
+    to_compare.append(['final_clustered', 'sst_pseudo'])
 
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
@@ -144,7 +150,7 @@ if __name__ == '__main__':
 
     # Compare clustered and unclustered
     to_compare = []
-    to_compare.append(['basic', 'lsat_pseudo'])
+    to_compare.append(['basic', 'sst_pseudo'])
 
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']

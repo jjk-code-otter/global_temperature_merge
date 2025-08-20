@@ -2,6 +2,7 @@
   "name": "basic",
   "description": "basic tests using basic set up - no thinning, fixed 30-year overlap",
   "trees": [
+
     "ur",
     "ur_pseudo",
     "ur_ensembles_only",
@@ -20,7 +21,6 @@
     "equal",
     "equal_pseudo",
 
-    "ur_pseudo_late_2024_updates",
     "sst_pseudo_reanalysis_switch",
     "lsat_pseudo_no_US",
     "sst_pseudo_no_US"

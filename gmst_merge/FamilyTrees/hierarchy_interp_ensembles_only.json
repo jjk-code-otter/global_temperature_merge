@@ -1,0 +1,22 @@
+{
+  "master": [
+    "Kadow_ensemble",
+    [
+      ["GloSAT", "HadCRUT5"],
+      ["HadCRU_MLE", "DCENT_MLE"]
+    ],
+    "ERA5 ensemble"
+  ],
+  "tails": [
+    "Kadow_ensemble",
+    [
+      ["GloSAT", "HadCRUT5"],
+      ["HadCRU_MLE", "DCENT_MLE"]
+    ],
+    "ERA5 ensemble"
+  ],
+  "heads": [
+    "HadCRUT5",
+    "ERA5 ensemble"
+  ]
+}

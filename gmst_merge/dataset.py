@@ -25,6 +25,21 @@ import matplotlib.patches as patches
 from sklearn.cluster import KMeans
 from scipy.optimize import linear_sum_assignment
 
+from gmst_merge.useful_functions import balanced_kmeans
+
+
+def get_axis_lims(data, step=0.25):
+    """Get some reasonable axis limits based on the data
+
+    :param data: ndarray
+        Array containing the data. Data max and min are used to set the axis limits
+    :param step: float
+        Increment of ticks on the axis
+    :return:
+        float, float
+    """
+    return np.floor(np.min(data) / step) * step, np.ceil(np.max(data) / step) * step
+
 
 class Dataset:
     """
@@ -37,6 +52,7 @@ class Dataset:
         self.n_time = len(self.time)
         self.n_ensemble = self.data.shape[1]
         self.name = name
+        self.end_year = 2024
 
     def __str__(self):
         return self.name
@@ -75,7 +91,7 @@ class Dataset:
         return Dataset(df, name=name)
 
     @staticmethod
-    def join(tail, head, join_start_year, join_end_year):
+    def join(tail, head, join_start_year, join_end_year, end_year=None):
         """
         Join two Datasets together. The Dataset is made by joining a tail Dataset to a head Dataset. This is
         done by anomalizing each Dataset to a common period specified by join_start_year and join_end_year and then
@@ -89,6 +105,8 @@ class Dataset:
             First year for the common period used for splicing
         :param join_end_year: int
             Last year for the common period used for splicing
+        :param end_year: int
+            Set last year explicitly
         :return: Dataset
             The spliced dataset.
         """
@@ -99,7 +117,12 @@ class Dataset:
         head.anomalize(join_start_year, join_end_year)
 
         first_year = tail.get_start_year()
-        last_year = head.get_end_year()
+
+        if end_year is None:
+            last_year = head.get_end_year()
+        else:
+            last_year = min(head.get_end_year(), end_year)
+
         head_first_year = head.get_start_year()
 
         out_n_time = last_year - first_year + 1
@@ -109,8 +132,10 @@ class Dataset:
         out_arr[0: mid_point - first_year + 1, 0] = tail.time[0: mid_point - first_year + 1]
         out_arr[0: mid_point - first_year + 1, 1] = tail.data[0: mid_point - first_year + 1, 0]
 
-        out_arr[mid_point - first_year + 1:, 0] = head.time[mid_point - head_first_year + 1:]
-        out_arr[mid_point - first_year + 1:, 1] = head.data[mid_point - head_first_year + 1:, 0]
+        out_arr[mid_point - first_year + 1:, 0] = head.time[
+                                                  mid_point - head_first_year + 1:last_year - head_first_year + 1]
+        out_arr[mid_point - first_year + 1:, 1] = head.data[
+                                                  mid_point - head_first_year + 1:last_year - head_first_year + 1, 0]
 
         return Dataset(out_arr, 'meta_ensemble')
 
@@ -155,7 +180,7 @@ class Dataset:
         :param y1: int
             start year for shortened dataset
         :param y2: int
-            end yer for shortened dataset
+            end year for shortened dataset
         :return: Dataset
         """
         output = copy.deepcopy(self)
@@ -217,6 +242,36 @@ class Dataset:
         mask = (self.time >= in_start_year) & (self.time <= in_end_year)
         self.data = self.data - np.mean(self.data[mask, :], axis=0)
 
+    def rescale_ensemble(self, dataset2):
+        """
+        Transform ensemble to have same mean and standard devations as second ensemble.
+
+        :param Dataset:
+            The dataset to be scaled to
+        :return: Dataset
+        """
+        if (
+                self.time.shape[0] != dataset2.time.shape[0] or
+                self.data.shape[1] < 2 or
+                dataset2.data.shape[1] < 2 or
+                not isinstance(dataset2, Dataset)
+        ):
+            raise RuntimeError('Invalid inputs for rescaling ensemble members of dataset')
+
+        stdev_dataset_1 = np.std(self.data, ddof=1, axis=1).reshape(-1, 1)
+        stdev_dataset_2 = np.std(dataset2.data, ddof=1, axis=1).reshape(-1, 1)
+        mean_dataset_1 = np.mean(self.data, axis=1).reshape(-1, 1)
+        mean_dataset_2 = np.mean(dataset2.data, axis=1).reshape(-1, 1)
+
+        # Subtract off the mean of the dataset being rescaled
+        temp = self.data - mean_dataset_1
+        # Scale the anomalies up by the standard deviation of the target series
+        temp = np.multiply(temp, stdev_dataset_2)
+        # Scale the anomalies down by the standard deviation of the original series
+        temp = np.divide(temp, stdev_dataset_1)
+        # Add back the mean of the original datasets
+        self.data = np.add(temp, mean_dataset_2)
+
     def convert_to_perturbations(self):
         """
         Turn the ensemble into a set of perturbations. Perturbations are differences from the ensemble mean.
@@ -249,22 +304,25 @@ class Dataset:
         """
         if self.n_ensemble != 1:
             raise RuntimeError('Trying to add perturbations to an ensemble dataset')
+
         y1 = self.get_start_year()
         y2 = self.get_end_year()
         py1 = perturbation.get_start_year()
         py2 = perturbation.get_end_year()
+
         if py1 > y1 or py2 < y2:
             raise RuntimeError('Perturbations do not cover whole dataset period')
 
         out_ds = copy.deepcopy(self)
 
         if scaling is None:
-            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + perturbation.data[y1 - py1:y2 - py1 + 1, :]
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1))
+            out_ds.data = out_ds.data + perturbation.data[y1 - py1:y2 - py1 + 1, :]
         else:
             n = perturbation.n_ensemble
             expanded_scaling = np.tile(scaling[:, 1:], (1, n))
-            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1)) + expanded_scaling * perturbation.data[
-                                                                                           y1 - py1:y2 - py1 + 1, :]
+            out_ds.data = np.reshape(out_ds.data, (out_ds.n_time, 1))
+            out_ds.data = out_ds.data + expanded_scaling * perturbation.data[y1 - py1:y2 - py1 + 1, :]
 
         out_ds.n_ensemble = perturbation.n_ensemble
 
@@ -313,7 +371,7 @@ class Dataset:
 
         out_data[:, 0] = self.time[:]
         for i in range(n_thinned):
-            index = int((i * n_per_bin) + (n_per_bin / 2))
+            index = int((i * n_per_bin) + rng.integers(n_per_bin))
             out_data[:, i + 1] = self.data[:, order[index]]
 
         return Dataset(out_data, name=self.name)
@@ -333,44 +391,8 @@ class Dataset:
         """
 
         ensemble = self.data
-
-        if round(number_of_clusters, 0) != number_of_clusters or number_of_clusters < 1:
-            raise TypeError("cluster size must be a positive integer")
-        if ensemble.ndim == 1:
-            ensemble = ensemble.reshape((-1, 1))
-        if ensemble.ndim != 2:
-            raise TypeError("ensemble must be a 2 dimensional array")
-        if ensemble.shape[1] % number_of_clusters != 0:
-            raise TypeError("number of ensemble members must be divisible by cluster size")
-
         cluster_size = int(ensemble.shape[1] / number_of_clusters)
-        ensemble = np.transpose(ensemble)
-
-        # Initialize clusters using K means algorithm
-        kmeans = KMeans(n_clusters=number_of_clusters, random_state=rng.integers(100)).fit(ensemble)
-        cluster_centers = kmeans.cluster_centers_
-
-        # Iteratively assign equal numbers of ensemble members to each cluster using Hungarian-like
-        # algorithm and recalculate cluster centers
-        distance_matrix = np.zeros((ensemble.shape[0], number_of_clusters))
-        old_assigned_cluster = np.zeros((ensemble.shape[0]))
-        for iterations in range(1, 100):
-            for i in range(ensemble.shape[0]):
-                for j in range(number_of_clusters):
-                    distance_matrix[i, j] = np.linalg.norm(ensemble[i] - cluster_centers[j])
-            row_index, column_index = linear_sum_assignment(np.kron(np.ones((1, int(cluster_size))), distance_matrix))
-            assigned_cluster = column_index % number_of_clusters
-            for i in range(number_of_clusters):
-                cluster_centers[i] = ensemble[assigned_cluster == i].mean(axis=0)
-
-            # Have we converged yet?
-            if (assigned_cluster == old_assigned_cluster).all():
-                print(iterations, np.mean((assigned_cluster-old_assigned_cluster)**2))
-                break
-            else:
-                print(iterations, np.mean((assigned_cluster-old_assigned_cluster)**2))
-                old_assigned_cluster = assigned_cluster
-
+        assigned_cluster, cluster_centers = balanced_kmeans(ensemble, number_of_clusters, rng)
 
         # Use cluster centres
         if centres:
@@ -378,14 +400,15 @@ class Dataset:
             out_ensemble.data = np.transpose(cluster_centers)
             out_ensemble.n_time = len(out_ensemble.time)
             out_ensemble.n_ensemble = out_ensemble.data.shape[1]
+
         # Do not use cluster centres (default)
         else:
             out_ensemble = copy.deepcopy(self)
             out_ensemble.data = np.zeros((out_ensemble.n_time, number_of_clusters))
             for i in range(number_of_clusters):
-                selection = ensemble[assigned_cluster == i]
+                selection = ensemble[:, assigned_cluster == i]
                 chosen_member = rng.integers(cluster_size)
-                out_ensemble.data[:, i] = selection[chosen_member, :]
+                out_ensemble.data[:, i] = selection[:, chosen_member]
             out_ensemble.n_time = len(out_ensemble.time)
             out_ensemble.n_ensemble = out_ensemble.data.shape[1]
 
@@ -430,12 +453,14 @@ class Dataset:
         y1 = self.get_start_year()
         y2 = self.get_end_year()
 
-        bins = np.arange(-0.5, 1.77, 0.01)
+        yrange_low, yrange_high = get_axis_lims(self.data, 0.25)
+
+        bins = np.arange(yrange_low, yrange_high, 0.01)
         hmap = np.zeros((y2 - y1 + 1, len(bins) - 1))
 
         for y in range(y1, y2 + 1):
             n_plot_years = y2 - y1 + 1
-            bins = np.arange(-0.5, 1.77, 0.01)
+            bins = np.arange(yrange_low, yrange_high, 0.01)
             h, b = np.histogram(self.data[y - y1, :], bins=bins)
             b = (b[0:-1] + b[1:]) / 2.
             h_prime = h / self.n_ensemble
@@ -509,7 +534,7 @@ class Dataset:
 
             plt.text(1979, threshold, f'{threshold:.1f} $\!^\circ\!$C', ha='right', va='center', fontsize=20)
             plt.gca().add_patch(patches.Rectangle(
-                (1980, threshold + 0.025), 2024 - 1970, 0.05,
+                (1980, threshold + 0.025), self.end_year - 1970, 0.05,
                 linewidth=None, edgecolor=None, facecolor='#eeeeee',
                 zorder=0
             ))
@@ -521,7 +546,7 @@ class Dataset:
                     continue
 
                 threshold_year = val[np.argmax(count >= p)]
-                width = 2024 - threshold_year
+                width = self.end_year - threshold_year
 
                 plt.gca().add_patch(
                     patches.Rectangle(
@@ -576,11 +601,13 @@ class Dataset:
             Filename for output file
         :return:
         """
+        yrange_low, yrange_high = get_axis_lims(self.data, 0.25)
+
         # Calculate some histograms
         plt.figure(figsize=[16, 16])
-        for y in range(1850, 2025, 5):
-            n_plot_years = 2024 - 1850 + 1
-            bins = np.arange(-0.5, 1.77, 0.01)
+        for y in range(1850, self.end_year+1, 5):
+            n_plot_years = self.end_year - 1850 + 1
+            bins = np.arange(yrange_low, yrange_high, 0.01)
 
             h, b = np.histogram(self.data[y - 1850, :], bins=bins)
 
@@ -591,16 +618,16 @@ class Dataset:
             plt.fill_between(b, zero_line, h_prime, color='white', alpha=1, zorder=y - 1850, clip_on=False)
             plt.plot(b, h_prime, color='black', zorder=y - 1850 + 0.5, clip_on=False)
 
-        plt.gca().set_xlim(-0.5, 1.75)
-        plt.gca().set_ylim(0, 175 + 10)
+        plt.gca().set_xlim(yrange_low, yrange_high)
+        plt.gca().set_ylim(0, self.end_year-1850 + 100)
         plt.axis('off')
         plt.gca().set_xlabel(r"Global mean temperature anomaly ($\!^\circ\!$C)")
 
-        for x in [-0.5, 0.0, 0.5, 1.0, 1.5]:
+        for x in np.arange(yrange_low,yrange_high, 0.5):
             plt.text(x, -5, f'{x}', ha='center', fontsize=20)
 
         for y in [1850, 1900, 1950, 2000]:
-            plt.text(-0.7, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
+            plt.text(yrange_low, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
 
         plt.savefig(filename, dpi=300)
         plt.close()
@@ -616,7 +643,7 @@ class Dataset:
         axs.fill_between(self.time, q1, q2, color='#d0b2f7', alpha=0.5)
         axs.plot(self.time, mn, color='#6800b8')
 
-        axs.set_xlim(1850, 2024)
+        axs.set_xlim(1850, self.end_year)
 
         ylims = axs.get_ylim()
         xlims = axs.get_xlim()

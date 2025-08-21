@@ -9,7 +9,7 @@
       ["NOAA v6", "NOAA_ensemble", "GISTEMP"]
     ],
     [
-      "Berkeley Earth Hires",
+      "Berkeley Earth",
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]
     ]
   ],
@@ -17,7 +17,7 @@
     "DCENT_MLE",
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
-      "Berkeley Earth Hires"
+      "Berkeley Earth"
     ],
     [
       "CMST3",
@@ -27,8 +27,8 @@
     "GloSAT"
   ],
   "heads": [
-    ["HadCRUT5", "Berkeley Earth Hires"],
-    ["NOAA v6", "GISTEMP"],
+    "HadCRUT5",
+    ["CMST3",["NOAA v6", "GISTEMP"]],
     ["ERA5 ensemble", "JRA-3Q"]
   ]
 }

@@ -2,7 +2,7 @@
   "master": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth Hires",
+    "Berkeley Earth",
     "HadCRU_MLE",
     "GISTEMP",
     "Kadow_ensemble",
@@ -17,7 +17,7 @@
   "tails": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth Hires",
+    "Berkeley Earth",
     "HadCRU_MLE",
     "Kadow_ensemble",
     "NOAA v6",
@@ -28,7 +28,8 @@
   ],
   "heads": [
       "HadCRUT5",
-      "Berkeley Earth Hires",
+      "Berkeley Earth",
+      "CMST3",
       "GISTEMP",
       "NOAA v6",
       "ERA5 ensemble",

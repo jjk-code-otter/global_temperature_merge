@@ -3,7 +3,6 @@
     "DCENT_MLE",
     "NOAA_ensemble",
     "ERA5 ensemble",
-    "Berkeley Earth Hires",
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"
@@ -12,7 +11,6 @@
   "tails": [
     "DCENT_MLE",
     "NOAA_ensemble",
-    "Berkeley Earth Hires",
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"
@@ -21,7 +19,6 @@
   ],
   "heads": [
     "HadCRUT5",
-    "Berkeley Earth Hires",
     "ERA5 ensemble"
   ]
 }

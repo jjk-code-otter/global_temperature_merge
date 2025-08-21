@@ -2,7 +2,7 @@
   "master": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth Hires",
+    "Berkeley Earth",
     "HadCRU_MLE",
     "Kadow_ensemble",
     "DCENT_MLE",
@@ -12,14 +12,14 @@
   "tails": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth Hires",
+    "Berkeley Earth",
     "HadCRU_MLE",
     "Kadow_ensemble",
     "DCENT_MLE"
   ],
   "heads": [
       "HadCRUT5",
-      "Berkeley Earth Hires",
+      "Berkeley Earth",
       "ERA5 ensemble",
       "JRA-3Q"
     ]

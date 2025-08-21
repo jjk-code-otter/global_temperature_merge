@@ -14,9 +14,10 @@ def convert_file():
             for i in range(2):
                 f.readline()
             for line in f:
-                columns = line.split(',')
-                year = columns[0]
-                anomaly = columns[13]
-                columns = [year, anomaly]
-                line = ','.join(columns) + '\n'
-                o.write(line)
+                if "*" not in line:
+                    columns = line.split(',')
+                    year = columns[0]
+                    anomaly = columns[13]
+                    columns = [year, anomaly]
+                    line = ','.join(columns) + '\n'
+                    o.write(line)

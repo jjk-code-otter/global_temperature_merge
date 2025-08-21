@@ -3,6 +3,7 @@
   "description": "100 member subset of 10000 ensembles using balanced k means clustering",
   "trees": [
     "sst_pseudo",
+    "sst_pseudo_berkeley_hires",
     "lsat_pseudo"
   ],
   "latest_join_year": 1981,

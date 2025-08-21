@@ -1,8 +1,8 @@
 from pathlib import Path
 import os
 
-def convert_file():
 
+def convert_file():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 
@@ -25,6 +25,6 @@ def convert_file():
                 f.readline()
             for line in f:
                 columns = line.split()
-                columns = [columns[0], f'{float(columns[2])/1.96:.4f}']  # 95% confidence intervals
+                columns = [columns[0], f'{float(columns[2]) / 1.96:.4f}']  # 95% confidence intervals
                 line = ','.join(columns) + '\n'
                 o.write(line)

@@ -3,8 +3,8 @@ import xarray as xa
 import numpy as np
 import os
 
-def convert_file():
 
+def convert_file():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 

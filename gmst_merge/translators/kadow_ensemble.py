@@ -3,8 +3,8 @@ import xarray as xa
 import numpy as np
 import os
 
-def convert_file_long():
 
+def convert_file_long():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 
@@ -12,10 +12,10 @@ def convert_file_long():
 
     n_ensemble = 200
     n_months = 2074
-    n_years = int(n_months/12)
+    n_years = int(n_months / 12)
     n_months_whole = n_years * 12
 
-    output = np.zeros((n_years, n_ensemble+1))
+    output = np.zeros((n_years, n_ensemble + 1))
 
     for member in range(n_ensemble):
         filename = data_file_dir / f'20crtaspadzens_tas_mon-gl-72x36_hadcrut5_observation_ens-3_1850-2022_image_{member + 1}.nc'
@@ -33,10 +33,9 @@ def convert_file_long():
         regional_ts = np.mean(regional_ts.reshape(n_years, 12), axis=1)
 
         # Make a time axis
-        time = np.arange(1850,1850+n_years, 1)
+        time = np.arange(1850, 1850 + n_years, 1)
 
-        output[:,0] = time[:]
-        output[:,member+1] = regional_ts[:]
+        output[:, 0] = time[:]
+        output[:, member + 1] = regional_ts[:]
 
     np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
-

@@ -2,8 +2,8 @@ from pathlib import Path
 import numpy as np
 import os
 
-def convert_file():
 
+def convert_file():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 
@@ -55,8 +55,7 @@ def convert_file():
     output[:, 0] = np.mean(years.reshape((nyears, 12)), axis=1)
 
     for i in range(11):
-        output[:, i+1] = np.mean(data[:, i].reshape((nyears, 12)), axis=1)
-        output[:, i+1] = output[:, i+1] - np.mean(output[:, i+1])
+        output[:, i + 1] = np.mean(data[:, i].reshape((nyears, 12)), axis=1)
+        output[:, i + 1] = output[:, i + 1] - np.mean(output[:, i + 1])
 
     np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
-

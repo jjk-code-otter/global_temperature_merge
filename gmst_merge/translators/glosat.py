@@ -4,7 +4,6 @@ import os
 
 
 def convert_file():
-
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
 
@@ -24,7 +23,7 @@ def convert_file():
                     ensemble = [float(x) for x in columns[3:]]
                     ensemble = np.array(ensemble)
 
-                    coverage_unc = float(columns[2]) # Coverage uncertainty is one sigma according to the file
+                    coverage_unc = float(columns[2])  # Coverage uncertainty is one sigma according to the file
 
                     ensemble_std = np.std(ensemble, ddof=1)
                     ensemble_mean = np.mean(ensemble)

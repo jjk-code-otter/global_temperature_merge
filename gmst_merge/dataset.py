@@ -619,7 +619,7 @@ class Dataset:
             plt.plot(b, h_prime, color='black', zorder=y - 1850 + 0.5, clip_on=False)
 
         plt.gca().set_xlim(yrange_low, yrange_high)
-        plt.gca().set_ylim(0, self.end_year-1850 + 100)
+        plt.gca().set_ylim(0, self.end_year-1850 + 10)
         plt.axis('off')
         plt.gca().set_xlabel(r"Global mean temperature anomaly ($\!^\circ\!$C)")
 
@@ -627,7 +627,7 @@ class Dataset:
             plt.text(x, -5, f'{x}', ha='center', fontsize=20)
 
         for y in [1850, 1900, 1950, 2000]:
-            plt.text(yrange_low, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center')
+            plt.text(yrange_low-0.1, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center', ha='right')
 
         plt.savefig(filename, dpi=300)
         plt.close()

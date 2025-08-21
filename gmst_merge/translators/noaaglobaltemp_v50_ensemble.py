@@ -135,7 +135,6 @@ def download_file(url, output_path):
 
 
 def calculate_time_series(data_array, nyears, plot_map_bool=False):
-
     latitudes = np.linspace(-87.5, 87.5, 36)
     longitudes = np.linspace(-177.5, 177.5, 72)
     times = pd.date_range(start=f'1850-01-01', freq='1MS', periods=nyears * 12)

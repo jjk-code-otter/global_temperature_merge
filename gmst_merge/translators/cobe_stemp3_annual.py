@@ -2,6 +2,7 @@ from pathlib import Path
 import numpy as np
 import os
 
+
 def convert_file():
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env)
@@ -30,14 +31,14 @@ def convert_file():
 
     output = np.zeros((nyears, 2))
 
-    output[:,0] = years[:]
-    output[:,1] = anoms[:]
+    output[:, 0] = years[:]
+    output[:, 1] = anoms[:]
 
     np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
 
     output = np.zeros((nyears, 2))
 
-    output[:,0] = years[:]
-    output[:,1] = uncertainties[:]
+    output[:, 0] = years[:]
+    output[:, 1] = uncertainties[:]
 
     np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")

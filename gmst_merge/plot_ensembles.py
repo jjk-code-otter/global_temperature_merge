@@ -1,5 +1,5 @@
 #  Global Temperature Merge - a package for merging global temperature datasets.
-#  Copyright \(c\) 2025 John Kennedy
+#  Copyright \(c\) 2025 John Kennedy and Bruce Calvert
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

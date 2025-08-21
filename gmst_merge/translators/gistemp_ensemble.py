@@ -19,12 +19,13 @@ def convert_file():
         for i in range(2):
             f.readline()
         for line in f:
-            columns = line.split(',')
-            year = columns[0]
-            anomaly = columns[13]
+            if not '*' in line:
+                columns = line.split(',')
+                year = columns[0]
+                anomaly = columns[13]
 
-            years.append(int(year))
-            anoms.append(float(anomaly))
+                years.append(int(year))
+                anoms.append(float(anomaly))
 
 
     full_nyears = len(years)

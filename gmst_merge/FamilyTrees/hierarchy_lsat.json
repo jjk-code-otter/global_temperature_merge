@@ -3,7 +3,7 @@
     "DCENT_MLE",
     "CMST3",
     "Berkeley Earth",
-    ["COBE-STEMP3", ["NOAA v6", "NOAA_ensemble", "GISTEMP"]],
+    ["COBE-STEMP3", ["NOAA v5.1", "NOAA v6", "GISTEMP"]],
     ["ERA5 ensemble", "JRA-3Q"],
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
@@ -18,7 +18,7 @@
       "GloSAT"
     ],
     "Berkeley Earth",
-    ["COBE-STEMP3", ["NOAA v6", "NOAA_ensemble"]]
+    ["COBE-STEMP3", ["NOAA v5.1", "NOAA v6"]]
   ],
   "heads": [
     "HadCRUT5",

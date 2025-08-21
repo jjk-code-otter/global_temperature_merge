@@ -6,7 +6,7 @@
     ["ERA5 ensemble", "JRA-3Q"],
     [
       "CMST3",
-      ["NOAA v6", "NOAA_ensemble", "GISTEMP"]
+      ["NOAA v5.1", "NOAA v6", "GISTEMP"]
     ],
     [
       "Berkeley Earth",
@@ -21,13 +21,13 @@
     ],
     [
       "CMST3",
-      ["NOAA v6", "NOAA_ensemble"]
+      ["NOAA v5.1", "NOAA v6"]
     ],
     "COBE-STEMP3",
     "GloSAT"
   ],
   "heads": [
-    "HadCRUT5",
+    ["HadCRUT5", "Berkeley Earth"],
     ["CMST3",["NOAA v6", "GISTEMP"]],
     ["ERA5 ensemble", "JRA-3Q"]
   ]

@@ -1,7 +1,7 @@
 {
   "master": [
     ["Kadow_ensemble", "NOAA v6"],
-    ["NOAA_ensemble", "CMST3", "COBE-STEMP3"],
+    ["NOAA v5.1", "CMST3", "COBE-STEMP3"],
     ["ERA5 ensemble", "JRA-3Q"],
     [
       ["GloSAT", "HadCRUT5","Berkeley Earth"],
@@ -14,7 +14,7 @@
       ["HadCRU_MLE", "DCENT_MLE"]
     ],
     ["Kadow_ensemble", "NOAA v6"],
-    ["NOAA_ensemble", "CMST3","COBE-STEMP3"]
+    ["NOAA v5.1", "CMST3", "COBE-STEMP3"]
   ],
   "heads": [
     [

@@ -6,6 +6,7 @@
     "HadCRU_MLE",
     "GISTEMP_HadCRUT5",
     "Kadow_ensemble",
+    "NOAA v5.1_NOAA_ensemble",
     "NOAA v6_NOAA_ensemble",
     "NOAA v6_HadCRUT5",
     "NOAA_ensemble",
@@ -21,9 +22,8 @@
     "Berkeley Earth_HadCRUT5",
     "HadCRU_MLE",
     "Kadow_ensemble",
+    "NOAA v5.1_NOAA_ensemble",
     "NOAA v6_NOAA_ensemble",
-    "NOAA v6_HadCRUT5",
-    "NOAA_ensemble",
     "CMST3_NOAA_ensemble",
     "COBE-STEMP3_HadCRUT5",
     "DCENT_MLE"

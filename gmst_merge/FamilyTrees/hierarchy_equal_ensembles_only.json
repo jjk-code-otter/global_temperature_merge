@@ -5,7 +5,6 @@
     "HadCRU_MLE",
     "Kadow_ensemble",
     "DCENT_MLE",
-    "NOAA ensemble",
     "ERA5 ensemble"
   ],
   "tails": [
@@ -14,7 +13,6 @@
     "HadCRU_MLE",
     "Kadow_ensemble",
     "DCENT_MLE",
-    "NOAA ensemble"
   ],
   "heads": [
       "HadCRUT5",

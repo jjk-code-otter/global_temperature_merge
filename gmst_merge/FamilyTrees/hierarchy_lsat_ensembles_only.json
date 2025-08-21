@@ -1,7 +1,6 @@
 {
   "master": [
     "DCENT_MLE",
-    "NOAA_ensemble",
     "ERA5 ensemble",
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
@@ -10,7 +9,6 @@
   ],
   "tails": [
     "DCENT_MLE",
-    "NOAA_ensemble",
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"

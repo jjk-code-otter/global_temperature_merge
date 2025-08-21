@@ -5,20 +5,20 @@
       "COBE-STEMP3_HadCRUT5",
       "GloSAT",
       ["ERA5 ensemble", "JRA-3Q_HadCRUT5"],
-      ["CMST3_NOAA_ensemble", [["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble", "NOAA_ensemble"], "GISTEMP_HadCRUT5"]],
+      [["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], [["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"], "GISTEMP_HadCRUT5"]],
       ["Berkeley Earth_HadCRUT5", ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]]
     ],
     [
       "DCENT_MLE",
-      "CMST3_NOAA_ensemble",
+      ["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"],
       "Berkeley Earth_HadCRUT5",
-      ["COBE-STEMP3_HadCRUT5", ["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble", "NOAA_ensemble"], "GISTEMP_HadCRUT5"],
+      ["COBE-STEMP3_HadCRUT5", ["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"], "GISTEMP_HadCRUT5"],
       ["ERA5 ensemble", "JRA-3Q_HadCRUT5"],
       [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "GloSAT"]
     ],
     [
       ["Kadow_ensemble", ["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble"]],
-      ["NOAA_ensemble", "CMST3_NOAA_ensemble","COBE-STEMP3_HadCRUT5"], ["ERA5 ensemble", "JRA-3Q_HadCRUT5"],
+      ["NOAA v5.1_NOAA_ensemble", ["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"],"COBE-STEMP3_HadCRUT5"], ["ERA5 ensemble", "JRA-3Q_HadCRUT5"],
       [["GloSAT", "HadCRUT5","Berkeley Earth_HadCRUT5"], ["DCENT_MLE", "HadCRU_MLE", "GISTEMP_HadCRUT5"]]
     ]
   ],
@@ -26,7 +26,7 @@
     [
       "DCENT_MLE",
       [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "Berkeley Earth_HadCRUT5"],
-      ["CMST3_NOAA_ensemble", ["NOAA v6_NOAA_ensemble", "NOAA_ensemble"]],
+      ["CMST3_NOAA_ensemble", ["NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"]],
       "COBE-STEMP3_HadCRUT5",
       "GloSAT"
     ],
@@ -35,12 +35,12 @@
       "CMST3_NOAA_ensemble",
       [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "GloSAT"],
       "Berkeley Earth_HadCRUT5",
-      ["COBE-STEMP3_HadCRUT5", ["NOAA v6_NOAA_ensemble", "NOAA_ensemble"]]
+      ["COBE-STEMP3_HadCRUT5", ["NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"]]
     ],
     [
-      [["GloSAT", "HadCRUT5","Berkeley Earth_HadCRUT5"], ["HadCRU_MLE", "DCENT_MLE"]],
+      [["GloSAT", "HadCRUT5", "Berkeley Earth_HadCRUT5"], ["HadCRU_MLE", "DCENT_MLE"]],
       ["Kadow_ensemble", "NOAA v6_NOAA_ensemble"],
-      ["NOAA_ensemble", "CMST3_NOAA_ensemble","COBE-STEMP3_HadCRUT5"]
+      ["NOAA v5.1_NOAA_ensemble", "CMST3_NOAA_ensemble","COBE-STEMP3_HadCRUT5"]
     ]
   ],
   "heads": [

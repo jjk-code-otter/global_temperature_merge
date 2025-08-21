@@ -3,13 +3,11 @@
     "DCENT_MLE",
     "GloSAT",
     "ERA5 ensemble",
-    "NOAA_ensemble",
     ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]
   ],
   "tails": [
     "DCENT_MLE",
     "GloSAT",
-    "NOAA_ensemble",
     ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]
   ],
   "heads": [

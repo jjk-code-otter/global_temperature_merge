@@ -61,6 +61,11 @@ class Dataset:
     def __repr__(self):
         return self.name
 
+    def is_ensemble(self):
+        if self.n_ensemble > 1:
+            return True
+        return False
+
     @staticmethod
     def read_csv(name, data_dir, header=None):
         """
@@ -225,6 +230,12 @@ class Dataset:
         :return: np.ndarray
         """
         return np.std(self.data, axis=1)
+
+    def reduce_to_ensemble_mean(self):
+        mean = self.get_ensemble_mean()
+        mean = mean.reshape((-1, 1))
+        self.data = mean
+        self.n_ensemble = self.data.shape[1]
 
     def anomalize(self, in_start_year, in_end_year):
         """

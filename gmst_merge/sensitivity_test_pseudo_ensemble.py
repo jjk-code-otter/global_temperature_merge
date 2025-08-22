@@ -21,24 +21,24 @@ import gmst_merge.dataset as ds
 
 if __name__ == '__main__':
     """
-    This generates the pseudo ensembles
+    This generates the pseudo ensembles for additional combinations using HadCRUT4 datasets
     """
     data_dir_env = os.getenv('DATADIR')
     DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
 
-    ensemble_datasets = ["HadCRUT5", "NOAA_ensemble", "ERA5 ensemble"]
+    ensemble_datasets = ["GETQUOCS", "Vaccaro"]
 
     regular_datasets = [
-        "NOAA v5.1", "NOAA v6", "GISTEMP", "CMST3", "COBE-STEMP3", "JRA-3Q"
+        "NOAA v5.1", "NOAA v6", "COBE-STEMP3", "HadCRUT5", "CMST3", "Berkeley Earth"
     ]
 
     matched_ensembles = {
-        "NOAA v5.1": ["NOAA_ensemble"],
-        "NOAA v6": ["NOAA_ensemble", "HadCRUT5"],
-        "GISTEMP": ["HadCRUT5"],
-        "CMST3": ["NOAA_ensemble", "HadCRUT5"],
-        "COBE-STEMP3": ["HadCRUT5"],
-        "JRA-3Q": ["ERA5 ensemble"]
+        "NOAA v5.1": ["GETQUOCS", "Vaccaro"],
+        "NOAA v6": ["GETQUOCS", "Vaccaro"],
+        "COBE-STEMP3": ["GETQUOCS", "Vaccaro"],
+        "HadCRUT5": ["GETQUOCS", "Vaccaro"],
+        "CMST3": ["GETQUOCS", "Vaccaro"],
+        "Berkeley Earth": ["GETQUOCS", "Vaccaro"],
     }
 
     all_perturbations = {}
@@ -70,6 +70,9 @@ if __name__ == '__main__':
 
                 df = ds.Dataset.read_csv(name, DATA_DIR)
                 df.anomalize(1981, 2010)
+                if df.is_ensemble():
+                    df.reduce_to_ensemble_mean()
+
                 y1 = df.get_start_year()
                 y2 = df.get_end_year()
 
@@ -96,6 +99,9 @@ if __name__ == '__main__':
 
                 df = ds.Dataset.read_csv(name, DATA_DIR)
                 df.anomalize(1981, 2010)
+                if df.is_ensemble():
+                    df.reduce_to_ensemble_mean()
+
                 y1 = df.get_start_year()
                 y2 = df.get_end_year()
 

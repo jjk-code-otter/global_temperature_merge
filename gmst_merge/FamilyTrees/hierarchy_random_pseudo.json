@@ -14,7 +14,7 @@
     "COBE-STEMP3_HadCRUT5",
     "DCENT_MLE",
     "ERA5 ensemble",
-    "JRA-3Q_HadCRUT5"
+    "JRA-3Q_ERA5 ensemble"
   ],
   "tails": [
     "GloSAT",
@@ -35,6 +35,6 @@
       "GISTEMP_HadCRUT5",
       "NOAA v6_HadCRUT5",
       "ERA5 ensemble",
-      "JRA-3Q_HadCRUT5"
+      "JRA-3Q_ERA5 ensemble"
     ]
 }

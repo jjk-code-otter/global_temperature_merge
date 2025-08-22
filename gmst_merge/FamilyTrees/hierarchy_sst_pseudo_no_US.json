@@ -4,7 +4,7 @@
       "DCENT_MLE",
       "COBE-STEMP3_HadCRUT5",
       "GloSAT",
-      ["ERA5 ensemble", "JRA-3Q_HadCRUT5"],
+      ["ERA5 ensemble", "JRA-3Q_ERA5 ensemble"],
       [["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], [["NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"], "GISTEMP_HadCRUT5"]],
       ["Berkeley Earth_HadCRUT5", ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]]
     ]
@@ -22,7 +22,7 @@
     [
       "CMST3_HadCRUT5",
       ["HadCRUT5", "Berkeley Earth_HadCRUT5"],
-      ["ERA5 ensemble", "JRA-3Q_HadCRUT5"]
+      ["ERA5 ensemble", "JRA-3Q_ERA5 ensemble"]
     ]
   ]
 }

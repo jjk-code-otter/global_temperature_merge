@@ -97,6 +97,6 @@ if __name__ == '__main__':
     experiments = load_experiments()
 
     for experiment in experiments:
-            rng = np.random.default_rng(experiment['seed'])
-            run_experiment(experiment, data_dir, rng)
-            print(rng.integers(20))
+        rng = np.random.default_rng(experiment['seed'])
+        run_experiment(experiment, data_dir, rng)
+        print(rng.integers(20))

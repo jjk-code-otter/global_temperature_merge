@@ -115,7 +115,6 @@ class MetaEnsembleFactory:
                 join_end_year = self.default_overlap[1]
 
             merged = ds.Dataset.join(tail, head, join_start_year, join_end_year)
-            merged.anomalize(self.output_baseline[0], self.output_baseline[1])
 
             meta_ensemble[:, i + 1] = merged.data[:, 0]
             if i == 0:
@@ -132,5 +131,7 @@ class MetaEnsembleFactory:
                 output_dataset = output_dataset.cluster_ensemble(self.modified_ensemble_size, rng)
             elif self.thinning == 'thin_ensemble':
                 output_dataset = output_dataset.thin_ensemble(self.modified_ensemble_size, rng)
+
+        output_dataset.anomalize(self.output_baseline[0], self.output_baseline[1])
 
         return output_dataset

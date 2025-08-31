@@ -19,6 +19,54 @@ from pathlib import Path
 import pandas as pd
 import gmst_merge.dataset as ds
 
+
+def make_perturbations(ensemble_datasets, clim1, clim2, data_dir):
+    all_perturbations = {}
+    all_standardised_perturbations = {}
+
+    for name in ensemble_datasets:
+        df = ds.Dataset.read_csv(name, data_dir)
+        df.anomalize(clim1, clim2)
+        df.convert_to_perturbations()
+        all_perturbations[name] = df
+
+        df = ds.Dataset.read_csv(name, data_dir)
+        df.anomalize(clim1, clim2)
+        df.convert_to_standardised_perturbations()
+        all_standardised_perturbations[name] = df
+
+    return all_perturbations, all_standardised_perturbations
+
+
+def apply_perturbations(name, data_dir, unc_file, ptb, clim1, clim2):
+    df = ds.Dataset.read_csv(name, data_dir)
+
+    df.anomalize(clim1, clim2)
+    y1 = df.get_start_year()
+    y2 = df.get_end_year()
+
+    uf = None
+    if unc_file is not None:
+        uf = pd.read_csv(unc_file, header=None)
+        uf = uf.to_numpy()
+
+    py1 = ptb.get_start_year()
+    py2 = ptb.get_end_year()
+
+    if py1 <= y1 and py2 >= y2:
+        print(f"Lengths of dataset and perturbations match.")
+        perturbed_dataset = df.make_perturbed_dataset(ptb, scaling=uf)
+    else:
+        print(f"Length mismatch, dataset {y1}-{y2}, perturbations {py1}-{py2} subset will be processed.")
+        df = df.select_year_range(py1, py2)
+        if uf is not None:
+            uf = uf[py1 - y1: py2 - y1 + 1]
+        perturbed_dataset = df.make_perturbed_dataset(ptb, scaling=uf)
+
+
+    return perturbed_dataset
+
+
 if __name__ == '__main__':
     """
     This generates the pseudo ensembles
@@ -41,72 +89,42 @@ if __name__ == '__main__':
         "JRA-3Q": ["ERA5 ensemble"]
     }
 
-    all_perturbations = {}
-    all_standardised_perturbations = {}
-    for name in ensemble_datasets:
-        df = ds.Dataset.read_csv(name, DATA_DIR)
-        df.anomalize(1981, 2010)
-        df.convert_to_perturbations()
-        all_perturbations[name] = df
-
-        df = ds.Dataset.read_csv(name, DATA_DIR)
-        df.anomalize(1981, 2010)
-        df.convert_to_standardised_perturbations()
-        all_standardised_perturbations[name] = df
+    baselines = {
+        "NOAA v5.1": [1971, 2000],  # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
+        "NOAA v6": [1971, 2000],  # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
+        "GISTEMP": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
+        "CMST3": [1961, 1990],  # See http://www.gwpu.net/en/h-col-103.html
+        "COBE-STEMP3": [1961, 1990],  # Inferred from input file
+        "JRA-3Q": [1981, 2010]  # Doesn't matter in this case because uncertainty is taken neat from ERA5
+    }
 
     all_perturbed_datasets = []
+
     for name in regular_datasets:
-        print(f"Processing {name}")
+        print(f"Processing {name} - with climatology {baselines[name][0]}-{baselines[name][1]}")
 
-        # If the uncertainty file exists
+        clim1 = baselines[name][0]
+        clim2 = baselines[name][1]
+
+        all_perturbations, all_standardised_perturbations = make_perturbations(
+            ensemble_datasets, clim1, clim2, DATA_DIR
+        )
+
         unc_file = DATA_DIR / name / "uncertainty_time_series.csv"
-        if unc_file.exists():
-            print(f"Using scaled perturbations from {matched_ensembles[name]}")
-
-            ptbs = matched_ensembles[name]
-            for ptb2 in ptbs:
-
-                ptb = all_standardised_perturbations[ptb2]
-
-                df = ds.Dataset.read_csv(name, DATA_DIR)
-                df.anomalize(1981, 2010)
-                y1 = df.get_start_year()
-                y2 = df.get_end_year()
-
-                uf = pd.read_csv(unc_file, header=None)
-                uf = uf.to_numpy()
-
-                py1 = ptb.get_start_year()
-                py2 = ptb.get_end_year()
-                if py1 <= y1 and py2 >= y2:
-                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
-                else:
-                    df = df.select_year_range(py1, py2)
-                    uf = uf[py1-y1: py2-y1+1]
-                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb, scaling=uf))
-                    print("Length mismatch, subset will be processed")
-
-        else:
+        if not unc_file.exists():
             print(f"Using non-scaled perturbations from {matched_ensembles[name]}")
+            unc_file = None
+            all_selected_perturbations = all_perturbations
+        else:
+            print(f"Using scaled perturbations from {matched_ensembles[name]}")
+            all_selected_perturbations = all_standardised_perturbations
 
-            ptbs = matched_ensembles[name]
-            for ptb2 in ptbs:
-
-                ptb = all_perturbations[ptb2]
-
-                df = ds.Dataset.read_csv(name, DATA_DIR)
-                df.anomalize(1981, 2010)
-                y1 = df.get_start_year()
-                y2 = df.get_end_year()
-
-                py1 = ptb.get_start_year()
-                py2 = ptb.get_end_year()
-                if py1 <= y1 and py2 >= y2:
-                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
-                else:
-                    df = df.select_year_range(py1, py2)
-                    all_perturbed_datasets.append(df.make_perturbed_dataset(ptb))
-                    print("Length mismatch, subset will be processed")
+        ptbs = matched_ensembles[name]
+        for ptb2 in ptbs:
+            print(ptb2)
+            ptb = all_selected_perturbations[ptb2]
+            perturbed_dataset = apply_perturbations(name, DATA_DIR, unc_file, ptb, clim1, clim2)
+            all_perturbed_datasets.append(perturbed_dataset)
 
         print("")
 

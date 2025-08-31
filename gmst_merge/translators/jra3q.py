@@ -38,10 +38,3 @@ def convert_file():
     output[:, 1] = anoms[:]
 
     np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
-
-    output = np.zeros((nyears, 2))
-
-    output[:, 0] = years[:]
-    output[:, 1] = anoms[:] * 0.0 + 0.06
-
-    np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, delimiter=",")

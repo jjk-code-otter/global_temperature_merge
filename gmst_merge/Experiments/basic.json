@@ -9,6 +9,7 @@
 
     "sst",
     "sst_pseudo",
+    "sst_pseudo_sensitivity",
     "sst_ensembles_only",
 
     "lsat",

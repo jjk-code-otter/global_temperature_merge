@@ -18,7 +18,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import gmst_merge.dataset as ds
-
+import matplotlib.pyplot as plt
 
 def make_perturbations(ensemble_datasets, clim1, clim2, data_dir):
     all_perturbations = {}
@@ -99,6 +99,7 @@ if __name__ == '__main__':
     }
 
     all_perturbed_datasets = []
+    all_clims = []
 
     for name in regular_datasets:
         print(f"Processing {name} - with climatology {baselines[name][0]}-{baselines[name][1]}")
@@ -125,11 +126,15 @@ if __name__ == '__main__':
             ptb = all_selected_perturbations[ptb2]
             perturbed_dataset = apply_perturbations(name, DATA_DIR, unc_file, ptb, clim1, clim2)
             all_perturbed_datasets.append(perturbed_dataset)
+            all_clims.append(f'{clim1}-{clim2}')
 
         print("")
 
-    for df in all_perturbed_datasets:
+    for i, df in enumerate(all_perturbed_datasets):
         directory = DATA_DIR / df.name
         directory.mkdir(exist_ok=True)
         filename = directory / 'ensemble_time_series.csv'
         df.to_csv(filename)
+
+        df.anomalize(1981,2010)
+        df.plot_whole_ensemble(Path('Figures')/'pseudo_ensembles'/f'{df.name}_{all_clims[i]}.png', alpha=0.7)

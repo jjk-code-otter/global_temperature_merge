@@ -14,7 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -119,7 +119,12 @@ if __name__ == '__main__':
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid', 'solid']
 
-    plot_comparisons('Figures/summary_all.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/summary_all.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/summary_all_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)
 
 
     # Summary plot trees
@@ -131,7 +136,12 @@ if __name__ == '__main__':
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#91a19f', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'solid']
 
-    plot_comparisons('Figures/summary_trees.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/summary_trees.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/summary_trees_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)
 
 
     # Summary of ensembles vs none vs pseudo plots
@@ -141,7 +151,12 @@ if __name__ == '__main__':
     colours = ['#555555', '#7fc97f', '#beaed4']
     linestyles = ['solid', 'solid', 'solid']
 
-    plot_comparisons('Figures/summary_ensembles_or_not.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/summary_ensembles_or_not.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/summary_ensembles_or_not_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)
 
 
     # Compare clustered and unclustered
@@ -154,7 +169,12 @@ if __name__ == '__main__':
     colours = ['#fdc086', '#beaed4','#7fc97f', '#555555', '#E65656']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'dashed']
 
-    plot_comparisons('Figures/thinning_all.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/thinning_all.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/thinning_all_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)
 
 
     # Sensitivity tests summary plots
@@ -165,7 +185,12 @@ if __name__ == '__main__':
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#91a19f', '#386cb0']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
-    plot_comparisons('Figures/sensitivity_all.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/sensitivity_all.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/sensitivity_all_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)
 
 
     # Sensitivity tests reanalysis regrouping summary plots
@@ -174,4 +199,9 @@ if __name__ == '__main__':
     colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#91a19f', '#386cb0']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
-    plot_comparisons('Figures/sensitivity_reanalysis.png', to_compare, colours, linestyles)
+    count = 0
+    filename = 'Figures/sensitivity_reanalysis.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/sensitivity_reanalysis_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles)

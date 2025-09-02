@@ -5,7 +5,8 @@
     [
       ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
       "GloSAT"
-    ]
+    ],
+    "NOAA_ensemble"
   ],
   "tails": [
     "DCENT_MLE",

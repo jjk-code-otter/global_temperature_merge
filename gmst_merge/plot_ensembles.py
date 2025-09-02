@@ -14,6 +14,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -146,7 +147,13 @@ if __name__ == '__main__':
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
 
-    plot_ensemble('Figures/final.png', to_compare, colours, linestyles, 100)
+
+    count = 0
+    filename = 'Figures/final.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/final_{count}.png'
+    plot_ensemble(filename, to_compare, colours, linestyles, 100)
 
     # Compare clustered and unclustered
     to_compare = []
@@ -155,4 +162,9 @@ if __name__ == '__main__':
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
 
-    plot_ensemble('Figures/final_full.png', to_compare, colours, linestyles, 10000)
+    count = 0
+    filename = 'Figures/final_full.png'
+    while Path(filename).exists():
+        count += 1
+        filename = f'Figures/final_full_{count}.png'
+    plot_ensemble(filename, to_compare, colours, linestyles, 10000)

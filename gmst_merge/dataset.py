@@ -401,6 +401,8 @@ class Dataset:
         :return:
             clustered ensemble
         """
+        # Use 1981-2010 baseline for consistency
+        self.anomalize(1981, 2010)
 
         ensemble = self.data
         cluster_size = int(ensemble.shape[1] / number_of_clusters)
@@ -601,7 +603,8 @@ class Dataset:
         """
         plt.figure(figsize=[16, 9])
         plt.plot(self.time, self.data, color='midnightblue', alpha=alpha)
-        plt.gca().set_ylim(-0.5, 1.75)
+        plt.gca().set_ylim(-1.25, 1.75)
+        plt.gca().set_xlim(1850,2025)
         plt.savefig(filename, dpi=300)
         plt.close()
 

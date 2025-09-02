@@ -124,14 +124,12 @@ class MetaEnsembleFactory:
 
         # If a thinning method is specified then call that method on the ensemble
         print(f"Thinning method: {self.thinning}")
-        if self.thinning is None:
-            return output_dataset
-        else:
-            if self.thinning == 'cluster_ensemble':
-                output_dataset = output_dataset.cluster_ensemble(self.modified_ensemble_size, rng)
-            elif self.thinning == 'thin_ensemble':
-                output_dataset = output_dataset.thin_ensemble(self.modified_ensemble_size, rng)
+        if self.thinning == 'cluster_ensemble':
+            output_dataset = output_dataset.cluster_ensemble(self.modified_ensemble_size, rng)
+        elif self.thinning == 'thin_ensemble':
+            output_dataset = output_dataset.thin_ensemble(self.modified_ensemble_size, rng)
 
+        # Finaly, anomalize to specified output baseline
         output_dataset.anomalize(self.output_baseline[0], self.output_baseline[1])
 
         return output_dataset

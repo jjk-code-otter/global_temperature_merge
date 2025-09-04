@@ -17,14 +17,40 @@
 
 import os
 from pathlib import Path
+from inspect import getmembers, isfunction
 import json
+from typing import List
+
 import numpy as np
 
 import gmst_merge.family_tree as ft
 import gmst_merge.metaensemblefactory as mef
+from gmst_merge.dataset import Dataset, Metric
+
+from gmst_merge.metrics import metrics
+
+
+def find_and_run_all_metrics(meta_ensemble: Dataset) -> List[Metric]:
+    """
+    Get all functions from the metrics module and run them one at a time using the
+    Dataset get_metric_range method.
+
+    :param meta_ensemble: Dataset
+
+    :return: list[Metric]
+        Returns list of Metric objects which can be printed out for a neat summary
+    """
+    functions_in_metrics = getmembers(metrics, isfunction)
+
+    metric_list = []
+    for ifunc in functions_in_metrics:
+        metric_list.append(meta_ensemble.get_metric_range(ifunc[1]))
+
+    return metric_list
 
 
 def load_experiments():
+    """Load all the experiments in the Experiments directory"""
     experiment_dir = Path("Experiments")
     experiments = []
     for file in experiment_dir.glob("*.json"):
@@ -64,8 +90,13 @@ def run_experiment(experiment, data_dir, rng):
 
         meta_ensemble = factory.make_meta_ensemble(rng, end_year=2024)
 
+        # Calculate the desired metrics for this ensemble
+        metric_list = find_and_run_all_metrics(meta_ensemble)
+
+        # Plot the ensemble
         meta_ensemble.plot_whole_ensemble(figure_dir / f'{tree}_clusters.png', alpha=1)
 
+        # Calculate the smoothed ensemble
         smoothed = meta_ensemble.lowess_smooth()
 
         # Write out the files
@@ -83,8 +114,19 @@ def run_experiment(experiment, data_dir, rng):
         smoothed.plot_time_series_with_exceedances(figure_dir / f'{tree}_time_series_with_exceedances.png')
         smoothed.plot_joy_division_histogram(figure_dir / f'{tree}_smoothed_joy_division.png')
 
+        # Now 81-10 climatology
+        meta_ensemble.anomalize(1981, 2010)
+        smoothed = meta_ensemble.lowess_smooth()
+        # Write out the files
+        meta_ensemble.to_csv(output_dir / f'{tree}_1981-2010.csv')
+        meta_ensemble.summary_to_csv(output_dir / f'{tree}_summary_1981-2010.csv')
+        smoothed.summary_to_csv(output_dir / f'{tree}_smoothed_summary_1981-2010.csv')
+
         print(tails)
         print(heads)
+
+        for metric in metric_list:
+            print(metric)
 
         print()
     print()

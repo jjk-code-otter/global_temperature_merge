@@ -3,12 +3,8 @@
   "description": "basic tests using basic set up - no thinning, fixed 30-year overlap",
   "trees": [
 
-    "ur",
-    "ur_pseudo",
-    "ur_ensembles_only",
-
-    "sst",
     "sst_pseudo",
+    "sst",
     "sst_pseudo_sensitivity",
     "sst_ensembles_only",
 
@@ -18,6 +14,10 @@
 
     "interp",
     "interp_pseudo",
+
+    "ur",
+    "ur_pseudo",
+    "ur_ensembles_only",
 
     "equal",
     "equal_pseudo",

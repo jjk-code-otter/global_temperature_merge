@@ -18,6 +18,7 @@
 import copy
 import numpy as np
 import pandas as pd
+from typing import Callable
 from random import randrange, choice
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
@@ -41,6 +42,24 @@ def get_axis_lims(data, step=0.25):
     """
     return np.floor(np.min(data) / step) * step, np.ceil(np.max(data) / step) * step
 
+
+class Metric:
+
+    def __init__(self, name, label, mean, stdev, low, high, range):
+        self.name = name
+        self.label = label
+        self.mean = mean
+        self.stdev = stdev
+        self.low = low
+        self.high = high
+        self.range = range
+
+    def __str__(self):
+        if self.stdev is not None:
+            return (f'{self.name}: {self.label} = {self.mean:.2f} +- '
+                    f'{self.stdev:.2f} (1-sigma) '
+                    f'[{self.low:.2f}-{self.high:.2f}] {self.range:.0f}% range')
+        return f'{self.name}: {self.label} = {self.mean:.2f}'
 
 class Dataset:
     """
@@ -427,6 +446,46 @@ class Dataset:
             out_ensemble.n_ensemble = out_ensemble.data.shape[1]
 
         return out_ensemble
+
+    def get_metric_range(self, infunc: Callable):
+        """
+        Given an input function that takes a time and data array as inputs, run the function
+        on each ensemble member and returng the mean, stdev, 2.5% and 97.5% ranges
+
+        :param infunc: Callable
+            function to be run on each ensemble member
+
+        :return:
+        """
+        numeric = True
+
+        label = infunc(self.time, self.data[:, 0], label=True)
+        qrange = infunc(self.time, self.data[:, 0], range=True)
+
+        computed_metrics = []
+        for i in range(self.n_ensemble):
+            result = infunc(self.time, self.data[:, i])
+            computed_metrics.append(result)
+            if isinstance(result, bool):
+                numeric = False
+
+        computed_metrics = np.array(computed_metrics)
+
+        if numeric:
+            mean = np.mean(computed_metrics)
+            stdev = np.std(computed_metrics)
+            low = np.quantile(computed_metrics, qrange[0])
+            high = np.quantile(computed_metrics, qrange[1])
+            pct_range = 100*(qrange[1]-qrange[0])
+        else:
+            mean = np.count_nonzero(computed_metrics) / self.n_ensemble
+            stdev = None
+            low = None
+            high = None
+            pct_range = None
+
+        return Metric(self.name, label, mean, stdev, low, high, pct_range)
+
 
     def to_csv(self, filename, header=False) -> None:
         """

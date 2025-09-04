@@ -22,7 +22,7 @@ import seaborn as sns
 import gmst_merge.dataset as ds
 
 
-def plot_comparisons(filename, to_compare, colours, linestyles):
+def plot_comparisons(filename, to_compare, colours, linestyles, climatology):
     STANDARD_PARAMETER_SET = {
         'axes.axisbelow': False,
         'axes.labelsize': 20,
@@ -61,12 +61,16 @@ def plot_comparisons(filename, to_compare, colours, linestyles):
         'ytick.right': False
     }
 
+    insert = ''
+    if climatology[0] != 1850 and climatology[1] != 1900:
+        insert = f'_{climatology[0]}-{climatology[1]}'
+
     # Read in the data
     frames = {}
     smooth = {}
     for combos in to_compare:
-        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}_summary.csv')
-        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}_smoothed_summary.csv')
+        frames[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}_summary{insert}.csv')
+        smooth[f'{combos[0]} {combos[1]}'] = pd.read_csv(f'Output/{combos[0]}/{combos[1]}_smoothed_summary{insert}.csv')
 
     sns.set(font='Franklin Gothic Book', rc=STANDARD_PARAMETER_SET)
 
@@ -99,9 +103,13 @@ def plot_comparisons(filename, to_compare, colours, linestyles):
     axs[1].set_title('(b) Standard deviation of annual global mean temperatures', loc='left', fontsize=20)
     axs[2].set_title('(c) Standard deviation of smoothed global mean temperatures', loc='left', fontsize=20)
 
-    axs[0].set_ylim(-0.35, 1.7)
-    axs[1].set_ylim(0.0, 0.16)
-    axs[2].set_ylim(0.0, 0.16)
+    if climatology[0] == 1850:
+        axs[0].set_ylim(-0.35, 1.7)
+    else:
+        axs[0].set_ylim(-1.05, 1.0)
+
+    axs[1].set_ylim(0.0, 0.176)
+    axs[2].set_ylim(0.0, 0.176)
 
     plt.savefig(filename, bbox_inches='tight')
     plt.savefig(filename.replace('.png', '.svg'), bbox_inches='tight')
@@ -109,6 +117,13 @@ def plot_comparisons(filename, to_compare, colours, linestyles):
 
 
 if __name__ == '__main__':
+
+    climatology = [1850, 1900]
+    climatology = [1981, 2010]
+    insert = ''
+    if climatology[0] != 1850 and climatology[1] != 1900:
+        insert = f'_{climatology[0]}-{climatology[1]}'
+
     # Summary plots
     trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only', 'ur_pseudo']
     to_compare = [['basic', x] for x in trees]
@@ -120,11 +135,11 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid', 'solid']
 
     count = 0
-    filename = 'Figures/summary_all.png'
+    filename = f'Figures/summary_all{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/summary_all_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/summary_all{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
 
     # Summary plot trees
@@ -137,11 +152,11 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'solid']
 
     count = 0
-    filename = 'Figures/summary_trees.png'
+    filename = f'Figures/summary_trees{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/summary_trees_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/summary_trees{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
 
     # Summary of ensembles vs none vs pseudo plots
@@ -152,11 +167,11 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid']
 
     count = 0
-    filename = 'Figures/summary_ensembles_or_not.png'
+    filename = f'Figures/summary_ensembles_or_not{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/summary_ensembles_or_not_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/summary_ensembles_or_not{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
 
     # Compare clustered and unclustered
@@ -170,11 +185,11 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'dashed']
 
     count = 0
-    filename = 'Figures/thinning_all.png'
+    filename = f'Figures/thinning_all{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/thinning_all_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/thinning_all{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
 
     # Sensitivity tests summary plots
@@ -186,11 +201,11 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
     count = 0
-    filename = 'Figures/sensitivity_all.png'
+    filename = f'Figures/sensitivity_all{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/sensitivity_all_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/sensitivity_all{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
 
     # Sensitivity tests reanalysis regrouping summary plots
@@ -200,8 +215,8 @@ if __name__ == '__main__':
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'solid']
 
     count = 0
-    filename = 'Figures/sensitivity_reanalysis.png'
+    filename = f'Figures/sensitivity_reanalysis{insert}.png'
     while Path(filename).exists():
         count += 1
-        filename = f'Figures/sensitivity_reanalysis_{count}.png'
-    plot_comparisons(filename, to_compare, colours, linestyles)
+        filename = f'Figures/sensitivity_reanalysis{insert}_{count}.png'
+    plot_comparisons(filename, to_compare, colours, linestyles, climatology)

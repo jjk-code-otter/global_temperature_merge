@@ -60,7 +60,6 @@ def run_experiment(experiment, data_dir, rng):
         heads.plot_tree(figure_dir / f'{tree}_heads_treeogram.svg')
 
 
-
 if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
     data_dir = Path(data_dir_env) / 'ManagedData' / 'Data'
@@ -68,6 +67,6 @@ if __name__ == '__main__':
     experiments = load_experiments()
 
     for experiment in experiments:
-            rng = np.random.default_rng(experiment['seed'])
-            run_experiment(experiment, data_dir, rng)
-            print(rng.integers(20))
+        rng = np.random.default_rng(experiment['seed'])
+        run_experiment(experiment, data_dir, rng)
+        print(rng.integers(20))

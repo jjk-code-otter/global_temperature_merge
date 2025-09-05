@@ -20,6 +20,7 @@ import pandas as pd
 import gmst_merge.dataset as ds
 import matplotlib.pyplot as plt
 
+
 def make_perturbations(ensemble_datasets, clim1, clim2, data_dir):
     all_perturbations = {}
     all_standardised_perturbations = {}
@@ -63,7 +64,6 @@ def apply_perturbations(name, data_dir, unc_file, ptb, clim1, clim2):
             uf = uf[py1 - y1: py2 - y1 + 1]
         perturbed_dataset = df.make_perturbed_dataset(ptb, scaling=uf)
 
-
     return perturbed_dataset
 
 
@@ -90,8 +90,10 @@ if __name__ == '__main__':
     }
 
     baselines = {
-        "NOAA v5.1": [1971, 2000],  # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
-        "NOAA v6": [1971, 2000],  # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
+        "NOAA v5.1": [1971, 2000],
+        # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
+        "NOAA v6": [1971, 2000],
+        # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
         "GISTEMP": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
         "CMST3": [1961, 1990],  # See http://www.gwpu.net/en/h-col-103.html
         "COBE-STEMP3": [1961, 1990],  # Inferred from input file
@@ -136,5 +138,5 @@ if __name__ == '__main__':
         filename = directory / 'ensemble_time_series.csv'
         df.to_csv(filename)
 
-        df.anomalize(1981,2010)
-        df.plot_whole_ensemble(Path('Figures')/'pseudo_ensembles'/f'{df.name}_{all_clims[i]}.png', alpha=0.7)
+        df.anomalize(1981, 2010)
+        df.plot_whole_ensemble(Path('Figures') / 'pseudo_ensembles' / f'{df.name}_{all_clims[i]}.png', alpha=0.7)

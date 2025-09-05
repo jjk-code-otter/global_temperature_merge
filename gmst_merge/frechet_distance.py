@@ -70,7 +70,7 @@ if __name__ == '__main__':
         "balanced_ensemble": out_path / 'balanced_ensemble' / 'sst_pseudo.csv',
     }
 
-    datasets = { name: ds.Dataset.read_csv_from_file(fname, name) for (name, fname) in tab.items()}
+    datasets = {name: ds.Dataset.read_csv_from_file(fname, name) for (name, fname) in tab.items()}
 
     # Add in the rescaled ensemble
     filename = out_path / 'final_small_ensemble' / 'sst_pseudo.csv'

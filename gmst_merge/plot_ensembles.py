@@ -147,7 +147,6 @@ if __name__ == '__main__':
     colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid']
 
-
     count = 0
     filename = 'Figures/final.png'
     while Path(filename).exists():

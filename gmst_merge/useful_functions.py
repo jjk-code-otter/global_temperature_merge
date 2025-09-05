@@ -27,7 +27,6 @@ def balanced_kmeans(
         rng=np.random.default_rng(seed=0),
         weights=["null"]
 ):
-
     ensemble = np.array(ensemble)
     if round(number_of_clusters, 0) != number_of_clusters or number_of_clusters < 1:
         raise TypeError("number of clusters must be a positive integer")
@@ -112,9 +111,9 @@ def gridded_to_timeseries(array):
 
     # assumes an equirectangular grid where 1st dimension is longitude and 2nd dimension is latitude
     weight = (
-                np.cos(np.arange(array.shape[1]) / array.shape[1] * np.pi) -
-                np.cos((np.arange(array.shape[1]) + 1) / array.shape[1] * np.pi)
-    ) / 2
+                     np.cos(np.arange(array.shape[1]) / array.shape[1] * np.pi) -
+                     np.cos((np.arange(array.shape[1]) + 1) / array.shape[1] * np.pi)
+             ) / 2
 
     weight = np.transpose(
         np.tile(weight, (array.shape[2], array.shape[0], 1)), [1, 2, 0]
@@ -122,7 +121,7 @@ def gridded_to_timeseries(array):
 
     timeseries = np.divide(
         np.nansum(np.nansum(np.multiply(array, weight), axis=0), axis=0),
-              np.nansum(np.nansum(np.multiply(1 - np.isnan(array).astype(int), weight), axis=0), axis=0)
+        np.nansum(np.nansum(np.multiply(1 - np.isnan(array).astype(int), weight), axis=0), axis=0)
     )
 
     return timeseries
@@ -146,7 +145,6 @@ def days_in_month(years):
 
 
 def monthly_to_annual_timeseries(matrix, first_year):
-
     if round(first_year, 0) != first_year:
         raise TypeError("first year must be an integer")
 
@@ -158,7 +156,8 @@ def monthly_to_annual_timeseries(matrix, first_year):
     if matrix.ndim != 2:
         raise TypeError("first input must be a 2 dimensional array")
 
-    matrix_reshaped = matrix[:(matrix.shape[0] // 12) * 12].reshape(12, matrix.shape[0] // 12, matrix.shape[1], order='F')
+    matrix_reshaped = matrix[:(matrix.shape[0] // 12) * 12].reshape(12, matrix.shape[0] // 12, matrix.shape[1],
+                                                                    order='F')
     years = np.arange(first_year, first_year + matrix.shape[0] // 12)
     month_weights = days_in_month(years).astype(float)
     month_weights = np.divide(month_weights, np.sum(month_weights, axis=0)).reshape(12, matrix.shape[0] // 12, 1,

@@ -125,14 +125,17 @@ if __name__ == '__main__':
         insert = f'_{climatology[0]}-{climatology[1]}'
 
     # Summary plots
-    trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only', 'ur_pseudo']
+    trees = ['ur', 'sst', 'lsat', 'interp', 'equal', 'sst_ensembles_only', 'lsat_ensembles_only', 'ur_ensembles_only',
+             'ur_pseudo']
     to_compare = [['basic', x] for x in trees]
     to_compare.append(['random', 'random'])
     to_compare.append(['basic', 'sst_pseudo'])
     to_compare.append(['basic', 'lsat_pseudo'])
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
-    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid', 'solid', 'solid']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#beaed4', '#555555', '#5DD0DB',
+               '#386cb0', '#000000', '#ffcc00', '#00ffcc']
+    linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'dashed', 'dotted', 'solid', 'solid',
+                  'solid', 'solid']
 
     count = 0
     filename = f'Figures/summary_all{insert}.png'
@@ -141,14 +144,14 @@ if __name__ == '__main__':
         filename = f'Figures/summary_all{insert}_{count}.png'
     plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
-
     # Summary plot trees
     trees = ['ur_pseudo', 'sst_pseudo', 'lsat_pseudo', 'interp_pseudo', 'equal_pseudo']
     to_compare = [['basic', x] for x in trees]
     to_compare.append(['random', 'random_pseudo'])
     to_compare = to_compare + [['unbalanced', x] for x in ['unbalanced']]
 
-    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#91a19f', '#555555', '#5DD0DB', '#386cb0', '#000000', '#ffcc00', '#00ffcc']
+    colours = ['#555555', '#7fc97f', '#beaed4', '#fdc086', '#E65656', '#7fc97f', '#91a19f', '#555555', '#5DD0DB',
+               '#386cb0', '#000000', '#ffcc00', '#00ffcc']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'solid', 'dashed', 'dashed', 'solid']
 
     count = 0
@@ -157,7 +160,6 @@ if __name__ == '__main__':
         count += 1
         filename = f'Figures/summary_trees{insert}_{count}.png'
     plot_comparisons(filename, to_compare, colours, linestyles, climatology)
-
 
     # Summary of ensembles vs none vs pseudo plots
     trees = ['ur', 'ur_ensembles_only', 'ur_pseudo']
@@ -173,7 +175,6 @@ if __name__ == '__main__':
         filename = f'Figures/summary_ensembles_or_not{insert}_{count}.png'
     plot_comparisons(filename, to_compare, colours, linestyles, climatology)
 
-
     # Compare clustered and unclustered
     to_compare = []
     to_compare.append(['final_small_ensemble', 'sst_pseudo'])
@@ -181,7 +182,7 @@ if __name__ == '__main__':
     to_compare.append(['final_clustered', 'sst_pseudo'])
     to_compare.append(['basic', 'sst_pseudo'])
 
-    colours = ['#fdc086', '#beaed4','#7fc97f', '#555555', '#E65656']
+    colours = ['#fdc086', '#beaed4', '#7fc97f', '#555555', '#E65656']
     linestyles = ['solid', 'solid', 'solid', 'solid', 'dashed']
 
     count = 0
@@ -190,7 +191,6 @@ if __name__ == '__main__':
         count += 1
         filename = f'Figures/thinning_all{insert}_{count}.png'
     plot_comparisons(filename, to_compare, colours, linestyles, climatology)
-
 
     # Sensitivity tests summary plots
     to_compare = [[x, 'ur_pseudo'] for x in ['basic', 'short_overlap', 'variable_overlap', 'shortest_overlap']]
@@ -206,7 +206,6 @@ if __name__ == '__main__':
         count += 1
         filename = f'Figures/sensitivity_all{insert}_{count}.png'
     plot_comparisons(filename, to_compare, colours, linestyles, climatology)
-
 
     # Sensitivity tests reanalysis regrouping summary plots
     to_compare = [['basic', x] for x in ['sst_pseudo', 'sst_pseudo_reanalysis_switch', 'sst_pseudo_no_US']]

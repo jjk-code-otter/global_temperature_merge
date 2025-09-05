@@ -61,6 +61,7 @@ class Metric:
                     f'[{self.low:.2f}-{self.high:.2f}] {self.range:.0f}% range')
         return f'{self.name}: {self.label} = {self.mean:.2f}'
 
+
 class Dataset:
     """
     Simple data class using numpy arrays for the time axis and a data ensemble.
@@ -476,7 +477,7 @@ class Dataset:
             stdev = np.std(computed_metrics)
             low = np.quantile(computed_metrics, qrange[0])
             high = np.quantile(computed_metrics, qrange[1])
-            pct_range = 100*(qrange[1]-qrange[0])
+            pct_range = 100 * (qrange[1] - qrange[0])
         else:
             mean = np.count_nonzero(computed_metrics) / self.n_ensemble
             stdev = None
@@ -485,7 +486,6 @@ class Dataset:
             pct_range = None
 
         return Metric(self.name, label, mean, stdev, low, high, pct_range)
-
 
     def to_csv(self, filename, header=False) -> None:
         """
@@ -663,7 +663,7 @@ class Dataset:
         plt.figure(figsize=[16, 9])
         plt.plot(self.time, self.data, color='midnightblue', alpha=alpha)
         plt.gca().set_ylim(-1.25, 1.75)
-        plt.gca().set_xlim(1850,2025)
+        plt.gca().set_xlim(1850, 2025)
         plt.savefig(filename, dpi=300)
         plt.close()
 
@@ -679,7 +679,7 @@ class Dataset:
 
         # Calculate some histograms
         plt.figure(figsize=[16, 16])
-        for y in range(1850, self.end_year+1, 5):
+        for y in range(1850, self.end_year + 1, 5):
             n_plot_years = self.end_year - 1850 + 1
             bins = np.arange(yrange_low, yrange_high, 0.01)
 
@@ -693,15 +693,15 @@ class Dataset:
             plt.plot(b, h_prime, color='black', zorder=y - 1850 + 0.5, clip_on=False)
 
         plt.gca().set_xlim(yrange_low, yrange_high)
-        plt.gca().set_ylim(0, self.end_year-1850 + 10)
+        plt.gca().set_ylim(0, self.end_year - 1850 + 10)
         plt.axis('off')
         plt.gca().set_xlabel(r"Global mean temperature anomaly ($\!^\circ\!$C)")
 
-        for x in np.arange(yrange_low,yrange_high, 0.5):
+        for x in np.arange(yrange_low, yrange_high, 0.5):
             plt.text(x, -5, f'{x}', ha='center', fontsize=20)
 
         for y in [1850, 1900, 1950, 2000]:
-            plt.text(yrange_low-0.1, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center', ha='right')
+            plt.text(yrange_low - 0.1, n_plot_years - y + 1850, f'{y}', fontsize=20, va='center', ha='right')
 
         plt.savefig(filename, dpi=300)
         plt.close()

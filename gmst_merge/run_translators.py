@@ -18,12 +18,14 @@
 from pathlib import Path
 import glob
 
+
 def func_launcher(module_name, func_name):
     module = __import__(module_name, fromlist=[None])
     if hasattr(module, func_name):
         print(f"Running {func_name} in {module_name}")
         chosen_fn = getattr(module, func_name)
         chosen_fn()
+
 
 run_long_conversions = False
 

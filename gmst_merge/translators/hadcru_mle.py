@@ -1,24 +1,21 @@
 from pathlib import Path
-import xarray as xa
+import netCDF4
 import numpy as np
-import os
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'HadCRU_MLE'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'HadCRU_MLE'
 
-def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
+# softcoded filename
+matches = sorted(Path(data_file_dir).glob("HadCRU_MLE_v*_timeseries_annual_anomalies_ensemble.nc"))
+data_file = netCDF4.Dataset(matches[-1])
 
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'Calvert 2024'
-    filename = data_file_dir / 'HadCRU_MLE_v1.3_timeseries_annual_anomalies_ensemble.nc'
+ensemble = np.transpose(np.ma.getdata(data_file.variables['surface_temperature_anomaly']).data)
+years = np.arange(1850,1850+ensemble.shape[0]).reshape((-1,1))
 
-    df = xa.open_dataset(filename)
+np.savetxt(data_file_dir / "ensemble_time_series.csv", np.concatenate((years,ensemble),axis=1), fmt='%.16f', delimiter=",")
 
-    ntime = df.surface_temperature_anomaly.shape[1]
-    nemsemble = df.surface_temperature_anomaly.shape[0]
-
-    output = np.zeros((ntime, nemsemble + 1))
-    output[:, 1:] = np.transpose(df.surface_temperature_anomaly.values[:, :])
-    output[:, 0] = np.arange(1850, 1850 + ntime, 1)
-    output = output.astype(np.float16)
-
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")

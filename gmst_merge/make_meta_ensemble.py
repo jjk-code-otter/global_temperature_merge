@@ -88,7 +88,7 @@ def run_experiment(experiment, data_dir, rng):
         factory = mef.MetaEnsembleFactory(tails, heads)
         factory.set_parameters(experiment)
 
-        meta_ensemble = factory.make_meta_ensemble(rng, end_year=2024)
+        meta_ensemble = factory.make_meta_ensemble(rng, end_year=2025)
 
         # Calculate the desired metrics for this ensemble
         metric_list = find_and_run_all_metrics(meta_ensemble)

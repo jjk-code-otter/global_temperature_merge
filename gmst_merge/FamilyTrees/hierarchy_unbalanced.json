@@ -4,9 +4,8 @@
     "HadCRUT5",
     "Berkeley Earth",
     "HadCRU_MLE",
-    "Kadow_ensemble",
-    "DCENT_MLE",
-    "ERA5 ensemble",
+    "Kadow",
+    "ERA5",
     "JRA-3Q"
   ],
   "tails": [
@@ -14,13 +13,12 @@
     "HadCRUT5",
     "Berkeley Earth",
     "HadCRU_MLE",
-    "Kadow_ensemble",
-    "DCENT_MLE"
+    "Kadow",
   ],
   "heads": [
       "HadCRUT5",
       "Berkeley Earth",
-      "ERA5 ensemble",
+      "ERA5",
       "JRA-3Q"
     ]
 }

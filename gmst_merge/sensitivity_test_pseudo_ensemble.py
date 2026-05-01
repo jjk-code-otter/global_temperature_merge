@@ -18,27 +18,36 @@ import os
 from pathlib import Path
 import pandas as pd
 import gmst_merge.dataset as ds
+import sys
+
 
 if __name__ == '__main__':
     """
     This generates the pseudo ensembles for additional combinations using HadCRUT4 datasets
     """
     data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
+    if data_file_dir is None:
+        DATA_DIR = Path(__file__).resolve().parent.parent / 'Data'
+    else:
+        DATA_DIR = data_dir_env / 'ManagedData' / 'Data'
 
     ensemble_datasets = ["GETQUOCS", "Vaccaro"]
 
     regular_datasets = [
-        "NOAA v5.1", "NOAA v6", "COBE-STEMP3", "HadCRUT5", "CMST3", "Berkeley Earth"
+        "NOAAGlobalTempv5.1", "NOAAGlobalTempv6", "COBE-STEMP3", "HadCRUT5", "CMST3", "CMA-GMST", "Berkeley Earth", "DCENT-I", "DCENT_MLE", "HadCRU_MLE"
     ]
 
     matched_ensembles = {
-        "NOAA v5.1": ["GETQUOCS", "Vaccaro"],
-        "NOAA v6": ["GETQUOCS", "Vaccaro"],
+        "NOAAGlobalTempv5.1": ["GETQUOCS", "Vaccaro"],
+        "NOAAGlobalTempv6": ["GETQUOCS", "Vaccaro"],
         "COBE-STEMP3": ["GETQUOCS", "Vaccaro"],
         "HadCRUT5": ["GETQUOCS", "Vaccaro"],
         "CMST3": ["GETQUOCS", "Vaccaro"],
+        "CMA-GMST": ["GETQUOCS", "Vaccaro"],
         "Berkeley Earth": ["GETQUOCS", "Vaccaro"],
+        "DCENT-I": ["GETQUOCS", "Vaccaro"],
+        "DCENT_MLE": ["GETQUOCS", "Vaccaro"],
+        "HadCRU_MLE": ["GETQUOCS", "Vaccaro"]
     }
 
     all_perturbations = {}

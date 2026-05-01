@@ -74,7 +74,7 @@ class Dataset:
         self.n_time = len(self.time)
         self.n_ensemble = self.data.shape[1]
         self.name = name
-        self.end_year = 2024
+        self.end_year = 2025
 
     def __str__(self):
         return self.name
@@ -670,7 +670,7 @@ class Dataset:
             plt.text(year, 0.5 - 0.025 - 0.02, f'{year}', ha='center', va='top', fontsize=20)
         plt.axis('off')
         plt.gca().set_ylim(0.4, 1.6)
-        plt.gca().set_xlim(1980, 2024)
+        plt.gca().set_xlim(1980, 2025)
         plt.savefig(filename, bbox_inches='tight')
         plt.close()
 

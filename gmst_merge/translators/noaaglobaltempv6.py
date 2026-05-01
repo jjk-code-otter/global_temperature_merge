@@ -5,9 +5,9 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 data_file_dir = os.getenv('DATADIR')
 if data_file_dir is None:
-    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'NOAAGlobalTempv5.1'
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'NOAAGlobalTempv6'
 else:
-    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'NOAAGlobalTempv5.1'
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'NOAAGlobalTempv6'
 
 # softcoded filename
 matches = sorted(Path(data_file_dir).glob("aravg.ann.land_ocean.90S.90N.*.asc"))

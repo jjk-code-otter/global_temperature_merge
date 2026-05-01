@@ -3,19 +3,21 @@
     "GloSAT",
     "HadCRUT5",
     "HadCRU_MLE",
-    "Kadow_ensemble",
     "DCENT_MLE",
-    "ERA5 ensemble"
+    "DCENT-I",
+    "ERA5_ERA5_ensemble"
   ],
   "tails": [
     "GloSAT",
     "HadCRUT5",
     "HadCRU_MLE",
-    "Kadow_ensemble",
-    "DCENT_MLE",
+    "DCENT_MLE"
+    "DCENT-I",
+    "ERA5_ERA5_ensemble"
   ],
   "heads": [
       "HadCRUT5",
-      "ERA5 ensemble"
+      "DCENT-I",
+      "ERA5_ERA5_ensemble"
     ]
 }

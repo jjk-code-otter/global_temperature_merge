@@ -1,23 +1,18 @@
 from pathlib import Path
-import os
+import numpy as np
+import pandas as pd
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'GISTEMP'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'GISTEMP'
 
-def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
+data_file = pd.read_csv(data_file_dir / 'GLB.Ts+dSST.csv',skiprows=1)
+data_file = data_file.apply(pd.to_numeric,errors='coerce').to_numpy()
+data_file = data_file[~np.isnan(data_file[:,13]),:];
+output = data_file[:,[0,13]]
 
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP'
-    filename = data_file_dir / 'GLB.Ts+dSST.csv'
-
-    with open(data_file_dir / 'ensemble_time_series.csv', 'w') as o:
-        with open(filename, 'r') as f:
-            for i in range(2):
-                f.readline()
-            for line in f:
-                if "*" not in line:
-                    columns = line.split(',')
-                    year = columns[0]
-                    anomaly = columns[13]
-                    columns = [year, anomaly]
-                    line = ','.join(columns) + '\n'
-                    o.write(line)
+np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.16f', delimiter=",")

@@ -72,32 +72,40 @@ if __name__ == '__main__':
     This generates the pseudo ensembles
     """
     data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env) / 'ManagedData' / 'Data'
+    if data_dir_env is None:
+        DATA_DIR = Path(__file__).resolve().parent.parent / 'Data'
+    else:
+        DATA_DIR = data_dir_env / 'ManagedData' / 'Data'
 
-    ensemble_datasets = ["HadCRUT5", "NOAA_ensemble", "ERA5 ensemble"]
+    ensemble_datasets = ["HadCRUT5", "NOAAGlobalTempv5.0", "ERA5_ensemble", "Kadow_ensemble"]
 
     regular_datasets = [
-        "NOAA v5.1", "NOAA v6", "GISTEMP", "CMST3", "COBE-STEMP3", "JRA-3Q"
+        "NOAAGlobalTempv5.1", "NOAAGlobalTempv6", "GISTEMPv4", "CMST3", "CMA-GMST", "COBE-STEMP3", "Berkeley Earth", "JRA-3Q", "ERA5"
     ]
 
     matched_ensembles = {
-        "NOAA v5.1": ["NOAA_ensemble"],
-        "NOAA v6": ["NOAA_ensemble", "HadCRUT5"],
-        "GISTEMP": ["HadCRUT5"],
+        "NOAAGlobalTempv5.1": ["NOAA_ensemble"],
+        "NOAAGlobalTempv6": ["NOAA_ensemble", "HadCRUT5"],
+        "GISTEMPv4": ["HadCRUT5"],
         "CMST3": ["NOAA_ensemble", "HadCRUT5"],
+        "CMA-GMST": ["HadCRUT5"],
         "COBE-STEMP3": ["HadCRUT5"],
-        "JRA-3Q": ["ERA5 ensemble"]
+        "Berkeley Earth": ["HadCRUT5"],
+        "JRA-3Q": ["ERA5_ensemble"],
+        "ERA5": ["ERA5_ensemble"]
     }
 
     baselines = {
-        "NOAA v5.1": [1971, 2000],
+        "NOAAGlobalTempv5.1": [1971, 2000],
         # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
-        "NOAA v6": [1971, 2000],
-        # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
-        "GISTEMP": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
+        "NOAAGlobalTempv6": [1991, 2020],
+        "GISTEMPv4": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
         "CMST3": [1961, 1990],  # See http://www.gwpu.net/en/h-col-103.html
+        "CMA-GMST": [1961, 1990],
         "COBE-STEMP3": [1961, 1990],  # Inferred from input file
-        "JRA-3Q": [1981, 2010]  # Doesn't matter in this case because uncertainty is taken neat from ERA5
+        "Berkeley Earth": [1951, 1980],
+        "JRA-3Q": [1981, 2010],  # Doesn't matter in this case because uncertainty is taken from ERA5
+        "ERA5": [1981, 2010]
     }
 
     all_perturbed_datasets = []

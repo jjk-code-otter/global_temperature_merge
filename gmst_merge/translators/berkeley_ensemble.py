@@ -1,49 +1,28 @@
 from pathlib import Path
-import numpy as np
 import os
+import numpy as np
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from useful_functions import monthly_to_annual_timeseries
 
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'Berkeley Earth Hires'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'Berkeley Earth Hires'
 
-def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
+file = open(data_file_dir / 'Global_TAVG_ensemble.txt')
+while True:
+    words = file.readline().split()
+    if len(words) > 0:
+        if words[0] == "1850":
+            break
+ensemble = np.zeros((0,10))
+while len(words) > 0:
+    ensemble = np.append(ensemble,float(words[2:12]),axis=0)
+    words = file.readline().split()
+file.close()
+ensemble = monthly_to_annual_timeseries(ensemble,1850)
+year = np.arange(1850:1850+ensemble.shape[0]).reshape(-1,1)
 
-    # https://storage.googleapis.com/berkeley-earth-temperature-hr/global/Global_TAVG_ensemble.txt
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'Berkeley Earth Hires'
-    filename = data_file_dir / 'Global_TAVG_ensemble.txt'
-
-    nyears = 2024 - 1850 + 1
-    nmonths = 12 * nyears
-    nensemble = 10
-
-    with open(filename, 'r') as f:
-        for i in range(49):
-            f.readline()
-
-        years = []
-        months = []
-
-        data = np.zeros((nmonths, nensemble))
-        count = 0
-
-        for line in f:
-            columns = line.split()
-            year = int(columns[0])
-            years.append(year)
-            months.append(int(columns[1]))
-
-            columns = columns[2:]
-            ensemble_members = np.array([float(x) for x in columns])
-
-            if year < 2025:
-                data[count, :] = ensemble_members[:]
-                count += 1
-
-    data = np.mean(data.reshape(nyears, 12, 10), axis=1)
-    time = np.arange(1850, 1850 + nyears, 1)
-
-    output = np.zeros((nyears, nensemble + 1))
-
-    output[:, 0] = time[:]
-    output[:, 1:] = data[:]
-
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+np.savetxt(data_file_dir / "ensemble_time_series.csv", np.concatenate((years,ensemble),axis=1), fmt='%.16f', delimiter=",")

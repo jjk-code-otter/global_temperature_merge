@@ -3,12 +3,17 @@ import netCDF4
 import numpy as np
 import os
 import requests
+import time
 import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from useful_functions import gridded_to_timeseries
 from useful_functions import monthly_to_annual_timeseries
 
-data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'COBE-SST3'
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'COBE-SST3'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'COBE-SST3'
 
 n_ensemble = 300
 delete_large_data_files = True # storing COBE-SST3 gridded ensembles requires 12 TB of data
@@ -33,6 +38,10 @@ for ensemble_member in range(n_ensemble):
                         for chunk in response.iter_content(chunk_size=8192):
                             if chunk:# Filter out keep-alive chunks
                                 file.write(chunk)
+                        # flush file to prevent code from occasionally getting stuck
+                        file.flush()
+                        os.fsync(file.fileno())
+                        time.sleep(0.5)
                 print(f"File downloaded successfully: {output_path}")
             except requests.exceptions.RequestException as e:
                 print(f"Failed to download file: {e}")

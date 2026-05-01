@@ -22,7 +22,14 @@ from pathlib import Path
 import netCDF4
 import pandas as pd
 from openpyxl import Workbook
+import sys
 from useful_functions import balanced_kmeans
+
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'Radiative Forcing'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'Radiative Forcing'
 
 if __name__ == '__main__':
     # Set Seed of Random Number Generator
@@ -34,18 +41,18 @@ if __name__ == '__main__':
     wb = Workbook()
     (wb.active).title = 'total'
     wb.save(
-        Path(__file__).resolve().parent / r'Data\Radiative Forcing\representative_ERF_ensemble_1750_to_present.xlsx')
+        data_file_dir / r'representative_ERF_ensemble_1750_to_present.xlsx')
     writer = pd.ExcelWriter(
-        Path(__file__).resolve().parent / r'Data\Radiative Forcing\representative_ERF_ensemble_1750_to_present.xlsx',
+        data_file_dir / r'representative_ERF_ensemble_1750_to_present.xlsx',
         engine='openpyxl', mode='a', if_sheet_exists='replace')
 
     for i in range(len(variable_names)):
 
         if i == 0:
-            data_file = netCDF4.Dataset(Path(__file__).resolve().parent / r'Data\Radiative Forcing\ERF_DAMIP_1000.nc')
+            data_file = netCDF4.Dataset(data_file_dir / r'ERF_DAMIP_1000.nc')
         else:
             data_file = netCDF4.Dataset(
-                Path(__file__).resolve().parent / r'Data\Radiative Forcing\ERF_DAMIP_1000_full.nc')
+                data_file_dir / r'ERF_DAMIP_1000_full.nc')
 
         data = np.ma.getdata(data_file.variables[variable_names[i]]).data
 

@@ -69,7 +69,7 @@ class MetaEnsembleFactory:
                 if key not in ['name', 'description', 'trees', 'seed']:
                     print(f"Tried to set {key} but {key} is not a class attribute. These are defined in __init__")
 
-    def make_meta_ensemble(self, rng, end_year=2024) -> ds.Dataset:
+    def make_meta_ensemble(self, rng, end_year=2025) -> ds.Dataset:
         """
         Make a meta ensemble
 

@@ -1,49 +1,17 @@
 {
   "master": [
-    [
-      "DCENT_MLE",
-      "GloSAT",
-      ["ERA5 ensemble", "JRA-3Q"],
-      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]
-    ],
-    [
-      "DCENT_MLE",
-      ["ERA5 ensemble", "JRA-3Q"],
-      [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "GloSAT"]
-    ],
-    [
-      "Kadow_ensemble",
-      ["ERA5 ensemble", "JRA-3Q"],
-      [["GloSAT", "HadCRUT5"], ["DCENT_MLE", "HadCRU_MLE"]]
-    ]
+    [["DCENT_MLE","DCENT-I"],"GloSAT","ERA5_ERA5_ensemble",["HadCRU_MLE", "HadCRUT5"]],
+    [["DCENT_MLE","DCENT-I"],"ERA5_ERA5_ensemble",[["HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
+    ["ERA5_ERA5_ensemble",[["GloSAT", "HadCRUT5"],["HadCRU_MLE", "DCENT_MLE"],"DCENT-I"]]
   ],
   "tails": [
-    [
-      "DCENT_MLE",
-      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
-      "GloSAT"
-    ],
-    [
-      "DCENT_MLE",
-      [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "GloSAT"]
-    ],
-    [
-      [["GloSAT", "HadCRUT5"], ["HadCRU_MLE", "DCENT_MLE"]],
-      "Kadow_ensemble"
-    ]
+    [["DCENT_MLE","DCENT-I"],"GloSAT",["HadCRU_MLE", "HadCRUT5"]],
+    [["DCENT_MLE","DCENT-I"],[["HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
+    [["GloSAT", "HadCRUT5"],["HadCRU_MLE", "DCENT_MLE"],"DCENT-I"]
   ],
   "heads": [
-    [
-      "HadCRUT5",
-      "ERA5 ensemble"
-    ],
-    [
-      "HadCRUT5",
-      "ERA5 ensemble"
-    ],
-    [
-      "HadCRUT5",
-      "ERA5 ensemble"
-    ]
+    ["DCENT-I","ERA5_ERA5_ensemble","HadCRUT5"],
+    ["DCENT-I","ERA5_ERA5_ensemble","HadCRUT5"],
+    ["ERA5_ERA5_ensemble",["HadCRUT5","DCENT-I"]]
   ]
 }

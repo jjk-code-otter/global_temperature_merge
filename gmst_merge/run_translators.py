@@ -33,10 +33,12 @@ for file in glob.glob("translators/*.py"):
 
     # Get the module name from the filename for import
     file = Path(file).stem
-    # And then stick it back onto translators with a dot
-    module_name = f'translators.{file}'
 
-    # Run the conversion function if it exists in the module
-    func_launcher(module_name, 'convert_file')
-    if run_long_conversions:
-        func_launcher(module_name, 'convert_file_long')
+    if not file.endswith('CMDCapi') and not file.endswith('cobe-sst3') and not file.endswith('_alternative'):
+        # And then stick it back onto translators with a dot
+        module_name = f'translators.{file}'
+
+        # Run the conversion function if it exists in the module
+        func_launcher(module_name, 'convert_file')
+        if run_long_conversions:
+            func_launcher(module_name, 'convert_file_long')

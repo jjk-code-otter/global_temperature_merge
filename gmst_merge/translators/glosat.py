@@ -1,42 +1,24 @@
 from pathlib import Path
+import netCDF4
 import numpy as np
-import os
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
+data_file_dir = os.getenv('DATADIR')
+if data_file_dir is None:
+    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'GloSAT'
+else:
+    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'GloSAT'
 
-def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
+# softcoded filename
+matches = sorted(Path(data_file_dir).glob("GloSATref-*_analysis_ensemble-series_global_annual.nc"))
+data_file = netCDF4.Dataset(matches[-1])
 
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GloSAT'
-    filename = data_file_dir / 'GloSATref.1.0.0.0.analysis.ensemble_series.global.annual.csv'
+ensemble = np.transpose(data_file.variables['tas'][:].filled(np.nan))
+coverage_unc = np.transpose(data_file.variables['coverage_unc'][:].filled(np.nan))
+scaling_factor = np.divide(np.sqrt(np.square(coverage_unc)+np.var(ensemble,axis=1,ddof=1)),np.std(ensemble,axis=1,ddof=1)).reshape(-1,1)
+mean = np.mean(ensemble,axis=1).reshape(-1,1);
+ensemble = np.multiply(ensemble-mean,scaling_factor)+mean;
+years = np.arange(1781,1781+ensemble.shape[0]).reshape(-1,1)
 
-    with open(data_file_dir / 'ensemble_time_series.csv', 'w') as o:
-        with open(filename, 'r') as f:
-            f.readline()
-            for line in f:
-                columns = line.split(',')
-
-                if int(columns[0]) >= 1850:
-                    year = [columns[0]]
-
-                    # Convert the ensemble to a numpy array
-                    ensemble = [float(x) for x in columns[3:]]
-                    ensemble = np.array(ensemble)
-
-                    coverage_unc = float(columns[2])  # Coverage uncertainty is one sigma according to the file
-
-                    ensemble_std = np.std(ensemble, ddof=1)
-                    ensemble_mean = np.mean(ensemble)
-
-                    total_unc = np.sqrt(coverage_unc ** 2 + ensemble_std ** 2)
-
-                    # Scale the ensemble deviations from the mean to include coverage uncertainty
-                    ensemble = ensemble_mean + ((total_unc / ensemble_std) * (ensemble - ensemble_mean))
-                    ensemble = ensemble.tolist()
-                    ensemble = [f'{x:.4f}' for x in ensemble]
-
-                    columns = year + ensemble
-
-                    line = ','.join(columns)
-                    line += '\n'
-                    o.write(line)
+np.savetxt(data_file_dir / "ensemble_time_series.csv", np.concatenate((years,ensemble),axis=1), fmt='%.16f', delimiter=",")

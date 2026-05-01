@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import json
 import numpy as np
+import sys
 
 import gmst_merge.family_tree as ft
 import gmst_merge.metaensemblefactory as mef
@@ -62,7 +63,10 @@ def run_experiment(experiment, data_dir, rng):
 
 if __name__ == '__main__':
     data_dir_env = os.getenv('DATADIR')
-    data_dir = Path(data_dir_env) / 'ManagedData' / 'Data'
+    if data_dir_env is None:
+        data_dir = Path(__file__).resolve().parent.parent / 'Data'
+    else:
+        data_dir = data_dir_env / 'ManagedData' / 'Data'
 
     experiments = load_experiments()
 

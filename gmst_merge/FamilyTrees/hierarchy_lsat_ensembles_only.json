@@ -1,23 +1,16 @@
 {
   "master": [
-    "DCENT_MLE",
-    "ERA5 ensemble",
-    [
-      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
-      "GloSAT"
-    ],
-    "NOAA_ensemble"
+    ["DCENT_MLE","DCENT-I"],
+    ["ERA5", "JRA-3Q"],
+    [["HadCRU_MLE", "HadCRUT5"],"GloSAT"]
   ],
   "tails": [
-    "DCENT_MLE",
-    [
-      ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],
-      "GloSAT"
-    ],
-    "NOAA_ensemble"
+    ["DCENT_MLE","DCENT-I"],
+    [["HadCRU_MLE", "HadCRUT5"],"GloSAT"]
   ],
   "heads": [
-    "HadCRUT5",
-    "ERA5 ensemble"
+    "DCENT-I",
+    ["ERA5", "JRA-3Q"],
+    "HadCRUT5"
   ]
 }

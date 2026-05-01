@@ -1,27 +1,25 @@
 {
   "master": [
-    [
-      "DCENT_MLE",
-      ["COBE-STEMP3_HadCRUT5", "JRA-3Q_ERA5 ensemble"],
-      "GloSAT",
-      [["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], [["NOAA v6_HadCRUT5", "NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"], "GISTEMP_HadCRUT5"]],
-      ["Berkeley Earth_HadCRUT5", ["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], ["ERA5 ensemble"]]
-    ]
+    ["DCENT_MLE","DCENT-I"],
+    "CMA-GMST_HadCRUT5",
+    ["COBE-STEMP3_HadCRUT5,"JRA-3Q_ERA5_ensemble]",
+    "GloSAT",
+    ["China-MST3_NOAAGlobalTempv5.0","China-MST3_HadCRUT5",["NOAAGlobalTempv5.1_NOAAGlobalTempv5.0", "NOAAGlobalTempv6_NOAAGlobalTempv5.0", "NOAAGlobalTempv6_HadCRUT5", "GISTEMPv4_HadCRUT5"]],
+    ["Berkeley Earth_HadCRUT5",["Kadow_Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"],"ERA5_ERA5_ensemble"]
   ],
   "tails": [
-    [
-      "DCENT_MLE",
-      "COBE-STEMP3_HadCRUT5",
-      "GloSAT",
-      ["CMST3_NOAA_ensemble", ["NOAA v6_NOAA_ensemble", "NOAA v5.1_NOAA_ensemble"]],
-      [["Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"], "Berkeley Earth_HadCRUT5"]
-    ]
+    ["DCENT_MLE","DCENT-I"],
+    "CMA-GMST_HadCRUT5",
+    "COBE-STEMP3_HadCRUT5",
+    "GloSAT",
+    ["China-MST3_NOAAGlobalTempv5.0",["NOAAGlobalTempv5.1_NOAAGlobalTempv5.0", "NOAAGlobalTempv6_NOAAGlobalTempv5.0"]],
+    ["Berkeley Earth_HadCRUT5",["Kadow_Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]]
   ],
   "heads": [
-    [
-      ["HadCRUT5", "Berkeley Earth_HadCRUT5", "ERA5 ensemble"],
-      ["CMST3_HadCRUT5", ["NOAA v6_HadCRUT5", "GISTEMP_HadCRUT5"]],
-      "JRA-3Q_ERA5 ensemble"
-    ]
+    "DCENT-I",
+    "CMA-GMST_HadCRUT5",
+    "JRA-3Q_ERA5_ensemble,
+    ["China-MST3_HadCRUT5",["NOAAGlobalTempv6_HadCRUT5", "GISTEMPv4_HadCRUT5"]],
+    ["Berkeley Earth_HadCRUT5","HadCRUT5","ERA5_ERA5_ensemble"]
   ]
 }

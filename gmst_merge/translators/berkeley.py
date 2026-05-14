@@ -1,33 +1,44 @@
-from pathlib import Path
 import numpy as np
-import os
-import sys
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
-data_file_dir = os.getenv('DATADIR')
-if data_file_dir is None:
-    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'Berkeley Earth'
-else:
-    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'Berkeley Earth'
 
-file = open(data_file_dir / 'Land_and_Ocean_summary.txt')
-while True:
-    words = file.readline().split()
-    if len(words) > 0:
-        if words[0] == "1850":
-            break
-years = np.zeros((0,1))
-mean = np.zeros((0,1))
-uncertainty = np.zeros((0,1))
-while len(words) > 0:
-    years = np.append(years,float(words[0]))
-    mean = np.append(mean,float(words[1]))
-    uncertainty = np.append(uncertainty,float(words[2])/1.96)
-    words = file.readline().split()
-file.close()
-years = years.reshape(-1,1)
-mean = mean.reshape(-1,1)
-uncertainty = uncertainty.reshape(-1,1)
+def convert_file():
+    timestamp = get_timestamp()
 
-np.savetxt(data_file_dir / "ensemble_time_series.csv", np.concatenate((years,mean),axis=1), fmt='%.16f', delimiter=",")
-np.savetxt(data_file_dir / "uncertainty_time_series.csv", np.concatenate((years,uncertainty),axis=1), fmt='%.16f', delimiter=",")
+    data_file_dir = DATADIR / 'Berkeley Earth'
+    filename = data_file_dir / 'Land_and_Ocean_summary.txt'
+    ts_filename = data_file_dir / f'{timestamp}_Land_and_Ocean_summary.txt'
+
+    shutil.copy(filename, ts_filename)
+
+    out_filename = data_file_dir / f'ensemble_time_series.csv'
+    ts_out_filename = data_file_dir / f'{timestamp}_ensemble_time_series.csv'
+    with open(out_filename, 'w') as o:
+        with open(ts_filename, 'r') as f:
+            for i in range(58):
+                f.readline()
+            for line in f:
+                columns = line.split()
+                columns = columns[0:2]
+                line = ','.join(columns) + '\n'
+                o.write(line)
+
+    shutil.copy(out_filename, ts_out_filename)
+
+    out_filename = data_file_dir / f'uncertainty_time_series.csv'
+    ts_out_filename = data_file_dir / f'{timestamp}_uncertainty_time_series.csv'
+    with open(out_filename, 'w') as o:
+        with open(ts_filename, 'r') as f:
+            for i in range(58):
+                f.readline()
+            for line in f:
+                columns = line.split()
+                columns = [columns[0], f'{float(columns[2]) / 1.96:.4f}']  # 95% confidence intervals
+                line = ','.join(columns) + '\n'
+                o.write(line)
+
+    shutil.copy(out_filename, ts_out_filename)
+
+if __name__ == '__main__':
+    convert_file()

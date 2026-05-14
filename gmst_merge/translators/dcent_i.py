@@ -1,15 +1,15 @@
-from pathlib import Path
 import xarray as xa
 import numpy as np
-import os
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
 
 def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
-
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'DCENT_I'
+    timestamp = get_timestamp()
+    data_file_dir = DATADIR / 'DCENT_I'
     filename = data_file_dir / 'DCENT_DCENT-I_annual_statistics.nc'
+    ts_filename = data_file_dir / f'{timestamp}_DCENT_DCENT-I_annual_statistics.nc'
+    shutil.copy(filename, ts_filename)
 
     df = xa.open_dataset(filename)
 
@@ -21,5 +21,15 @@ def convert_file():
     output[:, 0] = np.arange(1850, 1850 + ntime, 1)
     output = output.astype(np.float16)
 
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+    out_filename = data_file_dir / "ensemble_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    np.savetxt(
+        out_filename,
+        output,
+        fmt='%.4f',
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
 
+if __name__ == '__main__':
+    convert_file()

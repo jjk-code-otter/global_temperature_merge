@@ -1,21 +1,23 @@
-from pathlib import Path
 import numpy as np
-import os
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
 
 def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
-
+    timestamp = get_timestamp()
     # https://climate.mri-jma.go.jp/pub/archives/Ishii-et-al_COBE-SST3/gm/annual_gm_cobe-stemp3
     # columns are: year, STEMP, 1-sigma err.
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'COBE-STEMP3'
+    data_file_dir = DATADIR / 'COBE-STEMP3'
     filename = data_file_dir / 'annual_gm_cobe-stemp3.txt'
+    ts_filename = data_file_dir / f'{timestamp}_annual_gm_cobe-stemp3.txt'
+
+    shutil.copyfile(filename, ts_filename)
 
     years = []
     anoms = []
     uncertainties = []
     with open(filename, 'r') as f:
+        f.readline()
         f.readline()
         for line in f:
             columns = line.split()
@@ -34,11 +36,30 @@ def convert_file():
     output[:, 0] = years[:]
     output[:, 1] = anoms[:]
 
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.4f', delimiter=",")
+    out_filename = data_file_dir / "ensemble_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    np.savetxt(
+        out_filename,
+        output,
+        fmt='%.4f',
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
 
     output = np.zeros((nyears, 2))
 
     output[:, 0] = years[:]
     output[:, 1] = uncertainties[:]
 
-    np.savetxt(data_file_dir / "uncertainty_time_series.csv", output, fmt='%.4f', delimiter=",")
+    out_filename = data_file_dir / "uncertainty_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_uncertainty_time_series.csv"
+    np.savetxt(
+        out_filename,
+        output,
+        fmt='%.4f',
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
+
+if __name__ == '__main__':
+    convert_file()

@@ -1,21 +1,33 @@
 from pathlib import Path
 import netCDF4
 import numpy as np
-import sys
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
-data_file_dir = os.getenv('DATADIR')
-if data_file_dir is None:
-    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'HadCRU_MLE'
-else:
-    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'HadCRU_MLE'
 
-# softcoded filename
-matches = sorted(Path(data_file_dir).glob("HadCRU_MLE_v*_timeseries_annual_anomalies_ensemble.nc"))
-data_file = netCDF4.Dataset(matches[-1])
+def convert_file():
+    timestamp = get_timestamp()
+    data_file_dir = DATADIR / 'HadCRU_MLE'
 
-ensemble = np.transpose(np.ma.getdata(data_file.variables['surface_temperature_anomaly']).data)
-years = np.arange(1850,1850+ensemble.shape[0]).reshape((-1,1))
+    filename = data_file_dir / "HadCRU_MLE_v1.4_timeseries_annual_anomalies_ensemble.nc"
+    ts_filename = data_file_dir / f"{timestamp}_HadCRU_MLE_v1.4_timeseries_annual_anomalies_ensemble.nc"
 
-np.savetxt(data_file_dir / "ensemble_time_series.csv", np.concatenate((years,ensemble),axis=1), fmt='%.16f', delimiter=",")
+    shutil.copy(filename, ts_filename)
 
+    data_file = netCDF4.Dataset(filename)
+
+    ensemble = np.transpose(np.ma.getdata(data_file.variables['surface_temperature_anomaly']).data)
+    years = np.arange(1850, 1850 + ensemble.shape[0]).reshape((-1, 1))
+
+    out_filename = data_file_dir / "ensemble_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    np.savetxt(
+        out_filename,
+        np.concatenate((years, ensemble), axis=1),
+        fmt='%.16f',
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
+
+if __name__ == '__main__':
+    convert_file()

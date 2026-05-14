@@ -1,15 +1,16 @@
-from pathlib import Path
 import xarray as xa
 import numpy as np
-import os
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
 
 def convert_file():
-    data_dir_env = os.getenv('DATADIR')
-    DATA_DIR = Path(data_dir_env)
-
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP'
+    timestamp = get_timestamp()
+    data_file_dir = DATADIR / 'GISTEMP'
     filename = data_file_dir / 'GLB.Ts+dSST.csv'
+    ts_filename = data_file_dir / f'{timestamp}_GLB.Ts+dSST.csv'
+
+    shutil.copy(filename, ts_filename)
 
     years = []
     anoms = []
@@ -32,8 +33,11 @@ def convert_file():
     full_array[:, 0] = np.array(years)
     full_array[:, 1:] = np.repeat(np.reshape(np.array(anoms), (full_nyears, 1)), 200, axis=1)
 
-    data_file_dir = DATA_DIR / 'ManagedData' / 'Data' / 'GISTEMP_ensemble'
+    data_file_dir = DATADIR / 'GISTEMP_ensemble'
     filename = data_file_dir / 'ensembleCombinedSeries_Global.nc'
+    ts_filename = data_file_dir / f'{timestamp}_ensembleCombinedSeries_Global.nc'
+
+    shutil.copy(filename, ts_filename)
 
     df = xa.open_dataset(filename)
 
@@ -54,4 +58,15 @@ def convert_file():
 
     output = full_array
 
-    np.savetxt(data_file_dir / "ensemble_time_series.csv", output, delimiter=",")
+    out_filename = data_file_dir / "ensemble_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    np.savetxt(
+        out_filename,
+        output,
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
+
+
+if __name__ == '__main__':
+    convert_file()

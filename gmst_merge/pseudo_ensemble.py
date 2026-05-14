@@ -17,9 +17,10 @@
 import os
 from pathlib import Path
 import pandas as pd
+import shutil
 import gmst_merge.dataset as ds
 import matplotlib.pyplot as plt
-
+from gmst_merge.config import DATADIR, get_timestamp
 
 def make_perturbations(ensemble_datasets, clim1, clim2, data_dir):
     all_perturbations = {}
@@ -71,37 +72,33 @@ if __name__ == '__main__':
     """
     This generates the pseudo ensembles
     """
-    data_dir_env = os.getenv('DATADIR')
-    if data_dir_env is None:
-        DATA_DIR = Path(__file__).resolve().parent.parent / 'Data'
-    else:
-        DATA_DIR = data_dir_env / 'ManagedData' / 'Data'
+    timestamp = get_timestamp()
 
-    ensemble_datasets = ["HadCRUT5", "NOAAGlobalTempv5.0", "ERA5_ensemble", "Kadow_ensemble"]
+    ensemble_datasets = ["HadCRUT5", "NOAA_ensemble", "ERA5 ensemble", "Kadow_ensemble"]
 
     regular_datasets = [
-        "NOAAGlobalTempv5.1", "NOAAGlobalTempv6", "GISTEMPv4", "CMST3", "CMA-GMST", "COBE-STEMP3", "Berkeley Earth", "JRA-3Q", "ERA5"
+        "NOAA v5.1", "NOAA v61", "GISTEMP", "CMST3", "CMA_GMST", "COBE-STEMP3", "Berkeley Earth", "JRA-3Q", "ERA5"
     ]
 
     matched_ensembles = {
-        "NOAAGlobalTempv5.1": ["NOAA_ensemble"],
-        "NOAAGlobalTempv6": ["NOAA_ensemble", "HadCRUT5"],
-        "GISTEMPv4": ["HadCRUT5"],
+        "NOAA v5.1": ["NOAA_ensemble"],
+        "NOAA v61": ["NOAA_ensemble", "HadCRUT5"],
+        "GISTEMP": ["HadCRUT5"],
         "CMST3": ["NOAA_ensemble", "HadCRUT5"],
-        "CMA-GMST": ["HadCRUT5"],
+        "CMA_GMST": ["HadCRUT5"],
         "COBE-STEMP3": ["HadCRUT5"],
         "Berkeley Earth": ["HadCRUT5"],
-        "JRA-3Q": ["ERA5_ensemble"],
-        "ERA5": ["ERA5_ensemble"]
+        "JRA-3Q": ["ERA5 ensemble"],
+        "ERA5": ["ERA5 ensemble"]
     }
 
     baselines = {
-        "NOAAGlobalTempv5.1": [1971, 2000],
+        "NOAA v5.1": [1971, 2000],
         # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
-        "NOAAGlobalTempv6": [1991, 2020],
-        "GISTEMPv4": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
+        "NOAA v61": [1991, 2020],
+        "GISTEMP": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
         "CMST3": [1961, 1990],  # See http://www.gwpu.net/en/h-col-103.html
-        "CMA-GMST": [1961, 1990],
+        "CMA_GMST": [1961, 1990],
         "COBE-STEMP3": [1961, 1990],  # Inferred from input file
         "Berkeley Earth": [1951, 1980],
         "JRA-3Q": [1981, 2010],  # Doesn't matter in this case because uncertainty is taken from ERA5
@@ -118,10 +115,10 @@ if __name__ == '__main__':
         clim2 = baselines[name][1]
 
         all_perturbations, all_standardised_perturbations = make_perturbations(
-            ensemble_datasets, clim1, clim2, DATA_DIR
+            ensemble_datasets, clim1, clim2, DATADIR
         )
 
-        unc_file = DATA_DIR / name / "uncertainty_time_series.csv"
+        unc_file = DATADIR / name / "uncertainty_time_series.csv"
         if not unc_file.exists():
             print(f"Using non-scaled perturbations from {matched_ensembles[name]}")
             unc_file = None
@@ -134,17 +131,19 @@ if __name__ == '__main__':
         for ptb2 in ptbs:
             print(ptb2)
             ptb = all_selected_perturbations[ptb2]
-            perturbed_dataset = apply_perturbations(name, DATA_DIR, unc_file, ptb, clim1, clim2)
+            perturbed_dataset = apply_perturbations(name, DATADIR, unc_file, ptb, clim1, clim2)
             all_perturbed_datasets.append(perturbed_dataset)
             all_clims.append(f'{clim1}-{clim2}')
 
         print("")
 
     for i, df in enumerate(all_perturbed_datasets):
-        directory = DATA_DIR / df.name
+        directory = DATADIR / df.name
         directory.mkdir(exist_ok=True)
         filename = directory / 'ensemble_time_series.csv'
+        ts_filename = directory / f'{timestamp}_ensemble_time_series.csv'
         df.to_csv(filename)
+        shutil.copy(filename, ts_filename)
 
         df.anomalize(1981, 2010)
         df.plot_whole_ensemble(Path('Figures') / 'pseudo_ensembles' / f'{df.name}_{all_clims[i]}.png', alpha=0.7)

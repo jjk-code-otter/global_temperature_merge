@@ -1,64 +1,73 @@
-from pathlib import Path
-import netCDF4
 import numpy as np
-import os
-import sys
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+import shutil
+from gmst_merge.config import DATADIR, get_timestamp
 
-data_file_dir = os.getenv('DATADIR')
-if data_file_dir is None:
-    data_file_dir = Path(__file__).resolve().parent.parent / 'Data' / 'ERA5 ensemble'
-else:
-    data_file_dir = data_file_dir / 'ManagedData' / 'Data' / 'ERA5 ensemble'
 
-filename = data_file_dir / 'T2m_era51_time_series_from_1940.txt'
+def convert_file():
+    timestamp = get_timestamp()
+    data_file_dir = DATADIR / 'ERA5 ensemble'
+    filename = data_file_dir / 'T2m_era51_time_series_from_1940.txt'
+    ts_filename = data_file_dir / f'{timestamp}_T2m_era51_time_series_from_1940.txt'
 
-with open(filename, "rb") as f:
-    num_lines = sum(1 for _ in f)
+    shutil.copy(filename, ts_filename)
 
-years = np.zeros(num_lines)
-months = np.zeros(num_lines)
-data = np.zeros((num_lines, 11))
+    with open(filename, "rb") as f:
+        num_lines = sum(1 for _ in f)
 
-with open(filename, 'r') as f:
-    count = 0
-    for line in f:
-        columns = line.split()
+    years = np.zeros(num_lines)
+    months = np.zeros(num_lines)
+    data = np.zeros((num_lines, 11))
 
-        if len(columns) == 13:
-            year = columns[0]
-            month = columns[1]
-            anomalies = columns[2:]
-        else:
-            year = columns[0][0:4]
-            month = columns[0][4:]
-            anomalies = columns[1:]
+    with open(filename, 'r') as f:
+        count = 0
+        for line in f:
+            columns = line.split()
 
-        # Convert the ensemble to a numpy array
-        ensemble = [float(x) for x in anomalies]
-        ensemble = np.array(ensemble)
+            if len(columns) == 13:
+                year = columns[0]
+                month = columns[1]
+                anomalies = columns[2:]
+            else:
+                year = columns[0][0:4]
+                month = columns[0][4:]
+                anomalies = columns[1:]
 
-        years[count] = int(year)
-        months[count] = int(month)
-        data[count, :] = ensemble[:]
+            # Convert the ensemble to a numpy array
+            ensemble = [float(x) for x in anomalies]
+            ensemble = np.array(ensemble)
 
-        count += 1
+            years[count] = int(year)
+            months[count] = int(month)
+            data[count, :] = ensemble[:]
 
-nmonths = num_lines
-nyears = int(nmonths / 12)
+            count += 1
 
-nmonths_full_years = nyears * 12
+    nmonths = num_lines
+    nyears = int(nmonths / 12)
 
-years = years[0:nmonths_full_years]
-months = months[0:nmonths_full_years]
-data = data[0:nmonths_full_years, :]
+    nmonths_full_years = nyears * 12
 
-output = np.zeros((nyears, 12))
+    years = years[0:nmonths_full_years]
+    months = months[0:nmonths_full_years]
+    data = data[0:nmonths_full_years, :]
 
-output[:, 0] = np.mean(years.reshape((nyears, 12)), axis=1)
+    output = np.zeros((nyears, 12))
 
-for i in range(11):
-    output[:, i + 1] = np.mean(data[:, i].reshape((nyears, 12)), axis=1)
-    output[:, i + 1] = output[:, i + 1] - np.mean(output[:, i + 1])
+    output[:, 0] = np.mean(years.reshape((nyears, 12)), axis=1)
 
-np.savetxt(data_file_dir / "ensemble_time_series.csv", output, fmt='%.16f', delimiter=",")
+    for i in range(11):
+        output[:, i + 1] = np.mean(data[:, i].reshape((nyears, 12)), axis=1)
+        output[:, i + 1] = output[:, i + 1] - np.mean(output[:, i + 1])
+
+    out_filename = data_file_dir / "ensemble_time_series.csv"
+    ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    np.savetxt(
+        out_filename,
+        output,
+        fmt='%.4f',
+        delimiter=","
+    )
+    shutil.copy(out_filename, ts_out_filename)
+
+if __name__ == '__main__':
+    convert_file()

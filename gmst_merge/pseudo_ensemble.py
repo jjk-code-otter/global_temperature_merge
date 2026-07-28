@@ -77,7 +77,7 @@ if __name__ == '__main__':
     ensemble_datasets = ["HadCRUT5", "NOAA_ensemble", "ERA5 ensemble", "Kadow_ensemble"]
 
     regular_datasets = [
-        "NOAA v5.1", "NOAA v61", "GISTEMP", "CMST3", "CMA_GMST", "COBE-STEMP3", "Berkeley Earth", "JRA-3Q", "ERA5"
+        "NOAA v5.1", "NOAA v61", "GISTEMP", "CMST3", "CMA_GMST", "COBE-STEMP3", "Berkeley Earth", "JRA-3Q", "ERA5", "Kadow"
     ]
 
     matched_ensembles = {
@@ -87,6 +87,7 @@ if __name__ == '__main__':
         "CMST3": ["NOAA_ensemble", "HadCRUT5"],
         "CMA_GMST": ["HadCRUT5"],
         "COBE-STEMP3": ["HadCRUT5"],
+        "Kadow": ["HadCRUT5", "Kadow_ensemble"],
         "Berkeley Earth": ["HadCRUT5"],
         "JRA-3Q": ["ERA5 ensemble"],
         "ERA5": ["ERA5 ensemble"]
@@ -96,6 +97,7 @@ if __name__ == '__main__':
         "NOAA v5.1": [1971, 2000],
         # see https://www.ncei.noaa.gov/data/noaa-global-surface-temperature/v6/access/timeseries/00_Readme_timeseries.txt
         "NOAA v61": [1991, 2020],
+        "Kadow": [1961, 1990],
         "GISTEMP": [1951, 1980],  # See https://data.giss.nasa.gov/gistemp/
         "CMST3": [1961, 1990],  # See http://www.gwpu.net/en/h-col-103.html
         "CMA_GMST": [1961, 1990],

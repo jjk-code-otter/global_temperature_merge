@@ -1,16 +1,16 @@
 {
   "master": [
-    ["DCENT_MLE","DCENT-I"],
+    "DCENT_I",
     ["ERA5", "JRA-3Q"],
     [["HadCRU_MLE", "HadCRUT5"],"GloSAT"]
   ],
   "tails": [
-    ["DCENT_MLE","DCENT-I"],
+    "DCENT_I",
     [["HadCRU_MLE", "HadCRUT5"],"GloSAT"]
   ],
   "heads": [
-    "DCENT-I",
+    "DCENT_I",
     ["ERA5", "JRA-3Q"],
-    "HadCRUT5"
+    ["HadCRUT5", "HadCRU_MLE"]
   ]
 }

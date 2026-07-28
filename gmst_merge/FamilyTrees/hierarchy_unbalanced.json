@@ -18,6 +18,7 @@
   "heads": [
       "HadCRUT5",
       "Berkeley Earth",
+      "HadCRU_MLE",
       "ERA5",
       "JRA-3Q"
     ]

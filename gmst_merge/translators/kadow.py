@@ -1,54 +1,31 @@
 from pathlib import Path
-import xarray as xa
+import netCDF4
 import numpy as np
 import shutil
-import os
-
 from gmst_merge.config import DATADIR, get_timestamp
 
-
-def convert_file_long():
+def convert_file():
     timestamp = get_timestamp()
-    data_file_dir = DATADIR / 'Kadow_ensemble'
+    data_file_dir = DATADIR / 'Kadow'
+    filename = data_file_dir / 'Kadow_et_al_2026_HadCRUT.5.1.0.0.AIinfilled.anomalies.ensemble_global_annual_mean_185001-202512.nc'
+    ts_filename = data_file_dir / f'{timestamp}_Kadow_et_al_2026_HadCRUT.5.1.0.0.AIinfilled.anomalies.ensemble_global_annual_mean_185001-202512.nc'
 
-    n_ensemble = 200
-    n_months = 2074
-    n_years = int(n_months / 12)
-    n_months_whole = n_years * 12
+    shutil.copy(filename, ts_filename)
 
-    output = np.zeros((n_years, n_ensemble + 1))
+    data_file = netCDF4.Dataset(filename)
 
-    for member in range(n_ensemble):
-        filename = data_file_dir / f'20crtaspadzens_tas_mon-gl-72x36_hadcrut5_observation_ens-3_1850-2022_image_{member + 1}.nc'
+    ensemble = np.transpose(data_file.variables['tas'][:, 0, 0].filled(np.nan)).reshape(-1, 1)
+    years = np.arange(1850,1850+ensemble.shape[0]).reshape(-1,1)
 
-        print(filename)
-
-        # Open file get area weights
-        df = xa.open_dataset(filename)
-        weights = np.cos(np.deg2rad(df.tas.latitude))
-
-        # Calculate the area-weighted average, then the annual average
-        regional_ts = df.tas.weighted(weights).mean(dim=("latitude", "longitude"))
-        regional_ts = regional_ts.data
-        regional_ts = regional_ts[0:n_months_whole].astype(np.float16)
-        regional_ts = np.mean(regional_ts.reshape(n_years, 12), axis=1)
-
-        # Make a time axis
-        time = np.arange(1850, 1850 + n_years, 1)
-
-        output[:, 0] = time[:]
-        output[:, member + 1] = regional_ts[:]
-
-    out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    out_filename = data_file_dir / "ensemble_time_series.csv"
     ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
     np.savetxt(
         out_filename,
-        output,
+        np.concatenate((years,ensemble),axis=1),
         fmt='%.16f',
         delimiter=","
     )
     shutil.copy(out_filename, ts_out_filename)
 
-
 if __name__ == '__main__':
-    convert_file_long()
+    convert_file()

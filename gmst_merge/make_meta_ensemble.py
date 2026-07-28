@@ -63,6 +63,7 @@ def load_experiments():
 
 def run_experiment(experiment, data_dir, rng):
     experiment_name = experiment["name"]
+    end_year= 2025
 
     print(f"Running experiment {experiment_name}")
 
@@ -73,13 +74,16 @@ def run_experiment(experiment, data_dir, rng):
     output_dir.mkdir(exist_ok=True)
 
     for tree in experiment['trees']:
-        print(f"Running tree {tree} in experiment {experiment_name}")
+        # if not (output_dir / f'{tree}_smoothed_summary_1981-2010.csv').exists():
+        #     print(f"Running tree {tree} in experiment {experiment_name}")
+        # else:
+        #     continue
 
         tree_filename = f'FamilyTrees/hierarchy_{tree}.json'
 
-        tails = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'tails')
-        heads = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'heads')
-        whole = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'master')
+        tails = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'tails', end_year=end_year)
+        heads = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'heads', end_year=end_year)
+        whole = ft.FamilyTree.read_from_json(tree_filename, data_dir, 'master', end_year=end_year)
 
         whole.plot_tree(figure_dir / f'{tree}_treeogram.svg')
         tails.plot_tree(figure_dir / f'{tree}_tails_treeogram.svg')
@@ -88,7 +92,7 @@ def run_experiment(experiment, data_dir, rng):
         factory = mef.MetaEnsembleFactory(tails, heads)
         factory.set_parameters(experiment)
 
-        meta_ensemble = factory.make_meta_ensemble(rng, end_year=2025)
+        meta_ensemble = factory.make_meta_ensemble(rng, end_year=end_year)
 
         # Calculate the desired metrics for this ensemble
         metric_list = find_and_run_all_metrics(meta_ensemble)
@@ -123,8 +127,8 @@ def run_experiment(experiment, data_dir, rng):
         meta_ensemble.summary_to_csv(output_dir / f'{tree}_summary_1981-2010.csv')
         smoothed.summary_to_csv(output_dir / f'{tree}_smoothed_summary_1981-2010.csv')
 
-        print(tails)
-        print(heads)
+        #print(tails)
+        #print(heads)
 
         for metric in metric_list:
             print(metric)

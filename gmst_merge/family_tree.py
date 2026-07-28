@@ -104,10 +104,17 @@ def split_list(in_lst: list, n_splits: int, rng) -> list:
     number_of_items = len(new_lst)
     split_points = rng.choice(number_of_items - 2, n_splits - 1, replace=False) + 1
     split_points.sort()
-    result = np.split(new_lst, split_points)
+
+    indexer = np.arange(number_of_items)
+
+    result = np.split(indexer, split_points)
+
+    gong = []
+    for listicle in result:
+        gong.append([new_lst[x] for x in listicle])
 
     # convert back to a regular list
-    result = [x.tolist() for x in result]
+    result = gong #[x.tolist() for x in result]
 
     return result
 
@@ -123,14 +130,14 @@ def label_by_depth(lst, lbl=0):
     return gst
 
 
-def read_tree(lst, data_dir):
+def read_tree(lst, data_dir, end_year=None):
     """Recursively read datasets from list of lists"""
     gst = copy.deepcopy(lst)
     for i, elem in enumerate(gst):
         if isinstance(elem, list):
-            gst[i] = read_tree(elem, data_dir)
+            gst[i] = read_tree(elem, data_dir, end_year=end_year)
         else:
-            gst[i] = ds.Dataset.read_csv(elem, data_dir)
+            gst[i] = ds.Dataset.read_csv(elem, data_dir, end_year=end_year)
     return gst
 
 
@@ -183,7 +190,7 @@ class FamilyTree:
         return f"{self.tree}"
 
     @staticmethod
-    def read_from_json(json_file, data_dir, type):
+    def read_from_json(json_file, data_dir, type, end_year=None):
         """
         Read from a json file containing a family tree. Data are read in from the data_dir. type is one of
         'master', 'head' or 'tail'.
@@ -202,11 +209,11 @@ class FamilyTree:
         with open(json_file, 'r') as f:
             basic_tree = json.load(f)
         basic_tree = basic_tree[type]
-        filled_tree = FamilyTree(FamilyTree.read_from_directory(basic_tree, data_dir))
+        filled_tree = FamilyTree(FamilyTree.read_from_directory(basic_tree, data_dir, end_year=end_year))
         return filled_tree
 
     @staticmethod
-    def read_from_directory(basic_tree, data_dir):
+    def read_from_directory(basic_tree, data_dir, end_year=None):
         """
         Given a tree defined as a list of lists with strings giving the dataset names, create a list of lists holding
         the actual datasets.
@@ -218,7 +225,7 @@ class FamilyTree:
         :return: list
             List of lists containing the Datasets
         """
-        return read_tree(basic_tree, data_dir)
+        return read_tree(basic_tree, data_dir, end_year=end_year)
 
     @staticmethod
     def make_random_tree(list_of_datasets, rng):

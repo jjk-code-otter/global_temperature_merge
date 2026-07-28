@@ -88,7 +88,7 @@ class Dataset:
         return False
 
     @staticmethod
-    def read_csv(name, data_dir, header=None):
+    def read_csv(name, data_dir, header=None, end_year=None):
         """
         Read a file from the data directory
 
@@ -101,7 +101,13 @@ class Dataset:
         filestub = 'ensemble_time_series.csv'
         df = pd.read_csv(data_dir / name / filestub, header=header)
         df = df.to_numpy()
-        return Dataset(df, name=name)
+
+        ds = Dataset(df, name=name)
+        if end_year is None:
+            return ds
+        else:
+            start_year = ds.get_start_year()
+            return ds.select_year_range(start_year, end_year)
 
     def read_csv_from_file(filename, name, header=None):
         """
@@ -530,7 +536,7 @@ class Dataset:
         """
         mn = self.get_ensemble_mean().astype(np.float16)
         sd = self.get_ensemble_std().astype(np.float16)
-        tm = self.time.astype(np.int)
+        tm = self.time.astype(np.int16)
         df = pd.DataFrame({'time': tm, 'mean': mn, 'std': sd})
         df.to_csv(filename, sep=',', encoding='utf-8')
 

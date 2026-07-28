@@ -24,6 +24,9 @@ def convert_file():
     ensemble = np.multiply(ensemble - mean, scaling_factor) + mean
     years = np.arange(1781, 1781 + ensemble.shape[0]).reshape(-1, 1)
 
+    years = years[1850-1781:,:]
+    ensemble = ensemble[1850-1781:,:]
+
     out_filename = data_file_dir / "ensemble_time_series.csv"
     ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
     np.savetxt(

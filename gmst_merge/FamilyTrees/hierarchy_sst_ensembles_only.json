@@ -1,18 +1,18 @@
 {
   "master": [
-    ["DCENT_MLE","DCENT-I"],
+    "DCENT_I",
     "GloSAT",
-    ERA5_ERA5_ensemble,
+    "ERA5_ERA5 ensemble",
     ["HadCRU_MLE", "HadCRUT5"]
   ],
   "tails": [
-    ["DCENT_MLE","DCENT-I"],
+    "DCENT_I",
     "GloSAT",
     ["HadCRU_MLE", "HadCRUT5"]
   ],
   "heads": [
-    "DCENT-I",
-    "ERA5_ERA5_ensemble",
-    "HadCRUT5"
+    "DCENT_I",
+    "ERA5_ERA5 ensemble",
+    ["HadCRU_MLE", "HadCRUT5"]
   ]
 }

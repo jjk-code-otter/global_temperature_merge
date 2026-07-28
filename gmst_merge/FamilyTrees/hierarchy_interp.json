@@ -1,34 +1,33 @@
 {
   "master": [
-    ["Kadow", "NOAAGlobalTempv6"],
-    [["NOAAGlobalTempv5.1", "China-MST3"],
-      "GISTEMPv4"],
-    "CMA-GMST",
+    ["Kadow", "NOAA v61"],
+    [["NOAA v5.1", "CMST3"],
+      "GISTEMP"],
+    "CMA_GMST",
     "COBE-STEMP3",
     ["ERA5", "JRA-3Q"],
     [["GloSAT", "HadCRUT5"],
       "Berkeley Earth",
-      ["HadCRU_MLE", "DCENT_MLE"],
-      "DCENT-I"]
+      ["HadCRU_MLE"],
+      "DCENT_I"]
   ],
   "tails": [
-    ["Kadow", "NOAAGlobalTempv6"],
-    [["NOAAGlobalTempv5.1", "China-MST3"]],
-    "CMA-GMST",
+    ["Kadow", "NOAA v61"],
+    [["NOAA v5.1", "CMST3"]],
+    "CMA_GMST",
     "COBE-STEMP3",
     [["GloSAT", "HadCRUT5"],
       "Berkeley Earth",
-      ["HadCRU_MLE", "DCENT_MLE"],
-      "DCENT-I"]
+      "HadCRU_MLE",
+      "DCENT_I"]
   ],
   "heads": [
-    "NOAAGlobalTempv6",
-    ["China-MST3",
-      "GISTEMPv4"],
-    "CMA-GMST",
+    "NOAA v61",
+    ["CMST3", "GISTEMP"],
+    "CMA_GMST",
     ["ERA5", "JRA-3Q"],
     ["HadCRUT5",
       "Berkeley Earth",
-      "DCENT-I"]
+      "DCENT_I"]
   ]
 }

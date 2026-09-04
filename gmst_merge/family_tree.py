@@ -294,7 +294,7 @@ class FamilyTree:
             render_member = render_member.replace('_new_ensemble', ' et al.')
             render_member = render_member.replace('_ERA5 ensemble', ' (ERA5)')
             render_member = render_member.replace('ERA5 ensemble', 'ERA5')
-            render_member = render_member.replace('_Kadow_ensemble', 'Kadow et al.')
+            render_member = render_member.replace('_Kadow_ensemble', ' (Kadow et al.)')
             render_member = render_member.replace('Kadow_ensemble', 'Kadow et al.')
 
             axs.text(-0.1, i, render_member, ha='right', va='center', fontsize=20)

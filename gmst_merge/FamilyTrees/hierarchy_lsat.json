@@ -4,7 +4,7 @@
     "CMST3",
     "CMA_GMST",
     "Berkeley Earth",
-    ["COBE-STEMP3", ["NOAA v5.1", "NOAA v61", "GISTEMP"]],
+    ["COBE-STEMP3", [["NOAA v5.1", "NOAA v61"], "GISTEMP"]],
     ["ERA5", "JRA-3Q"],
     [["Kadow", "HadCRU_MLE", "HadCRUT5"],"GloSAT"]
   ],

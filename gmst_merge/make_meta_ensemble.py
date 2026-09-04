@@ -74,10 +74,10 @@ def run_experiment(experiment, data_dir, rng):
     output_dir.mkdir(exist_ok=True)
 
     for tree in experiment['trees']:
-        # if not (output_dir / f'{tree}_smoothed_summary_1981-2010.csv').exists():
-        #     print(f"Running tree {tree} in experiment {experiment_name}")
-        # else:
-        #     continue
+        if not (output_dir / f'{tree}_smoothed_summary_1981-2010.csv').exists():
+            print(f"Running tree {tree} in experiment {experiment_name}")
+        else:
+            continue
 
         tree_filename = f'FamilyTrees/hierarchy_{tree}.json'
 

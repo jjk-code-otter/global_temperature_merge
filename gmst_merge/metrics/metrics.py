@@ -17,6 +17,35 @@
 import numpy as np
 import statsmodels.api as sm
 
+def calculate_2025(intime, inarray, label=False, range=None):
+    if label:
+        return '2025 annual average'
+
+    if range is not None:
+        return [0.05, 0.95]
+
+    early_period = (1850 <= intime) & (intime <= 1900)
+    late_period = (2025 == intime)
+
+    out_value = np.mean(inarray[late_period]) - np.mean(inarray[early_period])
+
+    return out_value
+
+def calculate_2024(intime, inarray, label=False, range=None):
+    if label:
+        return '2024 annual average'
+
+    if range is not None:
+        return [0.05, 0.95]
+
+    early_period = (1850 <= intime) & (intime <= 1900)
+    late_period = (2024 == intime)
+
+    out_value = np.mean(inarray[late_period]) - np.mean(inarray[early_period])
+
+    return out_value
+
+
 def calculate_ipcc_long_term_change(intime, inarray, label=False, range=None):
     if label:
         return 'IPCC AR6 difference 2001-2020 minus 1850-1900'

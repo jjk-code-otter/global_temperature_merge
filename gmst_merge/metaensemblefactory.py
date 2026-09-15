@@ -116,6 +116,11 @@ class MetaEnsembleFactory:
 
             merged = ds.Dataset.join(tail, head, join_start_year, join_end_year)
 
+            if meta_ensemble.shape[0] != merged.data.shape[0]:
+                print(tail)
+                print(head)
+                raise RuntimeError("A dataset is the wrong size")
+
             meta_ensemble[:, i + 1] = merged.data[:, 0]
             if i == 0:
                 meta_ensemble[:, 0] = merged.time[:]

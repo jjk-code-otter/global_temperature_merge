@@ -4,7 +4,7 @@ import numpy as np
 import shutil
 import os
 
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 
 def convert_file_long():
@@ -39,7 +39,7 @@ def convert_file_long():
         output[:, 0] = time[:]
         output[:, member + 1] = regional_ts[:]
 
-    out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
+    out_filename = data_file_dir / f"ensemble_time_series.csv"
     ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
     np.savetxt(
         out_filename,
@@ -48,6 +48,7 @@ def convert_file_long():
         delimiter=","
     )
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('Kadow ensemble', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_Kadow_ensemble.png')
 
 
 if __name__ == '__main__':

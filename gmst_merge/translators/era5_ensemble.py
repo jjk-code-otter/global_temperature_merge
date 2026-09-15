@@ -1,6 +1,6 @@
 import numpy as np
 import shutil
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 
 def convert_file():
@@ -68,6 +68,8 @@ def convert_file():
         delimiter=","
     )
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('ERA5 ensemble', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_ERA5_ensemble.png')
+
 
 if __name__ == '__main__':
     convert_file()

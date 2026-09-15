@@ -1,17 +1,17 @@
 {
   "master": [
-    [["DCENT_I"],"CMA_GMST","COBE-STEMP3","GloSAT",["ERA5", "JRA-3Q"],["CMST3",["NOAA v5.1", "NOAA v61", "GISTEMP"]],["Berkeley Earth",["Kadow", "HadCRU_MLE", "HadCRUT5"]]],
-    [["DCENT_I"],"CMST3","CMA_GMST","Berkeley Earth",["COBE-STEMP3", ["NOAA v5.1", "NOAA v61", "GISTEMP"]],["ERA5", "JRA-3Q"],[["Kadow", "HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
-    [["Kadow", "NOAA v61"],[["NOAA v5.1", "CMST3"],"GISTEMP"],"CMA_GMST","COBE-STEMP3",["ERA5", "JRA-3Q"],[["GloSAT", "HadCRUT5"],"Berkeley Earth",["HadCRU_MLE"],"DCENT_I"]]
+    [["DCENT_I", "DCENT_MLE"], "CMA_GMST", "COBE-STEMP3", "GloSAT",["ERA5", "JRA-3Q"],["CMST3",[["NOAA v5.1", "NOAA v61"], "GISTEMP"]],["Berkeley Earth Hires",["Cooper", ["Kadow", "HadCRU_MLE", "HadCRUT5"]]]],
+    [["DCENT_I", "DCENT_MLE"], "CMST3", "CMA_GMST", "Berkeley Earth Hires", ["COBE-STEMP3", [["NOAA v5.1", "NOAA v61"], "GISTEMP"]], ["ERA5", "JRA-3Q"], [[["Kadow", "HadCRU_MLE", "HadCRUT5"],"GloSAT"], "Cooper"]],
+    [["Kadow", "NOAA v61"], [["NOAA v5.1", "CMST3"], "GISTEMP"], "CMA_GMST", "COBE-STEMP3", "Cooper", ["ERA5", "JRA-3Q"], [["GloSAT", "HadCRUT5"], "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
   ],
   "tails": [
-    [["DCENT_I"],"CMA_GMST","COBE-STEMP3","GloSAT",["CMST3",["NOAA v5.1", "NOAA v61"]],["Berkeley Earth",["Kadow", "HadCRU_MLE", "HadCRUT5"]]],
-    [["DCENT_I"],"CMST3","CMA_GMST","Berkeley Earth",["COBE-STEMP3", ["NOAA v5.1", "NOAA v61"]],[["Kadow", "HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
-    [["Kadow", "NOAA v61"],[["NOAA v5.1", "CMST3"]],"CMA_GMST","COBE-STEMP3",[["GloSAT", "HadCRUT5"],"Berkeley Earth",["HadCRU_MLE"],"DCENT_I"]]
+    [["DCENT_I", "DCENT_MLE"], "CMA_GMST","COBE-STEMP3", "GloSAT", ["CMST3",["NOAA v5.1", "NOAA v61"]], ["Berkeley Earth Hires",["Cooper", ["Kadow", "HadCRU_MLE", "HadCRUT5"]]]],
+    [["DCENT_I", "DCENT_MLE"], "CMST3", "CMA_GMST", "Berkeley Earth Hires", ["COBE-STEMP3", ["NOAA v5.1", "NOAA v61"]], [[["Kadow", "HadCRU_MLE", "HadCRUT5"],"GloSAT"], "Cooper"]],
+    [["Kadow", "NOAA v61"],  [["NOAA v5.1", "CMST3"]], "CMA_GMST", "COBE-STEMP3", "Cooper", [["GloSAT", "HadCRUT5"], "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
   ],
   "heads": [
-    ["DCENT_I","CMA_GMST",["ERA5", "JRA-3Q"],["CMST3",["NOAA v61", "GISTEMP"]],["Berkeley Earth","HadCRUT5"]],
-    ["DCENT_I","CMST3","CMA_GMST","Berkeley Earth",["NOAA v61", "GISTEMP"],["ERA5", "JRA-3Q"],"HadCRUT5"],
-    ["NOAA v61",["CMST3","GISTEMP"],"CMA_GMST",["ERA5", "JRA-3Q"],["HadCRUT5","Berkeley Earth","DCENT_I"]]
+    [["DCENT_I", "DCENT_MLE"], "CMA_GMST", "COBE-STEMP3", ["ERA5", "JRA-3Q"], ["CMST3",["NOAA v61", "GISTEMP"]], ["Berkeley Earth Hires",["Kadow", "HadCRU_MLE", "HadCRUT5"]]],
+    [["DCENT_I", "DCENT_MLE"], "CMST3", "CMA_GMST", "Berkeley Earth Hires", ["COBE-STEMP3", "NOAA v61", "GISTEMP"], ["ERA5", "JRA-3Q"], ["HadCRUT5", "HadCRU_MLE"]],
+    [["Kadow", "NOAA v61"], ["CMST3", "GISTEMP"], "CMA_GMST", "COBE-STEMP3", ["ERA5", "JRA-3Q"], ["HadCRUT5", "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
   ]
 }

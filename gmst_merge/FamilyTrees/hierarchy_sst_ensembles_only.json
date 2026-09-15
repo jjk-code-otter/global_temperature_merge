@@ -3,16 +3,16 @@
     "DCENT_I",
     "GloSAT",
     "ERA5_ERA5 ensemble",
-    ["HadCRU_MLE", "HadCRUT5"]
+    ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]
   ],
   "tails": [
     "DCENT_I",
     "GloSAT",
-    ["HadCRU_MLE", "HadCRUT5"]
+    ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]
   ],
   "heads": [
     "DCENT_I",
     "ERA5_ERA5 ensemble",
-    ["HadCRU_MLE", "HadCRUT5"]
+    ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]
   ]
 }

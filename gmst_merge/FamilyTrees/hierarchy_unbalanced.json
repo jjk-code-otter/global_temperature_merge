@@ -2,22 +2,24 @@
   "master": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth",
+    "Berkeley Earth Hires",
     "HadCRU_MLE",
     "Kadow",
+    "Cooper",
     "ERA5",
     "JRA-3Q"
   ],
   "tails": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth",
+    "Berkeley Earth Hires",
     "HadCRU_MLE",
-    "Kadow"
+    "Kadow",
+    "Cooper"
   ],
   "heads": [
       "HadCRUT5",
-      "Berkeley Earth",
+      "Berkeley Earth Hires",
       "HadCRU_MLE",
       "ERA5",
       "JRA-3Q"

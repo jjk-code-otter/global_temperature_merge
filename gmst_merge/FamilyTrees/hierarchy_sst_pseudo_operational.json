@@ -5,8 +5,12 @@
       "DCENT_MLE"
     ],
     "CMA_GMST_HadCRUT5",
-    ["COBE-STEMP3_HadCRUT5", "JRA-3Q_ERA5 ensemble"],
+    "COBE-STEMP3_HadCRUT5",
     "GloSAT",
+    [
+      "ERA5_ERA5 ensemble",
+      "JRA-3Q_ERA5 ensemble"
+    ],
     [
       [
         "CMST3_NOAA_ensemble",
@@ -23,7 +27,6 @@
     ],
     [
       "Berkeley Earth Hires",
-      "ERA5_ERA5 ensemble",
       [
         "Cooper",
         [
@@ -63,12 +66,12 @@
     ]
   ],
   "heads": [
-    [
-      "DCENT_I",
-      "DCENT_MLE"
-    ],
+    "DCENT_I",
     "CMA_GMST_HadCRUT5",
-    ["COBE-STEMP3_HadCRUT5", "JRA-3Q_ERA5 ensemble"],
+    [
+      "ERA5_ERA5 ensemble",
+      "JRA-3Q_ERA5 ensemble"
+    ],
     [
       "CMST3_HadCRUT5",
       [
@@ -78,12 +81,7 @@
     ],
     [
       "Berkeley Earth Hires",
-      "ERA5_ERA5 ensemble",
-      [
-        "Kadow_HadCRUT5",
-        "HadCRUT5",
-        "HadCRU_MLE"
-      ]
+      "HadCRUT5"
     ]
   ]
 }

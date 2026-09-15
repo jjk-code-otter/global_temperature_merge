@@ -1,6 +1,6 @@
 import numpy as np
 import shutil
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 
 def convert_file():
@@ -25,6 +25,7 @@ def convert_file():
                 o.write(line)
 
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('Berkeley Earth', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_Berkeley_Earth.png')
 
     out_filename = data_file_dir / f'uncertainty_time_series.csv'
     ts_out_filename = data_file_dir / f'{timestamp}_uncertainty_time_series.csv'

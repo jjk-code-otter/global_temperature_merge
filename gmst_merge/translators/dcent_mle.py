@@ -2,7 +2,7 @@ from pathlib import Path
 import netCDF4
 import numpy as np
 import shutil
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 def convert_file():
     timestamp = get_timestamp()
@@ -22,6 +22,8 @@ def convert_file():
     np.savetxt(out_filename, np.concatenate((years, ensemble), axis=1), fmt='%.16f',
                delimiter=",")
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('DCENT_MLE', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_DCENT_MLE.png')
+
 
 if __name__ == '__main__':
     convert_file()

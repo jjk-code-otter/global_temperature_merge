@@ -2,7 +2,7 @@
   "master": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth",
+    "Berkeley Earth Hires",
     "HadCRU_MLE",
     "GISTEMP",
     "Kadow",
@@ -12,32 +12,39 @@
     "CMA_GMST",
     "COBE-STEMP3",
     "DCENT_I",
+    "DCENT_MLE",
     "ERA5",
-    "JRA-3Q"
+    "JRA-3Q",
+    "Cooper"
   ],
   "tails": [
     "GloSAT",
     "HadCRUT5",
-    "Berkeley Earth",
+    "Berkeley Earth Hires",
     "HadCRU_MLE",
     "Kadow",
+    "Cooper",
     "NOAA v5.1",
     "NOAA v61",
     "CMST3",
     "CMA_GMST",
     "DCENT_I",
+    "DCENT_MLE",
     "COBE-STEMP3"
   ],
   "heads": [
-      "HadCRUT5",
-      "HadCRU_MLE",
-      "Berkeley Earth",
-      "GISTEMP",
-      "NOAA v61",
-      "CMST3",
-      "CMA_GMST",
-      "DCENT_I",
-      "ERA5",
-      "JRA-3Q"
-    ]
+    "HadCRUT5",
+    "HadCRU_MLE",
+    "Kadow",
+    "Berkeley Earth Hires",
+    "GISTEMP",
+    "NOAA v61",
+    "CMST3",
+    "CMA_GMST",
+    "DCENT_I",
+    "DCENT_MLE",
+    "ERA5",
+    "JRA-3Q",
+    "COBE-STEMP3"
+  ]
 }

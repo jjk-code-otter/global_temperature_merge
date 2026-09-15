@@ -1,17 +1,17 @@
 {
   "master": [
-    [["DCENT_I"],"GloSAT","ERA5_ERA5 ensemble",["HadCRU_MLE", "HadCRUT5"]],
-    [["DCENT_I"],"ERA5_ERA5 ensemble",[["HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
-    ["ERA5_ERA5 ensemble",[["GloSAT", "HadCRUT5"],["HadCRU_MLE"],"DCENT_I"]]
+    ["DCENT_I", "GloSAT", "ERA5_ERA5 ensemble", ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]],
+    [["DCENT_I", "DCENT_MLE"], "Berkeley Earth Hires", "ERA5_ERA5 ensemble", [[["HadCRU_MLE", "HadCRUT5", "Kadow_Kadow_ensemble"], "GloSAT"], "Cooper"]],
+    ["ERA5_ERA5 ensemble", "Kadow_Kadow_ensemble", [["GloSAT", "HadCRUT5"], ["HadCRU_MLE", "DCENT_MLE"], "Berkeley Earth Hires", "DCENT_I"]]
   ],
   "tails": [
-    [["DCENT_I"],"GloSAT",["HadCRU_MLE", "HadCRUT5"]],
-    [["DCENT_I"],[["HadCRU_MLE", "HadCRUT5"],"GloSAT"]],
-    [["GloSAT", "HadCRUT5"],["HadCRU_MLE"],"DCENT_I"]
+    ["DCENT_I", "GloSAT", ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]],
+    [["DCENT_I", "DCENT_MLE"], "Berkeley Earth Hires", [[["HadCRU_MLE", "HadCRUT5", "Kadow_Kadow_ensemble"], "GloSAT"], "Cooper"]],
+    ["Kadow_Kadow_ensemble", [["GloSAT", "HadCRUT5"], ["HadCRU_MLE", "DCENT_MLE"], "Berkeley Earth Hires", "DCENT_I"]]
   ],
   "heads": [
-    ["DCENT_I","ERA5_ERA5 ensemble","HadCRUT5"],
-    ["DCENT_I","ERA5_ERA5 ensemble","HadCRUT5"],
-    ["ERA5_ERA5 ensemble",["HadCRUT5","DCENT_I"]]
+    ["DCENT_I", "ERA5_ERA5 ensemble", ["Berkeley Earth Hires",["HadCRU_MLE", "HadCRUT5"]]],
+    [["DCENT_I", "DCENT_MLE"], "Berkeley Earth Hires", "ERA5_ERA5 ensemble", ["HadCRUT5", "HadCRU_MLE"]],
+    ["ERA5_ERA5 ensemble", ["HadCRUT5", ["HadCRU_MLE", "DCENT_MLE"], "Berkeley Earth Hires", "DCENT_I"]]
   ]
 }

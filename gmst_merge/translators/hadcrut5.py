@@ -2,7 +2,7 @@ from pathlib import Path
 import netCDF4
 import numpy as np
 import shutil
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 def convert_file():
     timestamp = get_timestamp()
@@ -21,15 +21,22 @@ def convert_file():
     ensemble = np.multiply(ensemble-mean,scaling_factor)+mean
     years = np.arange(1850,1850+ensemble.shape[0]).reshape(-1,1)
 
+    combined = np.concatenate((years,ensemble),axis=1)
+
+    # Just to 2025
+    combined = combined[0:176, :]
+
     out_filename = data_file_dir / "ensemble_time_series.csv"
     ts_out_filename = data_file_dir / f"{timestamp}_ensemble_time_series.csv"
     np.savetxt(
         out_filename,
-        np.concatenate((years,ensemble),axis=1),
+        combined,
         fmt='%.16f',
         delimiter=","
     )
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('HadCRUT5', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_HadCRUT5.png')
+
 
 if __name__ == '__main__':
     convert_file()

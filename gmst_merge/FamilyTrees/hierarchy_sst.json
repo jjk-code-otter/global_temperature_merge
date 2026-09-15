@@ -1,26 +1,27 @@
 {
   "master": [
-    "DCENT_I",
+    ["DCENT_I", "DCENT_MLE"],
     "CMA_GMST",
     "COBE-STEMP3",
     "GloSAT",
     ["ERA5", "JRA-3Q"],
     ["CMST3",[["NOAA v5.1", "NOAA v61"], "GISTEMP"]],
-    ["Berkeley Earth",["Kadow", "HadCRU_MLE", "HadCRUT5"]]
+    ["Berkeley Earth Hires",["Cooper", ["Kadow", "HadCRU_MLE", "HadCRUT5"]]]
   ],
   "tails": [
-    "DCENT_I",
+    ["DCENT_I", "DCENT_MLE"],
     "CMA_GMST",
     "COBE-STEMP3",
     "GloSAT",
     ["CMST3",["NOAA v5.1", "NOAA v61"]],
-    ["Berkeley Earth",["Kadow", "HadCRU_MLE", "HadCRUT5"]]
+    ["Berkeley Earth Hires",["Cooper", ["Kadow", "HadCRU_MLE", "HadCRUT5"]]]
   ],
   "heads": [
-    "DCENT_I",
+    ["DCENT_I", "DCENT_MLE"],
     "CMA_GMST",
+    "COBE-STEMP3",
     ["ERA5", "JRA-3Q"],
     ["CMST3",["NOAA v61", "GISTEMP"]],
-    ["Berkeley Earth",["HadCRUT5", "HadCRU_MLE"]]
+    ["Berkeley Earth Hires",["Kadow", "HadCRU_MLE", "HadCRUT5"]]
   ]
 }

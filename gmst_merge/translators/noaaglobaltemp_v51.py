@@ -1,7 +1,7 @@
 from pathlib import Path
 import numpy as np
 import shutil
-from gmst_merge.config import DATADIR, get_timestamp
+from gmst_merge.config import DATADIR, get_timestamp, quick_plot
 
 data_file_dir = DATADIR / 'NOAA v5.1'
 
@@ -36,6 +36,7 @@ def convert_file():
         delimiter=","
     )
     shutil.copy(out_filename, ts_out_filename)
+    quick_plot('NOAAGlobalTemp v5.1', ts_out_filename, f'../Figures/BasicInputPlots/{timestamp}_NOAAv51.png')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 {
   "master": [
-    ["Kadow_Kadow_HadCRUT5", "Kadow_Kadow_ensemble", "NOAA v61_NOAA_ensemble" , "NOAA v61_HadCRUT5"],
+    ["Kadow_HadCRUT5", "Kadow_Kadow_ensemble", "NOAA v61_NOAA_ensemble" , "NOAA v61_HadCRUT5"],
     [["NOAA v5.1_NOAA_ensemble", "CMST3_NOAA_ensemble", "CMST3_HadCRUT5"],
       "GISTEMP_HadCRUT5"],
     "CMA_GMST_HadCRUT5",
@@ -24,7 +24,7 @@
       "DCENT_I"]
   ],
   "heads": [
-    ["Kadow_Kadow_HadCRUT5", "NOAA v61_HadCRUT5"],
+    ["Kadow_HadCRUT5", "NOAA v61_HadCRUT5"],
     ["CMST3_HadCRUT5",
       "GISTEMP_HadCRUT5"],
     "CMA_GMST_HadCRUT5",

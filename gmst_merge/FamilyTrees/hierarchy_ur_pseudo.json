@@ -2,7 +2,7 @@
   "master": [
      [["DCENT_I", "DCENT_MLE"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", "GloSAT", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], [["CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], [["NOAA v5.1_NOAA_ensemble", "NOAA v61_NOAA_ensemble", "NOAA v61_HadCRUT5"], "GISTEMP_HadCRUT5"]], ["Berkeley Earth Hires", ["Cooper", ["Kadow_HadCRUT5", "Kadow_Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]]]],
      [["DCENT_I", "DCENT_MLE"], ["CMST3_NOAA_ensemble","CMST3_HadCRUT5"], "CMA_GMST_HadCRUT5", "Berkeley Earth Hires",["COBE-STEMP3_HadCRUT5", [["NOAA v5.1_NOAA_ensemble", ["NOAA v61_NOAA_ensemble", "NOAA v61_HadCRUT5"]], "GISTEMP"]], ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], [[["Kadow_Kadow_ensemble", "Kadow_HadCRUT5", "HadCRU_MLE", "HadCRUT5"],"GloSAT"], "Cooper"]],
-     [["Kadow_Kadow_HadCRUT5", "Kadow_Kadow_ensemble", "NOAA v61_NOAA_ensemble" , "NOAA v61_HadCRUT5"], [["NOAA v5.1_NOAA_ensemble", "CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], "GISTEMP_HadCRUT5"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", "Cooper", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], [["GloSAT", "HadCRUT5"], "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
+     [["Kadow_HadCRUT5", "Kadow_Kadow_ensemble", "NOAA v61_NOAA_ensemble" , "NOAA v61_HadCRUT5"], [["NOAA v5.1_NOAA_ensemble", "CMST3_NOAA_ensemble", "CMST3_HadCRUT5"], "GISTEMP_HadCRUT5"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", "Cooper", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], [["GloSAT", "HadCRUT5"], "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
   ],
   "tails": [
     [["DCENT_I", "DCENT_MLE"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", "GloSAT", ["CMST3_NOAA_ensemble", ["NOAA v5.1_NOAA_ensemble","NOAA v61_NOAA_ensemble"]], ["Berkeley Earth Hires", ["Cooper", ["Kadow_Kadow_ensemble", "HadCRU_MLE", "HadCRUT5"]]]],
@@ -12,6 +12,6 @@
   "heads": [
      [["DCENT_I", "DCENT_MLE"], "CMA_GMST_HadCRUT5","COBE-STEMP3_HadCRUT5", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], ["CMST3_HadCRUT5", ["NOAA v61_HadCRUT5", "GISTEMP_HadCRUT5"]], ["Berkeley Earth Hires", ["Kadow_HadCRUT5", "HadCRUT5", "HadCRU_MLE"]]],
      [["DCENT_I", "DCENT_MLE"], "CMST3_HadCRUT5", "CMA_GMST_HadCRUT5", "Berkeley Earth Hires", ["COBE-STEMP3_HadCRUT5", ["NOAA v61_HadCRUT5", "GISTEMP_HadCRUT5"]], ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], ["HadCRUT5", "HadCRU_MLE", "Kadow_HadCRUT5"]],
-     [["Kadow_Kadow_HadCRUT5", "NOAA v61_HadCRUT5"], ["CMST3_HadCRUT5", "GISTEMP_HadCRUT5"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], ["HadCRUT5", "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
+     [["Kadow_HadCRUT5", "NOAA v61_HadCRUT5"], ["CMST3_HadCRUT5", "GISTEMP_HadCRUT5"], "CMA_GMST_HadCRUT5", "COBE-STEMP3_HadCRUT5", ["ERA5_ERA5 ensemble", "JRA-3Q_ERA5 ensemble"], ["HadCRUT5", "Berkeley Earth Hires", ["HadCRU_MLE", "DCENT_MLE"], "DCENT_I"]]
   ]
 }
